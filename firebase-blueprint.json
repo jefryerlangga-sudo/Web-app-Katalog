@@ -1,0 +1,166 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Automotive spare part catalog item for canvassers and motoris",
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string",
+          "description": "Stock keeping unit identifier",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "description": "Product display name",
+          "maxLength": 150
+        },
+        "brand": {
+          "type": "string",
+          "description": "Brand manufacturer name",
+          "maxLength": 80
+        },
+        "category": {
+          "type": "string",
+          "description": "Primary product category",
+          "maxLength": 80
+        },
+        "subcategory": {
+          "type": "string",
+          "description": "Secondary subcategory",
+          "maxLength": 80
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Image URL of the part",
+          "maxLength": 500
+        },
+        "specification": {
+          "type": "string",
+          "description": "Technical specifications and material details",
+          "maxLength": 1000
+        },
+        "compatibility": {
+          "type": "string",
+          "description": "Vehicle and model fitment compatibility",
+          "maxLength": 600
+        },
+        "sellingPoint1": {
+          "type": "string",
+          "description": "First key sales pitch point",
+          "maxLength": 200
+        },
+        "sellingPoint2": {
+          "type": "string",
+          "description": "Second key sales pitch point",
+          "maxLength": 200
+        },
+        "sellingPoint3": {
+          "type": "string",
+          "description": "Third key sales pitch point",
+          "maxLength": 200
+        },
+        "wholesalePrice": {
+          "type": "number",
+          "description": "Canvasser wholesale dealer price"
+        },
+        "suggestedRetailPrice": {
+          "type": "number",
+          "description": "Suggested retail price for end customers (MSRP)"
+        },
+        "stockStatus": {
+          "type": "string",
+          "description": "Warehouse availability status",
+          "enum": ["In Stock", "Low Stock", "Pre-Order", "Out of Stock"]
+        },
+        "positioning": {
+          "type": "string",
+          "description": "Good / Better / Best value tiering",
+          "enum": ["Good", "Better", "Best"]
+        },
+        "targetCustomer": {
+          "type": "string",
+          "description": "Target retail shop or end-user segment",
+          "maxLength": 300
+        },
+        "isProductFocus": {
+          "type": "boolean",
+          "description": "Flag for company priority campaign push"
+        },
+        "isBestSeller": {
+          "type": "boolean",
+          "description": "Flag for fast-moving high-turnover item"
+        },
+        "crossSellNotes": {
+          "type": "string",
+          "description": "Recommended cross-sell products or complementary SKUs",
+          "maxLength": 300
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether product is active in catalog"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of last modification"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of creation"
+        }
+      },
+      "required": [
+        "sku",
+        "name",
+        "brand",
+        "category",
+        "subcategory",
+        "imageUrl",
+        "specification",
+        "compatibility",
+        "sellingPoint1",
+        "sellingPoint2",
+        "sellingPoint3",
+        "wholesalePrice",
+        "suggestedRetailPrice",
+        "stockStatus",
+        "positioning",
+        "targetCustomer",
+        "isProductFocus",
+        "isBestSeller",
+        "crossSellNotes",
+        "isActive"
+      ]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "System administrator with catalog management privileges",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Admin email address",
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "description": "Role name e.g. superadmin",
+          "maxLength": 40
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Vehicle automotive parts catalog collection"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Admin authority users"
+    }
+  }
+}

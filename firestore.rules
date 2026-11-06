@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email.lower() == 'jefryerlangga@gmail.com') ||
+        (request.auth.token.email == 'Jefryerlangga@gmail.com') ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidProduct(data) {
+      return data.keys().hasAll([
+        'sku', 'name', 'brand', 'category', 'subcategory', 'imageUrl',
+        'specification', 'compatibility', 'sellingPoint1', 'sellingPoint2', 'sellingPoint3',
+        'wholesalePrice', 'suggestedRetailPrice', 'stockStatus', 'positioning',
+        'targetCustomer', 'isProductFocus', 'isBestSeller', 'crossSellNotes', 'isActive'
+      ]) &&
+      data.sku is string && data.sku.size() > 0 && data.sku.size() <= 64 &&
+      data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
+      data.brand is string && data.brand.size() <= 80 &&
+      data.category is string && data.category.size() <= 80 &&
+      data.subcategory is string && data.subcategory.size() <= 80 &&
+      data.imageUrl is string && data.imageUrl.size() <= 500 &&
+      data.specification is string && data.specification.size() <= 1000 &&
+      data.compatibility is string && data.compatibility.size() <= 600 &&
+      data.sellingPoint1 is string && data.sellingPoint1.size() <= 200 &&
+      data.sellingPoint2 is string && data.sellingPoint2.size() <= 200 &&
+      data.sellingPoint3 is string && data.sellingPoint3.size() <= 200 &&
+      data.wholesalePrice is number && data.wholesalePrice >= 0 &&
+      data.suggestedRetailPrice is number && data.suggestedRetailPrice >= 0 &&
+      data.stockStatus in ['In Stock', 'Low Stock', 'Pre-Order', 'Out of Stock'] &&
+      data.positioning in ['Good', 'Better', 'Best'] &&
+      data.targetCustomer is string && data.targetCustomer.size() <= 300 &&
+      data.isProductFocus is bool &&
+      data.isBestSeller is bool &&
+      data.crossSellNotes is string && data.crossSellNotes.size() <= 300 &&
+      data.isActive is bool;
+    }
+
+    match /products/{productId} {
+      allow get: if isValidId(productId);
+      allow list: if true;
+      allow create: if isValidId(productId) && isValidProduct(request.resource.data);
+      allow update: if (isAdmin() || isValidProduct(request.resource.data)) && isValidId(productId) && isValidProduct(request.resource.data);
+      allow delete: if isAdmin() && isValidId(productId);
+    }
+
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+  }
+}

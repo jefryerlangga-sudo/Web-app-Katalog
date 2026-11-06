@@ -1,0 +1,6 @@
+{
+  "name": "Partshop Sales Catalog",
+  "description": "Mobile-first sales enablement product catalog for field canvassers and motoris visiting retail stores.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
