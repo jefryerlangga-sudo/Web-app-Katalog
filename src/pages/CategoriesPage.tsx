@@ -7,7 +7,6 @@ import {
   BatteryCharging,
   Shield,
   Layers,
-  Disc,
   ChevronRight,
 } from 'lucide-react';
 import { useCatalog } from '../context/CatalogContext';
@@ -72,14 +71,6 @@ export const CategoriesPage: React.FC = () => {
       border: 'border-indigo-500/40',
       textColor: 'text-indigo-400',
     },
-    {
-      name: 'Braking System',
-      desc: 'Kampas rem ceramic motor, brake pads matic, minyak rem DOT 4',
-      icon: Disc,
-      gradient: 'from-slate-700/40 to-slate-900/60',
-      border: 'border-slate-600/40',
-      textColor: 'text-slate-300',
-    },
   ];
 
   const handleSelectCategory = (catName: string, subcategory?: string) => {
@@ -96,10 +87,10 @@ export const CategoriesPage: React.FC = () => {
     <div className="space-y-4 pb-20">
       <div className="px-1">
         <h1 className="text-lg font-black text-white tracking-tight">
-          Kategori Aksesoris Handphone & Part
+          Kategori Aksesoris Handphone
         </h1>
         <p className="text-xs text-slate-400 mt-0.5">
-          Jelajahi lini produk aksesoris smartphone dan sparepart berdasarkan kategori
+          Jelajahi lini produk aksesoris smartphone berdasarkan kategori
         </p>
       </div>
 

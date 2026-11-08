@@ -1,6 +1,8 @@
 export type StockStatus = 'In Stock' | 'Low Stock' | 'Pre-Order' | 'Out of Stock';
 export type PositioningTier = 'Good' | 'Better' | 'Best';
 export type ViewMode = 'sales' | 'customer';
+export type UserRole = 'customer';
+export type OrderStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
 
 export interface Product {
   id?: string;
@@ -45,7 +47,53 @@ export interface ProductFilterState {
 export interface CanvasserProfile {
   name: string;
   email: string;
-  role: 'canvasser' | 'motoris' | 'admin';
+  role: 'admin' | 'customer';
   territory: string;
   dailyTargetVisit: number;
+}
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  role: UserRole;
+  phone?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CartItem {
+  productId: string;
+  sku: string;
+  name: string;
+  brand: string;
+  imageUrl: string;
+  unitPrice: number;
+  quantity: number;
+}
+
+export interface OrderItem {
+  productId: string;
+  sku: string;
+  name: string;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+}
+
+export interface Order {
+  id?: string;
+  userId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  items: OrderItem[];
+  itemCount: number;
+  subtotal: number;
+  total: number;
+  status: OrderStatus;
+  note?: string;
+  createdAt: string;
+  updatedAt: string;
 }

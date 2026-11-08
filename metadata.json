@@ -1,6 +1,6 @@
 {
-  "name": "Partshop Sales Catalog",
-  "description": "Mobile-first sales enablement product catalog for field canvassers and motoris visiting retail stores.",
+  "name": "PortalTech Catalog",
+  "description": "Online katalog dan portal belanja aksesoris HP PortalTech dengan akun customer dan admin master.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

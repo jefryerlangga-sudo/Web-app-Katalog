@@ -9,7 +9,8 @@ import {
   Unsubscribe,
   writeBatch,
 } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from './config';
+import { isMasterAdminUser } from '../config/app';
+import { auth, db, handleFirestoreError, OperationType } from './config';
 import { Product } from '../types/product';
 
 const COLLECTION_NAME = 'products';
@@ -247,7 +248,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     compatibility: 'Universal semua stang & spion motor (Honda Beat, Vario, NMAX, Aerox, Scoopy, PCX) untuk HP ukuran 4.7 - 7.0 inch',
     sellingPoint1: 'Sangat aman dari hujan deras dan getaran mesin motor yang sering merusak OIS kamera iPhone.',
     sellingPoint2: 'Target pasar jutaan driver ojol (Grab/Gojek/ShopeeFood) dan kurir motoris harian.',
-    sellingPoint3: 'Produk cepat laku di toko sparepart motor maupun konter HP pinggir jalan.',
+    sellingPoint3: 'Produk cepat laku di konter HP dan toko aksesoris pinggir jalan.',
     wholesalePrice: 38000,
     suggestedRetailPrice: 65000,
     stockStatus: 'In Stock',
@@ -302,74 +303,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
     crossSellNotes: 'Magsafe Wallet Card Holder, Tempered Glass Layar Depan',
     isActive: true,
   },
-
-  // --- KATEGORI SPAREPART MOTOR & MOBIL (AUTOMOTIVE SPARE PARTS) ---
-  {
-    sku: 'BRK-BRE-001',
-    name: 'Brembo Ceramic Front Brake Pads Pro-City',
-    brand: 'Brembo',
-    category: 'Braking System',
-    subcategory: 'Brake Pads',
-    imageUrl: 'https://images.unsplash.com/photo-1600790142055-619df03207e6?w=600&auto=format&fit=crop&q=80',
-    specification: 'High-temperature ceramic compound, 0.42 friction coefficient, zero copper environmental formulation, anti-vibration shims included.',
-    compatibility: 'Honda Vario 125/150/160, Beat FI, Scoopy 2018-2024, Genio',
-    sellingPoint1: 'Up to 40% longer service life compared to standard organic pads without rotor wear.',
-    sellingPoint2: 'Stable stopping power with zero brake fade even in stop-and-go rain or steep descents.',
-    sellingPoint3: 'Guaranteed 30% gross profit margin for retail workshops with high brand recognition.',
-    wholesalePrice: 65000,
-    suggestedRetailPrice: 95000,
-    stockStatus: 'In Stock',
-    positioning: 'Best',
-    targetCustomer: 'Commuter repair shops, daily delivery couriers, safety-conscious riders',
-    isProductFocus: true,
-    isBestSeller: true,
-    crossSellNotes: 'Brembo DOT 4 Brake Fluid (FL-BRE-004), Disc Rotor Cleaner Spray',
-    isActive: true,
-  },
-  {
-    sku: 'DRV-BAN-201',
-    name: 'Bando Reinforced Kevlar CVT Drive Belt',
-    brand: 'Bando',
-    category: 'Drivetrain',
-    subcategory: 'CVT Drive Belts',
-    imageUrl: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=600&auto=format&fit=crop&q=80',
-    specification: 'High-strength aramid/Kevlar cord reinforcement, heat-resistant EPDM rubber, dual-cog tooth profile.',
-    compatibility: 'Honda Vario 125 LED, Vario 150 ESP, PCX 150 (2015-2022)',
-    sellingPoint1: 'Zero belt slippage under heavy acceleration or uphill passenger loads.',
-    sellingPoint2: 'Prevents catastrophic belt snapping on expressways; rated for 25,000+ km.',
-    sellingPoint3: 'Canvasser Campaign priority item with retailer buy-10-get-1 incentive program.',
-    wholesalePrice: 110000,
-    suggestedRetailPrice: 155000,
-    stockStatus: 'In Stock',
-    positioning: 'Best',
-    targetCustomer: 'Automatic scooter specialist shops, courier fleets',
-    isProductFocus: true,
-    isBestSeller: true,
-    crossSellNotes: 'Bando CVT Roller Weight Set, Secondary Slider Shoes',
-    isActive: true,
-  },
-  {
-    sku: 'ENG-NGK-101',
-    name: 'NGK Laser Iridium Spark Plug CR8EIX',
-    brand: 'NGK',
-    category: 'Engine & Electrical',
-    subcategory: 'Spark Plugs',
-    imageUrl: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&auto=format&fit=crop&q=80',
-    specification: '0.6mm ultra-fine laser welded Iridium center tip, platinum ground electrode, anti-corrosion plating.',
-    compatibility: 'Yamaha NMAX, Aerox, R15, Vixion, Suzuki Satria F150, Honda CBR150R',
-    sellingPoint1: 'Instant throttle response and smoother engine idle from enhanced flame propagation.',
-    sellingPoint2: 'Lasts up to 50,000 km—3x the lifespan of conventional copper plugs.',
-    sellingPoint3: 'High ticket upsell during standard 10,000 km periodic service intervals.',
-    wholesalePrice: 78000,
-    suggestedRetailPrice: 110000,
-    stockStatus: 'In Stock',
-    positioning: 'Best',
-    targetCustomer: 'Performance modification workshops, touring riders, fuel efficiency enthusiasts',
-    isProductFocus: true,
-    isBestSeller: true,
-    crossSellNotes: 'High-Tension Spark Plug Cap, Throttle Body Cleaner',
-    isActive: true,
-  },
 ];
 
 export async function subscribeToProducts(
@@ -411,8 +344,8 @@ export async function getProductsOnce(): Promise<Product[]> {
     });
     return items;
   } catch (error) {
-    console.warn('getProductsOnce fallback to local items:', error);
-    return SAMPLE_PRODUCTS;
+    console.warn('getProductsOnce failed:', error);
+    return [];
   }
 }
 
@@ -470,28 +403,29 @@ export async function deleteProductById(id: string): Promise<void> {
   }
 }
 
-export async function seedInitialCatalogIfEmpty(): Promise<number> {
-  try {
-    const existing = await getProductsOnce();
-    if (existing && existing.length >= 10) {
-      return existing.length;
-    }
-
-    let seededCount = 0;
-    for (const sample of SAMPLE_PRODUCTS) {
-      const id = sample.sku.replace(/[^a-zA-Z0-9_-]/g, '_');
-      await setDoc(doc(db, COLLECTION_NAME, id), {
-        ...sample,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      seededCount++;
-    }
-    return seededCount;
-  } catch (error) {
-    console.warn('Seeding note:', error);
-    return SAMPLE_PRODUCTS.length;
+export async function seedInitialCatalogIfEmpty(): Promise<{ seeded: number; existing: number }> {
+  if (!isMasterAdminUser(auth.currentUser)) {
+    throw new Error('Hanya master admin dengan email terverifikasi yang dapat mengisi sampel');
   }
+
+  const productsCol = collection(db, COLLECTION_NAME);
+  const snapshot = await getDocs(productsCol);
+  if (!snapshot.empty) {
+    return { seeded: 0, existing: snapshot.size };
+  }
+
+  const now = new Date().toISOString();
+  const batch = writeBatch(db);
+  for (const sample of SAMPLE_PRODUCTS) {
+    const id = sample.sku.replace(/[^a-zA-Z0-9_-]/g, '_');
+    batch.set(doc(db, COLLECTION_NAME, id), {
+      ...sample,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+  await batch.commit();
+  return { seeded: SAMPLE_PRODUCTS.length, existing: 0 };
 }
 
 export async function batchSaveProducts(productList: Product[]): Promise<number> {

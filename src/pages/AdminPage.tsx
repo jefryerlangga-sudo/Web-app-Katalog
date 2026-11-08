@@ -14,6 +14,7 @@ import {
 import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ExcelImportModal } from '../components/ExcelImportModal';
+import { ACCESSORY_CATEGORIES, isStorefrontProduct } from '../config/app';
 
 export const AdminPage: React.FC = () => {
   const {
@@ -23,12 +24,45 @@ export const AdminPage: React.FC = () => {
     deleteProductItem,
     seedData,
     loading,
+    isAdmin,
+    user,
+    setShowAuthModal,
+    setCurrentTab,
   } = useCatalog();
 
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
+
+  if (!user || !isAdmin) {
+    return (
+      <div className="pb-24 space-y-4">
+        <div className="rounded-3xl border border-rose-500/30 bg-rose-950/40 p-5 space-y-3">
+          <h1 className="text-base font-black text-white">Akses Admin Dibatasi</h1>
+          <p className="text-xs text-rose-100/90">
+            Hanya master admin dengan email terverifikasi yang bisa menambah, mengubah, atau menghapus produk.
+            Customer hanya dapat melihat katalog dan berbelanja.
+          </p>
+          {!user ? (
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+            >
+              Masuk
+            </button>
+          ) : (
+            <button
+              onClick={() => setCurrentTab('home')}
+              className="px-4 py-2 rounded-xl bg-slate-700 text-white text-xs font-bold"
+            >
+              Kembali ke Beranda
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   const initialNewProduct: Partial<Product> = {
     sku: '',
@@ -89,6 +123,21 @@ export const AdminPage: React.FC = () => {
       await toggleActiveItem(id, current);
     } catch (err) {
       console.error('Gagal mengubah status aktif:', err);
+    }
+  };
+
+  const handleSeed = async () => {
+    try {
+      const result = await seedData();
+      setSuccessMessage(
+        result.seeded > 0
+          ? `Sampel aksesoris diisi (${result.seeded}). Tidak ada dokumen lama yang dihapus.`
+          : `Katalog sudah berisi ${result.existing} dokumen. Tidak ada yang diubah atau dihapus.`
+      );
+      setTimeout(() => setSuccessMessage(null), 4000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal mengisi sampel';
+      setSuccessMessage(message);
     }
   };
 
@@ -155,14 +204,19 @@ export const AdminPage: React.FC = () => {
         <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
           <span>Total Database: {products.length} SKU</span>
           <button
-            onClick={seedData}
+            onClick={handleSeed}
             disabled={loading}
             className="text-[11px] font-semibold text-blue-400 hover:text-white flex items-center gap-1 hover:underline"
           >
             <RotateCcw className="w-3 h-3" />
-            <span>Muat Ulang Katalog Awal</span>
+            <span>Isi sampel jika katalog kosong</span>
           </button>
         </div>
+        {products.some((item) => !isStorefrontProduct(item.category)) && (
+          <p className="text-[11px] text-amber-200/90">
+            Ada dokumen di luar kategori aksesoris HP. Dokumen itu tidak dihapus otomatis dan tidak tampil di etalase customer.
+          </p>
+        )}
       </div>
 
       {/* Catalog Table / Mobile Cards */}
@@ -348,14 +402,17 @@ export const AdminPage: React.FC = () => {
                     }
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white"
                   >
-                    <option value="Charger & Adapter">Charger & Adapter</option>
-                    <option value="Kabel Data & Charging">Kabel Data & Charging</option>
-                    <option value="Audio & TWS Earbuds">Audio & TWS Earbuds</option>
-                    <option value="Powerbank & Baterai">Powerbank & Baterai</option>
-                    <option value="Tempered Glass & Pelindung">Tempered Glass & Pelindung</option>
-                    <option value="Holder & Mount HP">Holder & Mount HP</option>
-                    <option value="Casing & Aksesoris Proteksi">Casing & Aksesoris Proteksi</option>
-                    <option value="Braking System">Braking System</option>
+                    {ACCESSORY_CATEGORIES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                    {editingProduct.category &&
+                      !ACCESSORY_CATEGORIES.includes(
+                        editingProduct.category as (typeof ACCESSORY_CATEGORIES)[number]
+                      ) && (
+                        <option value={editingProduct.category}>{editingProduct.category}</option>
+                      )}
                   </select>
                 </div>
                 <div>

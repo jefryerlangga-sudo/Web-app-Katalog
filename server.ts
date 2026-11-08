@@ -30,5 +30,5 @@ app.get('*', (_req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Partshop Sales Catalog server running on http://0.0.0.0:${PORT}`);
+  console.log(`PortalTech Catalog server running on http://0.0.0.0:${PORT}`);
 });

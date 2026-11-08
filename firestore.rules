@@ -1,7 +1,9 @@
 rules_version = '2';
+// Not deployed by git merge. Publish this file from the Firebase console or CLI yourself.
+// Catalog writes require the verified master-admin email below.
+// Keep that email in sync with MASTER_ADMIN_EMAILS in src/config/app.ts.
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny catch-all
     match /{document=**} {
       allow read, write: if false;
     }
@@ -10,16 +12,24 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function isAdmin() {
-      return isSignedIn() && (
-        (request.auth.token.email.lower() == 'jefryerlangga@gmail.com') ||
-        (request.auth.token.email == 'Jefryerlangga@gmail.com') ||
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-      );
+    function authEmail() {
+      return request.auth.token.email is string
+        ? request.auth.token.email.lower()
+        : '';
+    }
+
+    function isVerifiedMasterAdmin() {
+      return isSignedIn()
+        && request.auth.token.email_verified == true
+        && authEmail() == 'jefryerlangga@gmail.com';
     }
 
     function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isIsoLike(value) {
+      return value is string && value.size() >= 10 && value.size() <= 40;
     }
 
     function isValidProduct(data) {
@@ -51,18 +61,149 @@ service cloud.firestore {
       data.isActive is bool;
     }
 
+    function isValidUser(data) {
+      return data.keys().hasOnly([
+          'uid', 'email', 'displayName', 'photoURL', 'role', 'phone', 'createdAt', 'updatedAt'
+        ]) &&
+        data.uid == request.auth.uid &&
+        data.email is string && data.email.size() > 0 && data.email.size() <= 120 &&
+        data.email.lower() == authEmail() &&
+        data.displayName is string && data.displayName.size() > 0 && data.displayName.size() <= 120 &&
+        data.photoURL is string && data.photoURL.size() <= 500 &&
+        data.role == 'customer' &&
+        data.phone is string && data.phone.size() <= 32 &&
+        isIsoLike(data.createdAt) &&
+        isIsoLike(data.updatedAt);
+    }
+
+    function pricedFromCatalog(item) {
+      let product = get(/databases/$(database)/documents/products/$(item.productId)).data;
+      return product.suggestedRetailPrice == item.unitPrice
+        && product.sku == item.sku
+        && product.name == item.name
+        && product.isActive == true
+        && product.stockStatus is string
+        && product.stockStatus != 'Out of Stock';
+    }
+
+    function isValidOrderItem(item) {
+      return item is map
+        && item.keys().hasOnly(['productId', 'sku', 'name', 'unitPrice', 'quantity', 'lineTotal'])
+        && isValidId(item.productId)
+        && item.sku is string && item.sku.size() > 0 && item.sku.size() <= 64
+        && item.name is string && item.name.size() > 0 && item.name.size() <= 150
+        && item.unitPrice is number && item.unitPrice >= 0
+        && item.quantity is int && item.quantity > 0 && item.quantity <= 99
+        && item.lineTotal is number
+        && item.lineTotal == item.unitPrice * item.quantity
+        && pricedFromCatalog(item);
+    }
+
+    function lineAt(items, i) {
+      return items.size() > i ? items[i].lineTotal : 0;
+    }
+
+    function qtyAt(items, i) {
+      return items.size() > i ? items[i].quantity : 0;
+    }
+
+    function linesTotal(items) {
+      return lineAt(items, 0) + lineAt(items, 1) + lineAt(items, 2) + lineAt(items, 3) + lineAt(items, 4)
+        + lineAt(items, 5) + lineAt(items, 6) + lineAt(items, 7) + lineAt(items, 8) + lineAt(items, 9);
+    }
+
+    function qtyTotal(items) {
+      return qtyAt(items, 0) + qtyAt(items, 1) + qtyAt(items, 2) + qtyAt(items, 3) + qtyAt(items, 4)
+        + qtyAt(items, 5) + qtyAt(items, 6) + qtyAt(items, 7) + qtyAt(items, 8) + qtyAt(items, 9);
+    }
+
+    function allItemsValid(items) {
+      return items is list
+        && items.size() > 0
+        && items.size() <= 10
+        && (items.size() < 1 || isValidOrderItem(items[0]))
+        && (items.size() < 2 || isValidOrderItem(items[1]))
+        && (items.size() < 3 || isValidOrderItem(items[2]))
+        && (items.size() < 4 || isValidOrderItem(items[3]))
+        && (items.size() < 5 || isValidOrderItem(items[4]))
+        && (items.size() < 6 || isValidOrderItem(items[5]))
+        && (items.size() < 7 || isValidOrderItem(items[6]))
+        && (items.size() < 8 || isValidOrderItem(items[7]))
+        && (items.size() < 9 || isValidOrderItem(items[8]))
+        && (items.size() < 10 || isValidOrderItem(items[9]));
+    }
+
+    function isValidOrderCreate(data) {
+      return data.keys().hasOnly([
+          'userId', 'customerName', 'customerEmail', 'customerPhone',
+          'items', 'itemCount', 'subtotal', 'total', 'status', 'note', 'createdAt', 'updatedAt'
+        ]) &&
+        data.userId == request.auth.uid &&
+        data.customerName is string && data.customerName.size() > 0 && data.customerName.size() <= 120 &&
+        data.customerEmail is string && data.customerEmail.size() > 0 && data.customerEmail.size() <= 120 &&
+        data.customerEmail.lower() == authEmail() &&
+        data.customerPhone is string && data.customerPhone.matches('^[0-9]{8,20}$') &&
+        allItemsValid(data.items) &&
+        data.itemCount is int && data.itemCount == qtyTotal(data.items) &&
+        data.subtotal is number && data.subtotal == linesTotal(data.items) &&
+        data.total is number && data.total == data.subtotal &&
+        data.status == 'pending' &&
+        data.note is string && data.note.size() <= 500 &&
+        isIsoLike(data.createdAt) &&
+        isIsoLike(data.updatedAt);
+    }
+
     match /products/{productId} {
       allow get: if isValidId(productId);
       allow list: if true;
-      allow create: if isValidId(productId) && isValidProduct(request.resource.data);
-      allow update: if (isAdmin() || isValidProduct(request.resource.data)) && isValidId(productId) && isValidProduct(request.resource.data);
-      allow delete: if isAdmin() && isValidId(productId);
+      allow create, update: if isVerifiedMasterAdmin() && isValidId(productId) && isValidProduct(request.resource.data);
+      allow delete: if isVerifiedMasterAdmin() && isValidId(productId);
     }
 
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isVerifiedMasterAdmin());
+      allow list: if isVerifiedMasterAdmin();
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && isValidUser(request.resource.data);
+      allow update: if isSignedIn()
+        && request.auth.uid == userId
+        && isValidUser(request.resource.data)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.role == 'customer'
+        && resource.data.role == 'customer'
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['email', 'displayName', 'photoURL', 'phone', 'updatedAt']);
+      allow delete: if isVerifiedMasterAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isVerifiedMasterAdmin()
+      );
+      allow list: if isSignedIn() && (
+        isVerifiedMasterAdmin() || resource.data.userId == request.auth.uid
+      );
+      allow create: if isSignedIn()
+        && isValidId(orderId)
+        && isValidOrderCreate(request.resource.data);
+      allow update: if isVerifiedMasterAdmin()
+        && isValidId(orderId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+        && request.resource.data.status in ['pending', 'confirmed', 'cancelled', 'completed']
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.items == resource.data.items
+        && request.resource.data.itemCount == resource.data.itemCount
+        && request.resource.data.subtotal == resource.data.subtotal
+        && request.resource.data.total == resource.data.total
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isVerifiedMasterAdmin();
+    }
+
+    // Retained collection. A document here does not grant catalog or order writes.
     match /admins/{adminId} {
-      allow get: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
-      allow list: if isAdmin();
-      allow write: if isAdmin();
+      allow get, list: if isVerifiedMasterAdmin();
+      allow create, update, delete: if isVerifiedMasterAdmin();
     }
   }
 }

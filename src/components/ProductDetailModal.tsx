@@ -12,6 +12,7 @@ import {
   Calculator,
   Layers,
   ArrowRight,
+  ShoppingCart,
   TrendingUp,
 } from 'lucide-react';
 import { Product } from '../types/product';
@@ -33,6 +34,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     isInCompare,
     compareList,
     setCurrentTab,
+    addToCart,
   } = useCatalog();
 
   const [orderQty, setOrderQty] = useState<number>(10);
@@ -345,6 +347,18 @@ ${
 
         {/* Modal Sticky Bottom Action Bar */}
         <div className="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
+          <button
+            onClick={() => {
+              addToCart(product, 1);
+              onClose();
+              setCurrentTab('cart');
+            }}
+            disabled={product.stockStatus === 'Out of Stock' || product.isActive === false}
+            className="flex-1 py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-50"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            <span>Keranjang</span>
+          </button>
           <button
             onClick={() => {
               if (inCompare) {

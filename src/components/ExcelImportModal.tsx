@@ -104,7 +104,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template_Katalog');
 
-    XLSX.writeFile(workbook, 'Template_Input_Katalog_Partshop.xlsx');
+    XLSX.writeFile(workbook, 'Template_Input_Katalog_PortalTech.xlsx');
   };
 
   // Baca File Excel atau CSV
