@@ -22,7 +22,7 @@ export const AiAssistantPage: React.FC = () => {
     {
       id: 'welcome',
       sender: 'assistant',
-      text: `Halo! Saya Asisten AI Penjualan untuk Canvasser & Motoris Partshop.\n\nSaya terhubung langsung dengan database Firestore (${activeProducts.length} produk aktif). Saya tidak akan mengarang harga, stok, atau tipe kecocokan HP.\n\nSilakan tanyakan rekomendasi aksesoris handphone, opsi budget, perbandingan Good/Better/Best, atau naskah pitch closing untuk pemilik konter!`,
+      text: `Halo! Saya Asisten AI PortalTech untuk aksesoris handphone.\n\nSaya memakai katalog yang sedang dimuat (${activeProducts.length} produk aktif) dan tidak mengarang harga, stok, atau kecocokan HP.\n\nTanyakan rekomendasi charger, kabel, audio, powerbank, atau pelindung HP.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -65,7 +65,7 @@ export const AiAssistantPage: React.FC = () => {
         category: p.category,
         positioning: p.positioning,
         suggestedRetailPrice: p.suggestedRetailPrice,
-        wholesalePrice: p.wholesalePrice,
+        wholesalePrice: 0,
         stockStatus: p.stockStatus,
         compatibility: p.compatibility,
         specification: p.specification,
@@ -126,7 +126,7 @@ export const AiAssistantPage: React.FC = () => {
           </div>
           <div>
             <h1 className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span>Asisten AI Produk Partshop</span>
+              <span>Asisten AI Produk PortalTech</span>
               <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-500/30">
                 Terverifikasi Firestore
               </span>

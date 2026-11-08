@@ -2,7 +2,7 @@
   "entities": {
     "Product": {
       "title": "Product",
-      "description": "Automotive spare part catalog item for canvassers and motoris",
+      "description": "HP accessories catalog item for PortalTech shoppers and the verified master admin",
       "type": "object",
       "properties": {
         "sku": {
@@ -42,7 +42,7 @@
         },
         "compatibility": {
           "type": "string",
-          "description": "Vehicle and model fitment compatibility",
+          "description": "Phone and device compatibility",
           "maxLength": 600
         },
         "sellingPoint1": {
@@ -62,11 +62,11 @@
         },
         "wholesalePrice": {
           "type": "number",
-          "description": "Canvasser wholesale dealer price"
+          "description": "Wholesale price stored on the public product document"
         },
         "suggestedRetailPrice": {
           "type": "number",
-          "description": "Suggested retail price for end customers (MSRP)"
+          "description": "Customer retail price used as the authoritative checkout price"
         },
         "stockStatus": {
           "type": "string",
@@ -134,9 +134,48 @@
         "isActive"
       ]
     },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Signed-in profile. Client writes always use role customer.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "maxLength": 120 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "role": { "type": "string", "enum": ["customer"] },
+        "phone": { "type": "string", "maxLength": 32 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "photoURL", "role", "phone", "createdAt", "updatedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer checkout order. Totals must match catalog retail prices in Firestore rules.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "customerName": { "type": "string", "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 120 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "items": { "type": "array" },
+        "itemCount": { "type": "number" },
+        "subtotal": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled", "completed"] },
+        "note": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "customerName", "customerEmail", "customerPhone",
+        "items", "itemCount", "subtotal", "total", "status", "note", "createdAt", "updatedAt"
+      ]
+    },
     "Admin": {
       "title": "Admin",
-      "description": "System administrator with catalog management privileges",
+      "description": "Legacy allowlist document. Presence does not grant catalog writes.",
       "type": "object",
       "properties": {
         "email": {
@@ -156,11 +195,19 @@
   "firestore": {
     "/products/{productId}": {
       "schema": "Product",
-      "description": "Vehicle automotive parts catalog collection"
+      "description": "HP accessories catalog. Public read. Verified master admin write."
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Customer profiles. Role cannot be self-elevated."
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer-owned orders priced from the catalog."
     },
     "/admins/{adminId}": {
       "schema": "Admin",
-      "description": "Admin authority users"
+      "description": "Legacy documents. Not an authorization grant."
     }
   }
 }

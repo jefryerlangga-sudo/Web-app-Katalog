@@ -19,7 +19,8 @@ export const HomePage: React.FC = () => {
     viewMode,
     setCurrentTab,
     setFilters,
-    canvasserProfile,
+    user,
+    isAdmin,
   } = useCatalog();
 
   const [selectedDevice, setSelectedDevice] = useState<string>('Semua');
@@ -34,8 +35,8 @@ export const HomePage: React.FC = () => {
     'Type-C',
     'Samsung',
     'Xiaomi',
-    'Motor',
-    'Vario',
+    'Oppo',
+    'Lightning',
   ];
 
   // Filtered by selected device for instant showcase
@@ -88,20 +89,20 @@ export const HomePage: React.FC = () => {
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1">
               <Briefcase className="w-3.5 h-3.5" />
-              <span>Sales Enablement Canvasser</span>
+              <span>PortalTech Aksesoris HP</span>
             </span>
             <h1 className="text-xl font-black mt-0.5 tracking-tight">
-              Semangat Pagi, {canvasserProfile.name.split(' ')[0]}!
+              {user?.displayName ? `Halo, ${user.displayName.split(' ')[0]}` : 'Katalog Aksesoris HP'}
             </h1>
             <p className="text-xs text-slate-300 mt-0.5">
-              Siap kunjungan rute konter & toko retail hari ini.
+              Charger, kabel, audio, powerbank, dan proteksi handphone.
             </p>
           </div>
 
           <div className="text-right bg-slate-900/60 p-2 rounded-2xl border border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-semibold">Target Rute</span>
+            <span className="text-[10px] text-slate-400 block font-semibold">SKU Aktif</span>
             <span className="text-base font-extrabold text-blue-400 font-mono">
-              14 Toko
+              {activeProducts.length}
             </span>
           </div>
         </div>
@@ -141,7 +142,7 @@ export const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Akses Cepat Input Produk & Import Excel */}
+      {isAdmin && (
       <div className="bg-gradient-to-r from-blue-900/50 via-slate-800 to-emerald-950/50 p-3 rounded-2xl border border-blue-500/30 flex items-center justify-between gap-2 shadow-sm">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30 flex-shrink-0">
@@ -165,8 +166,9 @@ export const HomePage: React.FC = () => {
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
+      )}
 
-      {/* Filter Cepat Kompatibilitas Tipe HP & Motor */}
+      {/* Filter cepat tipe HP */}
       <div className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
@@ -229,7 +231,7 @@ export const HomePage: React.FC = () => {
 
           {viewMode === 'sales' && (
             <p className="text-[11px] text-rose-200/90 mt-2 bg-rose-950/50 p-2 rounded-xl border border-rose-500/20">
-              💡 <strong>Tips Canvasser:</strong> Produk Fokus memiliki program promo Beli 10 Gratis 1 untuk konter dan poin komisi 2x lipat untuk motoris!
+              💡 <strong>Tips:</strong> Produk Fokus adalah rekomendasi PortalTech minggu ini untuk bundling dan repeat order.
             </p>
           )}
         </div>
@@ -263,7 +265,7 @@ export const HomePage: React.FC = () => {
       <div className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Kategori Aksesoris Handphone & Part
+            Kategori Aksesoris Handphone
           </h2>
           <button
             onClick={() => setCurrentTab('categories')}

@@ -21,18 +21,22 @@ export interface AiAssistantRequest {
 }
 
 export async function handleAiAssistantQuery(reqBody: AiAssistantRequest): Promise<string> {
-  const { prompt, catalogContext, viewMode = 'sales' } = reqBody;
+  const { prompt, catalogContext } = reqBody;
 
   const apiKey = process.env.GEMINI_API_KEY;
+  const publicCatalog = (catalogContext || []).map((product) => {
+    const { wholesalePrice: _omit, ...rest } = product;
+    return rest;
+  });
 
-  // Format catalog strictly to avoid hallucinations
-  const catalogSummary = (catalogContext || []).map((p) => {
-    return `[SKU: ${p.sku}] ${p.brand} ${p.name} | Kategori: ${p.category} | Tier: ${p.positioning} | HET Konsumen: Rp ${p.suggestedRetailPrice.toLocaleString('id-ID')} | Modal Grosir Konter: Rp ${p.wholesalePrice.toLocaleString('id-ID')} | Stok: ${p.stockStatus} | Cocok untuk: ${p.compatibility} | Spek: ${p.specification} | 3 Keunggulan: 1) ${p.sellingPoint1} 2) ${p.sellingPoint2} 3) ${p.sellingPoint3}`;
+  // Retail snapshot only. The endpoint is not authenticated, so dealer cost is never forwarded.
+  const catalogSummary = publicCatalog.map((p) => {
+    return `[SKU: ${p.sku}] ${p.brand} ${p.name} | Kategori: ${p.category} | Tier: ${p.positioning} | HET Konsumen: Rp ${p.suggestedRetailPrice.toLocaleString('id-ID')} | Stok: ${p.stockStatus} | Cocok untuk: ${p.compatibility} | Spek: ${p.specification} | 3 Keunggulan: 1) ${p.sellingPoint1} 2) ${p.sellingPoint2} 3) ${p.sellingPoint3}`;
   }).join('\n');
 
   if (!apiKey) {
     const lower = prompt.toLowerCase();
-    const matches = (catalogContext || []).filter((p) => {
+    const matches = publicCatalog.filter((p) => {
       return (
         p.name.toLowerCase().includes(lower) ||
         p.compatibility.toLowerCase().includes(lower) ||
@@ -47,7 +51,7 @@ export async function handleAiAssistantQuery(reqBody: AiAssistantRequest): Promi
       return `Berikut rekomendasi terverifikasi dari katalog aktif kami:\n\n${top
         .map(
           (m) =>
-            `• **${m.name}** (SKU: \`${m.sku}\`)\n  - Merk: ${m.brand} • Tier ${m.positioning}\n  - HET Eceran: Rp ${m.suggestedRetailPrice.toLocaleString('id-ID')} ${viewMode === 'sales' ? `(Modal Konter: Rp ${m.wholesalePrice.toLocaleString('id-ID')})` : ''}\n  - Kompatibel: ${m.compatibility}\n  - Keunggulan: "${m.sellingPoint1}"`
+            `• **${m.name}** (SKU: \`${m.sku}\`)\n  - Merk: ${m.brand} • Tier ${m.positioning}\n  - HET Eceran: Rp ${m.suggestedRetailPrice.toLocaleString('id-ID')}\n  - Kompatibel: ${m.compatibility}\n  - Keunggulan: "${m.sellingPoint1}"`
         )
         .join('\n\n')}\n\n*Semua data harga, stok, dan spesifikasi terverifikasi langsung dari database Firestore.*`;
     }
@@ -64,16 +68,14 @@ export async function handleAiAssistantQuery(reqBody: AiAssistantRequest): Promi
     },
   });
 
-  const systemInstruction = `Kamu adalah Asisten AI Penjualan Lapangan resmi untuk "Partshop Sales Catalog", digunakan oleh field Canvasser dan Motoris yang berkunjung ke konter handphone dan toko retail di Indonesia.
+  const systemInstruction = `Kamu adalah asisten belanja PortalTech untuk katalog aksesoris handphone di Indonesia.
 
-ATURAN WAJIB (STRICT MANDATES):
-1. BAHASA INDONESIA: Wajib menjawab dalam Bahasa Indonesia yang profesional, ramah, dan taktis untuk penjualan lapangan.
-2. ZERO-HALLUCINATION: Kamu HANYA BOLEH merekomendasikan produk yang tercantum di SNAPSHOT KATALOG di bawah. DILARANG KERAS mengarang SKU, harga, stok, merk, atau spesifikasi yang tidak ada di katalog.
-3. MODE TAMPILAN: Pengguna saat ini dalam "${viewMode.toUpperCase()} MODE".
-   - Jika dalam "SALES" mode: Sebutkan modal grosir konter, HET, persentase keuntungan konter (laba), dan berikan naskah/tips closing taktis untuk meyakinkan pemilik konter.
-   - Jika dalam "CUSTOMER" mode: HANYA sebutkan informasi aman pelanggan (HET resmi, garansi, keunggulan kualitas, kecocokan tipe HP). JANGAN PERNAH membocorkan modal grosir atau margin rahasia konter!
-4. FORMAT RINGKAS & MOBILE-FRIENDLY: Gunakan poin-poin tebal (bullet points) agar sangat mudah dibaca oleh sales di layar HP saat berdiri di depan etalase konter yang ramai.
-5. PENJELASAN GOOD/BETTER/BEST: Jika relevan, jelaskan mengapa menaikkan pilihan ke tier 'Better' atau 'Best' menguntungkan bagi konsumen dan toko.
+ATURAN WAJIB:
+1. Jawab dalam Bahasa Indonesia yang jelas.
+2. Hanya rekomendasikan produk di SNAPSHOT KATALOG. Jangan mengarang SKU, harga, stok, merk, atau spesifikasi.
+3. Sebutkan hanya harga eceran (HET). Jangan menyebut modal grosir, harga dealer, atau margin. Endpoint ini tidak membuktikan bahwa pemanggil adalah admin.
+4. Gunakan poin singkat yang mudah dibaca di layar HP.
+5. Jika relevan, jelaskan perbedaan tier Good, Better, dan Best dari sisi pembeli.
 
 SNAPSHOT KATALOG TERVERIFIKASI:
 ${catalogSummary || 'Tidak ada produk dalam katalog saat ini.'}`;
@@ -92,7 +94,7 @@ ${catalogSummary || 'Tidak ada produk dalam katalog saat ini.'}`;
   } catch (error: any) {
     console.warn('Gemini call fallback to local search:', error?.message);
     const lower = prompt.toLowerCase();
-    const matches = (catalogContext || []).filter((p) => {
+    const matches = publicCatalog.filter((p) => {
       return (
         p.name.toLowerCase().includes(lower) ||
         p.compatibility.toLowerCase().includes(lower) ||
@@ -107,7 +109,7 @@ ${catalogSummary || 'Tidak ada produk dalam katalog saat ini.'}`;
       return `Berikut rekomendasi terverifikasi dari katalog aktif kami:\n\n${top
         .map(
           (m) =>
-            `• **${m.name}** (SKU: \`${m.sku}\`)\n  - Merk: ${m.brand} • Tier ${m.positioning}\n  - HET Eceran: Rp ${m.suggestedRetailPrice.toLocaleString('id-ID')} ${viewMode === 'sales' ? `(Modal Konter: Rp ${m.wholesalePrice.toLocaleString('id-ID')})` : ''}\n  - Kompatibel: ${m.compatibility}\n  - Keunggulan: "${m.sellingPoint1}"`
+            `• **${m.name}** (SKU: \`${m.sku}\`)\n  - Merk: ${m.brand} • Tier ${m.positioning}\n  - HET Eceran: Rp ${m.suggestedRetailPrice.toLocaleString('id-ID')}\n  - Kompatibel: ${m.compatibility}\n  - Keunggulan: "${m.sellingPoint1}"`
         )
         .join('\n\n')}\n\n*Semua data harga, stok, dan spesifikasi terverifikasi langsung dari database Firestore.*`;
     }

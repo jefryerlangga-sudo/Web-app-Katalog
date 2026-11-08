@@ -29,7 +29,7 @@ export const ProductFocusPage: React.FC = () => {
         </div>
 
         <p className="text-xs text-slate-300 leading-relaxed">
-          Item prioritas tertinggi yang didukung promosi distributor. Canvasser dan Motoris wajib menawarkan produk ini terlebih dahulu pada setiap kunjungan konter atau toko retail.
+          Item prioritas PortalTech. Produk ini yang paling direkomendasikan untuk customer dan konter retail.
         </p>
 
         {viewMode === 'sales' ? (

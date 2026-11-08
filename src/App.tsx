@@ -3,6 +3,7 @@ import { CatalogProvider, useCatalog } from './context/CatalogContext';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { ProductDetailModal } from './components/ProductDetailModal';
+import { AuthModal } from './components/AuthModal';
 import { HomePage } from './pages/HomePage';
 import { SearchCatalogPage } from './pages/SearchCatalogPage';
 import { CategoriesPage } from './pages/CategoriesPage';
@@ -11,10 +12,11 @@ import { BestSellerPage } from './pages/BestSellerPage';
 import { ComparePage } from './pages/ComparePage';
 import { AiAssistantPage } from './pages/AiAssistantPage';
 import { AdminPage } from './pages/AdminPage';
+import { CartPage } from './pages/CartPage';
 import { RefreshCw } from 'lucide-react';
 
 const AppContent: React.FC = () => {
-  const { currentTab, selectedProduct, setSelectedProduct, loading, error } = useCatalog();
+  const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog } = useCatalog();
 
   const renderCurrentView = () => {
     switch (currentTab) {
@@ -32,8 +34,10 @@ const AppContent: React.FC = () => {
         return <ComparePage />;
       case 'ai':
         return <AiAssistantPage />;
+      case 'cart':
+        return <CartPage />;
       case 'admin':
-        return <AdminPage />;
+        return isAdmin ? <AdminPage /> : <HomePage />;
       default:
         return <HomePage />;
     }
@@ -60,6 +64,15 @@ const AppContent: React.FC = () => {
           </div>
         )}
 
+        {usingPreviewCatalog && !error && (
+          <div className="mb-3 p-3 rounded-2xl bg-slate-800 border border-slate-700 text-slate-300 text-xs">
+            <p className="font-bold text-white">Sampel lokal aksesoris HP</p>
+            <p className="text-[11px] mt-0.5">
+              Firestore belum berisi produk, jadi etalase memakai sampel di aplikasi. Sampel tidak ditulis otomatis dan tidak bisa di-checkout.
+            </p>
+          </div>
+        )}
+
         {renderCurrentView()}
       </main>
 
@@ -73,6 +86,8 @@ const AppContent: React.FC = () => {
           onClose={() => setSelectedProduct(null)}
         />
       )}
+
+      <AuthModal />
     </div>
   );
 };

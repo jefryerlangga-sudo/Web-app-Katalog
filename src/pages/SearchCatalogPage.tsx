@@ -360,7 +360,7 @@ export const SearchCatalogPage: React.FC = () => {
               {/* Category */}
               <div className="space-y-1.5">
                 <label className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
-                  Kategori Aksesoris & Part
+                  Kategori Aksesoris HP
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {categories.map((cat) => (
