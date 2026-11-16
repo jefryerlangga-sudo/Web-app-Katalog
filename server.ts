@@ -2,7 +2,12 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { handleAiAssistantQuery, runtimeFromEnv, type AiRuntime } from './src/server/aiHandler';
+import {
+  handleAiAssistantQuery,
+  MAX_AI_BODY_BYTES,
+  runtimeFromEnv,
+  type AiRuntime,
+} from './src/server/aiHandler';
 
 dotenv.config();
 
@@ -21,7 +26,7 @@ export function createApp(runtime: AiRuntime = runtimeFromEnv(), options: AppOpt
 
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
-  app.use(express.json({ limit: '512kb' }));
+  app.use(express.json({ limit: MAX_AI_BODY_BYTES }));
 
   app.post('/api/ai-assistant', async (req, res) => {
     if (limit > 0) {
@@ -53,6 +58,20 @@ export function createApp(runtime: AiRuntime = runtimeFromEnv(), options: AppOpt
     res.sendFile(path.join(distPath, 'index.html'), (err) => {
       if (err) res.status(404).end();
     });
+  });
+
+  app.use((err: unknown, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const status =
+      typeof err === 'object' && err && 'status' in err ? Number((err as { status?: number }).status) : 0;
+    if (status === 400) {
+      res.status(400).json({ error: 'JSON tidak valid' });
+      return;
+    }
+    if (status === 413) {
+      res.status(413).json({ error: 'Permintaan terlalu besar' });
+      return;
+    }
+    next(err);
   });
 
   return app;

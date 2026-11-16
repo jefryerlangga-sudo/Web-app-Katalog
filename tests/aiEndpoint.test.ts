@@ -3,7 +3,7 @@ import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
 import test from 'node:test';
 import { createApp } from '../server.ts';
-import type { AiRuntime } from '../src/server/aiHandler.ts';
+import { MAX_AI_BODY_BYTES, type AiRuntime } from '../src/server/aiHandler.ts';
 
 const catalog = [
   {
@@ -125,4 +125,50 @@ test('POST /api/ai-assistant rate limit returns 429', async () => {
   } finally {
     await new Promise<void>((resolve, reject) => server.close((err) => (err ? reject(err) : resolve())));
   }
+});
+
+test('POST /api/ai-assistant rejects invalid JSON', async () => {
+  await withServer(
+    {
+      apiKey: '',
+      model: 'grok-4.7',
+      baseUrl: 'https://api.x.ai/v1/chat/completions',
+      fetchImpl: async () => {
+        throw new Error('should not fetch');
+      },
+    },
+    async (base) => {
+      const res = await fetch(`${base}/api/ai-assistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{',
+      });
+      assert.equal(res.status, 400);
+      assert.equal(await res.text(), JSON.stringify({ error: 'JSON tidak valid' }));
+    }
+  );
+});
+
+test('POST /api/ai-assistant rejects a body over 512kb', async () => {
+  await withServer(
+    {
+      apiKey: 'xai-should-not-leak',
+      model: 'grok-4.7',
+      baseUrl: 'https://api.x.ai/v1/chat/completions',
+      fetchImpl: async () => {
+        throw new Error('should not fetch');
+      },
+    },
+    async (base) => {
+      const res = await fetch(`${base}/api/ai-assistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: 'a'.repeat(MAX_AI_BODY_BYTES) }),
+      });
+      const raw = await res.text();
+      assert.equal(res.status, 413);
+      assert.equal(raw, JSON.stringify({ error: 'Permintaan terlalu besar' }));
+      assert.equal(raw.includes('xai-should-not-leak'), false);
+    }
+  );
 });

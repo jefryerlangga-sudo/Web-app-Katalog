@@ -81,6 +81,20 @@ docker build --build-arg VITE_WHATSAPP_NUMBER=6281234567890 -t portaltech-katalo
 
 Lalu deploy image itu dan set `XAI_API_KEY` / `XAI_MODEL` sebagai env runtime. `PORT` diisi Cloud Run sendiri.
 
+## Deploy di Vercel (Hobby)
+
+Impor repo dari GitHub (Add New → Project). Framework **Vite**. `vercel.json` memakai `npm run build` dan output `dist`. `npm start` dan `Dockerfile` tidak berubah; Cloud Run tetap menjalankan Express.
+
+Isi Environment Variables untuk Production dan Preview sebelum deploy:
+
+- `XAI_API_KEY` — hanya di server. Jangan diawali `VITE_`. Kosong = pencarian kata di katalog.
+- `XAI_MODEL` — opsional. Kosong memakai `grok-4.7`.
+- `VITE_WHATSAPP_NUMBER` — dibaca saat **build** (hanya digit, kode negara). Nilai ini masuk ke client dan bukan secret. Mengubahnya butuh deploy ulang.
+
+`XAI_API_BASE_URL` opsional, sama seperti di komputer. File statis datang dari `dist/`. Path yang bukan berkas dan bukan `/api/*` diarahkan ke `/index.html`. `POST /api/ai-assistant` dijalankan fungsi Node di `api/ai-assistant.ts` dengan jawaban, batas body 512kb, dan kunci yang sama seperti Express. Kunci tidak dikirim ke browser.
+
+Firebase Console → Authentication → Settings → Authorized domains: tambahkan host `.vercel.app` yang tampil setelah impor (bentuknya `nama-proyek.vercel.app`). Firebase menolak pola `*.vercel.app`; isi nama host lengkap. Host preview perlu ditambahkan juga kalau login dipakai di preview. Tanpa host itu, login Google gagal (`auth/unauthorized-domain`).
+
 File `firebase-applet-config.json` adalah konfigurasi client Firebase (bukan service account). Jangan meng-commit file service account.
 
 Langkah Auth, rules, migrasi harga grosir, dan WhatsApp ada di [DEPLOY_NOTES.md](DEPLOY_NOTES.md). Merge Git **tidak** memasang rules dan **tidak** mengubah data Firestore yang sedang hidup.
