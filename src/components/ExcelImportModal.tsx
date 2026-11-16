@@ -41,7 +41,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         merk: 'Anker',
         kategori: 'Charger & Adapter',
         subkategori: 'Fast Charger GaN',
-        modal_grosir: 135000,
+        modal_grosir: '',
         het_eceran: 199000,
         posisi_tier: 'Best',
         status_stok: 'In Stock',
@@ -49,7 +49,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         spesifikasi: 'GaN III 30W PD, ultra compact, anti-overheat shield',
         keunggulan_1: 'Merk No.1 aksesoris dunia dengan garansi resmi 18 bulan',
         keunggulan_2: 'Ngecas iPhone 50% cuma dalam 25 menit',
-        keunggulan_3: 'Margin konter tebal Rp 64.000 per unit',
+        keunggulan_3: 'Bodi kompak dan tidak mudah panas saat fast charging',
         target_profil_toko: 'Konter HP mall dan toko aksesoris premium',
         cross_sell: 'Kabel Ugreen Type-C 100W, Pelindung Kabel',
         link_gambar: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600',
@@ -62,7 +62,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         merk: 'Baseus',
         kategori: 'Charger & Adapter',
         subkategori: 'Dual Port Charger',
-        modal_grosir: 65000,
+        modal_grosir: '',
         het_eceran: 99000,
         posisi_tier: 'Better',
         status_stok: 'In Stock',
@@ -83,13 +83,13 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         merk: 'Robot',
         kategori: 'Kabel Data & Charging',
         subkategori: 'Kabel Type-C Standar',
-        modal_grosir: 12000,
+        modal_grosir: '',
         het_eceran: 25000,
         posisi_tier: 'Good',
         status_stok: 'In Stock',
         kompatibilitas: 'Semua Android Type-C (Oppo, Vivo, Xiaomi, Samsung)',
         spesifikasi: 'Bahan PVC lentur anti kusut, arus 2.4A stabil',
-        keunggulan_1: 'Modal super murah Rp 12.000, margin konter di atas 50%',
+        keunggulan_1: 'Kabel harian yang lentur untuk Android Type-C',
         keunggulan_2: 'Kemasan toples mika display menarik di kasir konter',
         keunggulan_3: 'Stok staple harian yang selalu dicari konsumen',
         target_profil_toko: 'Semua konter pulsa dan etalase toko retail',
@@ -153,7 +153,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           const specification = String(row.specification || row.spesifikasi || row.spek || '-').trim();
           const sellingPoint1 = String(row.sellingPoint1 || row.keunggulan_1 || 'Kualitas terjamin resmi').trim();
           const sellingPoint2 = String(row.sellingPoint2 || row.keunggulan_2 || 'Garansi distributor terpercaya').trim();
-          const sellingPoint3 = String(row.sellingPoint3 || row.keunggulan_3 || 'Margin konter menguntungkan').trim();
+          const sellingPoint3 = String(row.sellingPoint3 || row.keunggulan_3 || 'Siap dipakai harian').trim();
           const targetCustomer = String(row.targetCustomer || row.target_profil_toko || 'Konter HP dan toko retail').trim();
           const crossSellNotes = String(row.crossSellNotes || row.cross_sell || row.paket_terkait || '').trim();
           const imageUrl = String(row.imageUrl || row.link_gambar || row.foto || 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600').trim();
@@ -345,7 +345,11 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                       </div>
                       <p className="text-xs font-bold text-white truncate">{item.name}</p>
                       <p className="text-[10px] text-slate-400 truncate">
-                        Modal: Rp {item.wholesalePrice.toLocaleString('id-ID')} | HET: Rp{' '}
+                        Modal:{' '}
+                        {typeof item.wholesalePrice === 'number'
+                          ? `Rp ${item.wholesalePrice.toLocaleString('id-ID')}`
+                          : 'belum diisi'}{' '}
+                        | HET: Rp{' '}
                         {item.suggestedRetailPrice.toLocaleString('id-ID')}
                       </p>
                     </div>

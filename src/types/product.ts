@@ -17,8 +17,9 @@ export interface Product {
   sellingPoint1: string;
   sellingPoint2: string;
   sellingPoint3: string;
-  wholesalePrice: number; // For Canvasser / Dealer cost
-  suggestedRetailPrice: number; // MSRP for retail workshop customer
+  /** Dealer cost. Loaded only into admin memory from productAdmin/{id}. Not stored on products. */
+  wholesalePrice?: number;
+  suggestedRetailPrice: number; // HET used as the authoritative checkout price
   stockStatus: StockStatus;
   positioning: PositioningTier;
   targetCustomer: string;

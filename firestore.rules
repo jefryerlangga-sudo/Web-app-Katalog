@@ -2,6 +2,8 @@ rules_version = '2';
 // Not deployed by git merge. Publish this file from the Firebase console or CLI yourself.
 // Catalog writes require the verified master-admin email below.
 // Keep that email in sync with MASTER_ADMIN_EMAILS in src/config/app.ts.
+// products/{id} is public and must not store wholesalePrice.
+// productAdmin/{id} holds dealer cost and is readable only by the verified master admin.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
@@ -36,9 +38,17 @@ service cloud.firestore {
       return data.keys().hasAll([
         'sku', 'name', 'brand', 'category', 'subcategory', 'imageUrl',
         'specification', 'compatibility', 'sellingPoint1', 'sellingPoint2', 'sellingPoint3',
-        'wholesalePrice', 'suggestedRetailPrice', 'stockStatus', 'positioning',
+        'suggestedRetailPrice', 'stockStatus', 'positioning',
         'targetCustomer', 'isProductFocus', 'isBestSeller', 'crossSellNotes', 'isActive'
       ]) &&
+      data.keys().hasOnly([
+        'sku', 'name', 'brand', 'category', 'subcategory', 'imageUrl',
+        'specification', 'compatibility', 'sellingPoint1', 'sellingPoint2', 'sellingPoint3',
+        'suggestedRetailPrice', 'stockStatus', 'positioning',
+        'targetCustomer', 'isProductFocus', 'isBestSeller', 'crossSellNotes', 'isActive',
+        'createdAt', 'updatedAt'
+      ]) &&
+      !data.keys().hasAny(['wholesalePrice']) &&
       data.sku is string && data.sku.size() > 0 && data.sku.size() <= 64 &&
       data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
       data.brand is string && data.brand.size() <= 80 &&
@@ -50,7 +60,6 @@ service cloud.firestore {
       data.sellingPoint1 is string && data.sellingPoint1.size() <= 200 &&
       data.sellingPoint2 is string && data.sellingPoint2.size() <= 200 &&
       data.sellingPoint3 is string && data.sellingPoint3.size() <= 200 &&
-      data.wholesalePrice is number && data.wholesalePrice >= 0 &&
       data.suggestedRetailPrice is number && data.suggestedRetailPrice >= 0 &&
       data.stockStatus in ['In Stock', 'Low Stock', 'Pre-Order', 'Out of Stock'] &&
       data.positioning in ['Good', 'Better', 'Best'] &&
@@ -58,7 +67,16 @@ service cloud.firestore {
       data.isProductFocus is bool &&
       data.isBestSeller is bool &&
       data.crossSellNotes is string && data.crossSellNotes.size() <= 300 &&
-      data.isActive is bool;
+      data.isActive is bool &&
+      (!data.keys().hasAny(['createdAt']) || isIsoLike(data.createdAt)) &&
+      (!data.keys().hasAny(['updatedAt']) || isIsoLike(data.updatedAt));
+    }
+
+    function isValidProductAdmin(data) {
+      return data.keys().hasOnly(['wholesalePrice', 'updatedAt']) &&
+        data.wholesalePrice is number &&
+        data.wholesalePrice >= 0 &&
+        isIsoLike(data.updatedAt);
     }
 
     function isValidUser(data) {
@@ -157,6 +175,12 @@ service cloud.firestore {
       allow get: if isValidId(productId);
       allow list: if true;
       allow create, update: if isVerifiedMasterAdmin() && isValidId(productId) && isValidProduct(request.resource.data);
+      allow delete: if isVerifiedMasterAdmin() && isValidId(productId);
+    }
+
+    match /productAdmin/{productId} {
+      allow get, list: if isVerifiedMasterAdmin();
+      allow create, update: if isVerifiedMasterAdmin() && isValidId(productId) && isValidProductAdmin(request.resource.data);
       allow delete: if isVerifiedMasterAdmin() && isValidId(productId);
     }
 

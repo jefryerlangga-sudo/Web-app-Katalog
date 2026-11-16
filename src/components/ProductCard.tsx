@@ -7,9 +7,11 @@ import {
   Copy,
   ChevronRight,
   Shield,
+  ShoppingCart,
 } from 'lucide-react';
 import { Product } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
+import { dealerQuote, rupiah } from '../lib/money';
 
 interface ProductCardProps {
   product: Product;
@@ -23,19 +25,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     removeFromCompare,
     isInCompare,
     compareList,
+    addToCart,
   } = useCatalog();
 
   const [copiedPitch, setCopiedPitch] = useState(false);
 
   const inCompare = isInCompare(product.id || product.sku);
   const compareFull = compareList.length >= 3 && !inCompare;
-
-  // Margin calculation for Sales Mode
-  const profit = Math.max(0, product.suggestedRetailPrice - product.wholesalePrice);
-  const marginPercent =
-    product.suggestedRetailPrice > 0
-      ? Math.round((profit / product.suggestedRetailPrice) * 100)
-      : 0;
+  const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
 
   const handleCopyPitch = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -158,7 +155,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       {/* Mode Specific Pricing & Pitch Information */}
       <div className="pt-2 border-t border-slate-700/60">
-        {viewMode === 'sales' ? (
+        {viewMode === 'sales' && quote ? (
           /* SALES MODE: Modal Konter, HET, Laba Toko */
           <div className="space-y-1.5">
             <div className="flex items-baseline justify-between gap-1">
@@ -167,7 +164,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   Modal Konter (Grosir)
                 </p>
                 <p className="text-sm font-extrabold text-white font-mono">
-                  Rp {product.wholesalePrice.toLocaleString('id-ID')}
+                  {rupiah(quote.wholesale)}
                 </p>
               </div>
 
@@ -175,8 +172,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                   HET Konsumen
                 </p>
-                <p className="text-xs text-slate-300 font-mono line-through decoration-slate-500">
-                  Rp {product.suggestedRetailPrice.toLocaleString('id-ID')}
+                <p className="text-xs text-slate-300 font-mono">
+                  {rupiah(product.suggestedRetailPrice)}
                 </p>
               </div>
 
@@ -185,7 +182,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   Untung Konter
                 </p>
                 <p className="text-xs font-black text-emerald-300 font-mono leading-tight">
-                  +{marginPercent}% (Rp {profit.toLocaleString('id-ID')})
+                  +{quote.marginPercent}% ({rupiah(quote.profit)})
                 </p>
               </div>
             </div>
@@ -216,8 +213,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 Harga Eceran Resmi (HET)
               </p>
               <p className="text-base font-extrabold text-blue-400 font-mono">
-                Rp {product.suggestedRetailPrice.toLocaleString('id-ID')}
+                {rupiah(product.suggestedRetailPrice)}
               </p>
+              {viewMode === 'sales' && !quote && (
+                <p className="text-[10px] text-amber-300/90 mt-0.5">Harga grosir belum ada di data admin.</p>
+              )}
             </div>
 
             <div className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
@@ -243,6 +243,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         >
           <Scale className="w-3.5 h-3.5" />
           <span>{inCompare ? 'Bandingkan' : '+ Banding'}</span>
+        </button>
+
+        <button
+          onClick={(event) => {
+            event.stopPropagation();
+            addToCart(product, 1);
+          }}
+          disabled={product.stockStatus === 'Out of Stock' || product.isActive === false}
+          className="py-1.5 px-3 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white flex items-center gap-1"
+        >
+          <ShoppingCart className="w-3.5 h-3.5" />
+          <span>Beli</span>
         </button>
 
         <button

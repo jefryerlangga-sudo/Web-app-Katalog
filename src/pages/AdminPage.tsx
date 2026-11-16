@@ -76,7 +76,6 @@ export const AdminPage: React.FC = () => {
     sellingPoint1: '',
     sellingPoint2: '',
     sellingPoint3: '',
-    wholesalePrice: 45000,
     suggestedRetailPrice: 75000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -277,8 +276,11 @@ export const AdminPage: React.FC = () => {
                     </h3>
 
                     <p className="text-[10px] text-slate-400 font-mono mt-0.5">
-                      Modal: Rp {item.wholesalePrice.toLocaleString('id-ID')} | HET: Rp{' '}
-                      {item.suggestedRetailPrice.toLocaleString('id-ID')}
+                      Modal:{' '}
+                      {typeof item.wholesalePrice === 'number'
+                        ? `Rp ${item.wholesalePrice.toLocaleString('id-ID')}`
+                        : 'belum di productAdmin'}{' '}
+                      | HET: Rp {item.suggestedRetailPrice.toLocaleString('id-ID')}
                     </p>
                   </div>
                 </div>
@@ -438,6 +440,9 @@ export const AdminPage: React.FC = () => {
                   <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">
                     Modal Grosir (Rp) *
                   </label>
+                  <p className="text-[9px] text-slate-500 mb-1 leading-snug">
+                    Disimpan di productAdmin, tidak di dokumen publik.
+                  </p>
                   <input
                     type="number"
                     required
@@ -593,7 +598,7 @@ export const AdminPage: React.FC = () => {
                   onChange={(e) =>
                     setEditingProduct({ ...editingProduct, sellingPoint3: e.target.value })
                   }
-                  placeholder="Keunggulan 3 (cth: Laba konter tebal Rp 64.000 per unit)"
+                  placeholder="Keunggulan 3 (cth: Garansi resmi dan siap pakai harian)"
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white"
                 />
               </div>

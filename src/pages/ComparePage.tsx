@@ -8,6 +8,7 @@ import {
   Wrench,
   TrendingUp,
 } from 'lucide-react';
+import { dealerQuote, rupiah } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
 
 export const ComparePage: React.FC = () => {
@@ -91,11 +92,7 @@ export const ComparePage: React.FC = () => {
           }}
         >
           {compareList.map((product) => {
-            const profit = Math.max(0, product.suggestedRetailPrice - product.wholesalePrice);
-            const marginPercent =
-              product.suggestedRetailPrice > 0
-                ? Math.round((profit / product.suggestedRetailPrice) * 100)
-                : 0;
+            const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
 
             return (
               <div
@@ -146,24 +143,24 @@ export const ComparePage: React.FC = () => {
 
                 {/* Pricing Block (Mode Aware) */}
                 <div className="p-2.5 rounded-2xl bg-slate-900/80 border border-slate-700/80 space-y-1.5">
-                  {viewMode === 'sales' ? (
+                  {viewMode === 'sales' && quote ? (
                     <>
                       <div className="flex items-baseline justify-between text-xs">
                         <span className="text-slate-400 font-medium">Modal Konter:</span>
                         <span className="font-mono font-bold text-white">
-                          Rp {product.wholesalePrice.toLocaleString('id-ID')}
+                          {rupiah(quote.wholesale)}
                         </span>
                       </div>
                       <div className="flex items-baseline justify-between text-xs">
                         <span className="text-slate-400 font-medium">HET Eceran:</span>
                         <span className="font-mono text-slate-300">
-                          Rp {product.suggestedRetailPrice.toLocaleString('id-ID')}
+                          {rupiah(product.suggestedRetailPrice)}
                         </span>
                       </div>
                       <div className="pt-1 border-t border-slate-800 flex items-center justify-between text-xs">
                         <span className="text-emerald-400 font-bold">Laba Konter:</span>
                         <span className="font-mono font-black text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-lg border border-emerald-500/30">
-                          +{marginPercent}% (Rp {profit.toLocaleString('id-ID')})
+                          +{quote.marginPercent}% ({rupiah(quote.profit)})
                         </span>
                       </div>
                     </>

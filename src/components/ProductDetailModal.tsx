@@ -15,6 +15,7 @@ import {
   ShoppingCart,
   TrendingUp,
 } from 'lucide-react';
+import { dealerQuote, rupiah } from '../lib/money';
 import { Product } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 
@@ -42,15 +43,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   const inCompare = isInCompare(product.id || product.sku);
   const compareFull = compareList.length >= 3 && !inCompare;
-
-  // Margin math
-  const unitProfit = Math.max(0, product.suggestedRetailPrice - product.wholesalePrice);
-  const marginPercent =
-    product.suggestedRetailPrice > 0
-      ? Math.round((unitProfit / product.suggestedRetailPrice) * 100)
-      : 0;
+  const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
+  const unitProfit = quote?.profit ?? 0;
+  const marginPercent = quote?.marginPercent ?? 0;
   const totalShopProfit = unitProfit * orderQty;
-  const totalWholesaleInvestment = product.wholesalePrice * orderQty;
+  const totalWholesaleInvestment = (quote?.wholesale ?? 0) * orderQty;
 
   const handleCopyPitch = () => {
     const script = `NASKAH PITCH JUALAN: ${product.name} (${product.brand})
@@ -62,9 +59,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   3. ${product.sellingPoint3}
 • HET Eceran Resmi: Rp ${product.suggestedRetailPrice.toLocaleString('id-ID')}
 ${
-  viewMode === 'sales'
-    ? `• Modal Grosir Konter: Rp ${product.wholesalePrice.toLocaleString('id-ID')}
-• Margin Keuntungan Toko: ${marginPercent}% (Untung Rp ${unitProfit.toLocaleString('id-ID')} per pcs)`
+  quote
+    ? `• Modal Grosir Konter: ${rupiah(quote.wholesale)}
+• Margin Keuntungan Toko: ${marginPercent}% (Untung ${rupiah(unitProfit)} per pcs)`
     : ''
 }`;
 
@@ -149,7 +146,7 @@ ${
           </div>
 
           {/* Pricing & Value Box (Mode Aware) */}
-          {viewMode === 'sales' ? (
+          {viewMode === 'sales' && quote ? (
             /* INTERNAL SALES MODE: Canvasser Wholesale + Margins */
             <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-800/60 border border-slate-700 space-y-3">
               <div className="flex items-baseline justify-between border-b border-slate-700/60 pb-2.5">
@@ -158,7 +155,7 @@ ${
                     Modal Konter (Grosir)
                   </span>
                   <p className="text-xl font-extrabold text-white font-mono">
-                    Rp {product.wholesalePrice.toLocaleString('id-ID')}
+                    {rupiah(quote.wholesale)}
                   </p>
                 </div>
                 <div className="text-right">
@@ -166,7 +163,7 @@ ${
                     HET Eceran Resmi
                   </span>
                   <p className="text-base text-slate-300 font-mono">
-                    Rp {product.suggestedRetailPrice.toLocaleString('id-ID')}
+                    {rupiah(product.suggestedRetailPrice)}
                   </p>
                 </div>
                 <div className="text-right bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl">
@@ -207,7 +204,7 @@ ${
                   <div className="bg-slate-800/80 p-2 rounded-lg">
                     <span className="text-[10px] text-slate-400 block">Total Modal Belanja:</span>
                     <span className="font-mono font-bold text-slate-200">
-                      Rp {totalWholesaleInvestment.toLocaleString('id-ID')}
+                      {rupiah(totalWholesaleInvestment)}
                     </span>
                   </div>
                   <div className="bg-emerald-950/40 border border-emerald-500/30 p-2 rounded-lg">
@@ -215,7 +212,7 @@ ${
                       Potensi Laba Bersih Toko:
                     </span>
                     <span className="font-mono font-black text-emerald-300">
-                      +Rp {totalShopProfit.toLocaleString('id-ID')}
+                      +{rupiah(totalShopProfit)}
                     </span>
                   </div>
                 </div>
@@ -235,10 +232,12 @@ ${
                   Harga Eceran Tertinggi (HET)
                 </span>
                 <p className="text-2xl font-black text-white font-mono mt-0.5">
-                  Rp {product.suggestedRetailPrice.toLocaleString('id-ID')}
+                  {rupiah(product.suggestedRetailPrice)}
                 </p>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Harga resmi konsumen dengan garansi produk resmi terjamin
+                  {viewMode === 'sales'
+                    ? 'Harga grosir belum tersimpan di koleksi admin. Etalase memakai HET.'
+                    : 'Harga resmi konsumen dengan garansi produk resmi terjamin'}
                 </p>
               </div>
 

@@ -10,12 +10,14 @@ import {
 } from '../firebase/config';
 import { buildWhatsAppOrderLink, createOrder } from '../firebase/ordersService';
 import { priceCart } from '../firebase/orderPricing';
+import { applyDealerCost } from '../firebase/productRecord';
 import {
   SAMPLE_PRODUCTS,
   batchSaveProducts,
   deleteProductById,
   saveProduct,
   seedInitialCatalogIfEmpty,
+  subscribeToProductAdmin,
   subscribeToProducts,
   toggleProductActive,
 } from '../firebase/productsService';
@@ -138,6 +140,7 @@ function requireAdmin(isAdmin: boolean) {
 
 export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [adminCosts, setAdminCosts] = useState<Record<string, number>>({});
   const [usingPreviewCatalog, setUsingPreviewCatalog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -271,6 +274,18 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   useEffect(() => {
+    if (!isAdmin) {
+      setAdminCosts({});
+      return;
+    }
+    if (usingPreviewCatalog) {
+      setAdminCosts({});
+      return;
+    }
+    return subscribeToProductAdmin(setAdminCosts, () => setAdminCosts({}));
+  }, [isAdmin, usingPreviewCatalog]);
+
+  useEffect(() => {
     if (usingPreviewCatalog) return;
     setCart((prev) => {
       let changed = false;
@@ -298,11 +313,40 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   }, [products, usingPreviewCatalog]);
 
+  const catalogProducts = useMemo(
+    () => products.map((product) => applyDealerCost(product, adminCosts, isAdmin)),
+    [products, adminCosts, isAdmin]
+  );
+
   const activeProducts = useMemo(() => {
-    return products
-      .filter((product) => product.isActive !== false && isStorefrontProduct(product.category))
-      .map((product) => (isAdmin ? product : { ...product, wholesalePrice: 0 }));
-  }, [products, isAdmin]);
+    return catalogProducts.filter(
+      (product) => product.isActive !== false && isStorefrontProduct(product.category)
+    );
+  }, [catalogProducts]);
+
+  useEffect(() => {
+    setCompareList((prev) => {
+      if (prev.length === 0) return prev;
+      let changed = false;
+      const next = prev.map((item) => {
+        const fresh = catalogProducts.find(
+          (product) => (product.id || product.sku) === (item.id || item.sku)
+        );
+        if (!fresh) return item;
+        changed = true;
+        return fresh;
+      });
+      return changed ? next : prev;
+    });
+    setSelectedProduct((current) => {
+      if (!current) return current;
+      return (
+        catalogProducts.find(
+          (product) => (product.id || product.sku) === (current.id || current.sku)
+        ) ?? current
+      );
+    });
+  }, [catalogProducts]);
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartTotal = useMemo(() => {
@@ -310,11 +354,11 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
     }
     try {
-      return priceCart(cart, products).total;
+      return priceCart(cart, catalogProducts).total;
     } catch {
       return cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
     }
-  }, [cart, products, usingPreviewCatalog]);
+  }, [cart, catalogProducts, usingPreviewCatalog]);
 
   const addToCompare = (product: Product): boolean => {
     if (compareList.some((entry) => (entry.id || entry.sku) === (product.id || product.sku))) {
@@ -445,7 +489,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       customerEmail: user.email,
       customerPhone: input.customerPhone,
       cart,
-      catalog: products,
+      catalog: catalogProducts,
       note: input.note,
     });
 
@@ -462,7 +506,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <CatalogContext.Provider
       value={{
-        products,
+        products: catalogProducts,
         activeProducts,
         usingPreviewCatalog,
         loading,

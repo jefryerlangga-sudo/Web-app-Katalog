@@ -9,6 +9,11 @@ const catalog = readFileSync(new URL('../src/context/CatalogContext.tsx', import
 const orders = readFileSync(new URL('../src/firebase/ordersService.ts', import.meta.url), 'utf8');
 const whatsapp = readFileSync(new URL('../src/firebase/whatsappLink.ts', import.meta.url), 'utf8');
 const users = readFileSync(new URL('../src/firebase/usersService.ts', import.meta.url), 'utf8');
+const ai = readFileSync(new URL('../src/server/aiHandler.ts', import.meta.url), 'utf8');
+const server = readFileSync(new URL('../server.ts', import.meta.url), 'utf8');
+const pkg = readFileSync(new URL('../package.json', import.meta.url), 'utf8');
+const envExample = readFileSync(new URL('../.env.example', import.meta.url), 'utf8');
+const productRecord = readFileSync(new URL('../src/firebase/productRecord.ts', import.meta.url), 'utf8');
 
 test('rules and app share the existing owner email and require a verified token', () => {
   const email = 'jefryerlangga@gmail.com';
@@ -40,6 +45,25 @@ test('seed data and guest UI no longer treat visitors as admin or motorcycle-par
   assert.equal(products.includes('deleteDoc(collection'), false);
 });
 
+test('dealer cost lives in productAdmin and the assistant does not use Gemini', () => {
+  assert.match(rules, /match \/productAdmin\/\{productId\}/);
+  assert.match(rules, /function isValidProductAdmin\(/);
+  assert.match(rules, /!data\.keys\(\)\.hasAny\(\['wholesalePrice'\]\)/);
+  const productBlock = rules.slice(rules.indexOf('match /products/'), rules.indexOf('match /productAdmin/'));
+  assert.equal(productBlock.includes('wholesalePrice'), false);
+  assert.match(productRecord, /PRODUCT_ADMIN_COLLECTION = 'productAdmin'/);
+  assert.match(products, /PRODUCT_ADMIN_COLLECTION/);
+  assert.match(products, /readPublicProduct/);
+  assert.equal(ai.includes('@google/genai'), false);
+  assert.equal(ai.includes('GEMINI_API_KEY'), false);
+  assert.match(ai, /XAI_API_KEY/);
+  assert.match(ai, /grok-4\.7/);
+  assert.equal(server.includes('@google/genai'), false);
+  assert.equal(pkg.includes('@google/genai'), false);
+  assert.equal(pkg.includes('GEMINI_API_KEY'), false);
+  assert.match(envExample, /XAI_API_KEY/);
+  assert.equal(envExample.includes('GEMINI_API_KEY'), false);
+});
 test('order code does not call a WhatsApp or payment API', () => {
   const orderCode = `${orders}\n${whatsapp}`;
   assert.equal(orderCode.includes('fetch('), false);

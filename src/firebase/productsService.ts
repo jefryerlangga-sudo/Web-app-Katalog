@@ -1,10 +1,9 @@
 import {
   collection,
+  deleteField,
   doc,
+  getDoc,
   getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
   onSnapshot,
   Unsubscribe,
   writeBatch,
@@ -12,8 +11,15 @@ import {
 import { isMasterAdminUser } from '../config/app';
 import { auth, db, handleFirestoreError, OperationType } from './config';
 import { Product } from '../types/product';
+import {
+  PRODUCT_ADMIN_COLLECTION,
+  PRODUCTS_COLLECTION,
+  planActiveToggle,
+  readPublicProduct,
+  splitCatalogWrite,
+} from './productRecord';
 
-const COLLECTION_NAME = 'products';
+const COLLECTION_NAME = PRODUCTS_COLLECTION;
 
 export const SAMPLE_PRODUCTS: Product[] = [
   // --- KATEGORI AKSESORIS HANDPHONE (SMARTPHONE ACCESSORIES) ---
@@ -28,8 +34,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     compatibility: 'iPhone 13/14/15/16, Samsung Galaxy S23/S24/A55, iPad, Google Pixel, Xiaomi',
     sellingPoint1: 'Merk No.1 charging aksesoris di dunia dengan garansi resmi 18 bulan ganti baru.',
     sellingPoint2: 'Mengisi daya iPhone 50% hanya dalam 25 menit tanpa panas berlebih berkat GaN III.',
-    sellingPoint3: 'Produk kelas premium dengan margin konter tebal (Rp 64.000 per unit) dan repeat buyer tinggi.',
-    wholesalePrice: 135000,
+    sellingPoint3: 'Bodi kompak, tidak mudah panas, dan nyaman untuk fast charging harian.',
     suggestedRetailPrice: 199000,
     stockStatus: 'In Stock',
     positioning: 'Best',
@@ -51,7 +56,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
     sellingPoint1: 'Bisa charge 2 HP sekaligus (iPhone & Android) hanya dengan satu colokan adaptor.',
     sellingPoint2: 'Harga sangat terjangkau di bawah 100 ribu dengan kualitas sertifikasi multi-proteksi aman.',
     sellingPoint3: 'Item paling laris di konter pinggir jalan, perputaran stok sangat cepat.',
-    wholesalePrice: 65000,
     suggestedRetailPrice: 99000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -70,10 +74,9 @@ export const SAMPLE_PRODUCTS: Product[] = [
     imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80',
     specification: 'Output total 5V/2.4A dual USB-A, bahan PC fireproof casing, smart chip overcharge protection, pin plug standar Indonesia.',
     compatibility: 'Universal semua HP Android entry-level, earphone TWS, kipas portable, smartwatch',
-    sellingPoint1: 'Harga modal sangat murah Rp 24.000, konter bisa jual Rp 45.000 (margin untung 47%).',
+    sellingPoint1: 'Adaptor dual USB ringkas untuk HP entry-level dan perangkat kecil.',
     sellingPoint2: 'Brand Robot sangat terkenal dan dipercaya konsumen kelas menengah ke bawah.',
     sellingPoint3: 'Garansi resmi 1 tahun ganti baru langsung dari distributor resmi.',
-    wholesalePrice: 24000,
     suggestedRetailPrice: 45000,
     stockStatus: 'In Stock',
     positioning: 'Good',
@@ -95,7 +98,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
     sellingPoint1: 'Support fast charging super cepat hingga 100W, bisa dipakai untuk HP flagship dan laptop.',
     sellingPoint2: 'Bahan braided nylon anti kusut dan anti putus dengan pelindung kepala alloy solid.',
     sellingPoint3: 'Canvasser Focus Item dengan promo bundling charger Anker.',
-    wholesalePrice: 48000,
     suggestedRetailPrice: 75000,
     stockStatus: 'In Stock',
     positioning: 'Best',
@@ -117,7 +119,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
     sellingPoint1: 'Anti-popup error iOS certified, konektor kepala kuat tidak mudah patah saat ditarik.',
     sellingPoint2: 'Solusi kabel awet pengganti kabel bawaan iPhone yang cepat sobek/kuning.',
     sellingPoint3: 'Item repeat order nomor 1 untuk pemilik iPhone generasi 11 hingga 14.',
-    wholesalePrice: 32000,
     suggestedRetailPrice: 55000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -136,10 +137,9 @@ export const SAMPLE_PRODUCTS: Product[] = [
     imageUrl: 'https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?w=600&auto=format&fit=crop&q=80',
     specification: 'Kabel PVC elastis tahan lekukan, tembaga murni oxygen-free, arus stabil 2.4A, transmisi data 480Mbps.',
     compatibility: 'Semua HP Android Type-C (Oppo, Vivo, Xiaomi, Samsung A-series, Infinix, Realme)',
-    sellingPoint1: 'Modal super ekonomis cuma Rp 12.000, bisa dijual konter Rp 25.000 (margin di atas 50%!).',
+    sellingPoint1: 'Kabel harian yang lentur dan mudah diganti saat kabel lama rusak atau tertinggal.',
     sellingPoint2: 'Kemasan toples mika display menarik untuk ditaruh langsung di etalase depan kasir konter.',
     sellingPoint3: 'Produk staple harian yang selalu dibeli konsumen saat kabel HP lamanya tertinggal atau rusak.',
-    wholesalePrice: 12000,
     suggestedRetailPrice: 25000,
     stockStatus: 'In Stock',
     positioning: 'Good',
@@ -160,8 +160,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     compatibility: 'Universal semua smartphone Bluetooth (iOS, Android, Windows, Mac)',
     sellingPoint1: 'Kualitas bass paling nendang dan jernih di kelasnya, rating 4.9 di marketplace.',
     sellingPoint2: 'Garansi resmi Anker 18 bulan ganti baru tanpa ribet servis.',
-    sellingPoint3: 'Keuntungan margin konter Rp 84.000 per unit, sangat mudah dipasarkan ke anak muda.',
-    wholesalePrice: 185000,
+    sellingPoint3: 'Baterai panjang dan mikrofon jernih untuk panggilan serta musik harian.',
     suggestedRetailPrice: 269000,
     stockStatus: 'In Stock',
     positioning: 'Best',
@@ -182,8 +181,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     compatibility: 'Universal smartphone Android & iPhone',
     sellingPoint1: 'TWS berkualitas dengan harga eceran konter di bawah 130 ribu rupiah.',
     sellingPoint2: 'Bentuk semi-in-ear sangat nyaman dipakai berjam-jam tanpa sakit telinga.',
-    sellingPoint3: 'Modal Rp 78.000 dengan margin laba Rp 47.000 bersih untuk pemilik konter.',
-    wholesalePrice: 78000,
+    sellingPoint3: 'Pilihan TWS terjangkau dengan baterai yang cukup untuk aktivitas seharian.',
     suggestedRetailPrice: 125000,
     stockStatus: 'In Stock',
     positioning: 'Good',
@@ -205,7 +203,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
     sellingPoint1: 'Display LED angka digital menunjukkan sisa baterai secara presisi, bukan lampu titik biasa.',
     sellingPoint2: 'Bodi slim matte anti gores dan tidak meninggalkan sidik jari.',
     sellingPoint3: 'Garansi resmi 12 bulan dari Baseus Indonesia.',
-    wholesalePrice: 145000,
     suggestedRetailPrice: 219000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -226,8 +223,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     compatibility: 'iPhone 12/13/14/15/16 Series (Magsafe snap langsung) & Android Qi wireless',
     sellingPoint1: 'Menempel kuat di belakang iPhone tanpa kabel menjuntai, dilengkapi stand lipat untuk nonton.',
     sellingPoint2: 'Produk lifestyle paling diminati anak muda pengguna iPhone.',
-    sellingPoint3: 'Margin penjualan fantastis Rp 100.000 per unit untuk konter gadget.',
-    wholesalePrice: 230000,
+    sellingPoint3: 'Menempel di iPhone untuk isi daya sambil menonton dengan kickstand.',
     suggestedRetailPrice: 330000,
     stockStatus: 'In Stock',
     positioning: 'Best',
@@ -249,7 +245,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
     sellingPoint1: 'Sangat aman dari hujan deras dan getaran mesin motor yang sering merusak OIS kamera iPhone.',
     sellingPoint2: 'Target pasar jutaan driver ojol (Grab/Gojek/ShopeeFood) dan kurir motoris harian.',
     sellingPoint3: 'Produk cepat laku di konter HP dan toko aksesoris pinggir jalan.',
-    wholesalePrice: 38000,
     suggestedRetailPrice: 65000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -268,10 +263,9 @@ export const SAMPLE_PRODUCTS: Product[] = [
     imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&auto=format&fit=crop&q=80',
     specification: 'Lapisan keramik fleksibel tidak bisa pecah, filter privasi anti-spy 28 derajat (orang sebelah tidak bisa mengintip), finishing matte anti minyak dan sidik jari.',
     compatibility: 'iPhone 11/12/13/14/15/16, Samsung A-series, Oppo Reno, Vivo Y-series, Redmi Note',
-    sellingPoint1: 'Keuntungan kotor tertinggi bagi konter HP: modal Rp 8.500, pasang di tempat Rp 25.000 (margin 66%!).',
+    sellingPoint1: 'Privasi layar anti-intip dan lapisan matte anti sidik jari, siap dipasang di konter.',
     sellingPoint2: 'Bahan ceramic fleksibel tidak akan retak atau gompal di pinggir saat disimpan di kantong celana.',
     sellingPoint3: 'Fitur anti-spy menjaga privasi chat dan m-banking saat di tempat umum.',
-    wholesalePrice: 8500,
     suggestedRetailPrice: 25000,
     stockStatus: 'In Stock',
     positioning: 'Good',
@@ -292,8 +286,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     compatibility: 'iPhone 13, 14, 15, 16 Series (Reguler, Pro, Pro Max)',
     sellingPoint1: 'Magnet Magsafe nempel kencang ke powerbank wireless, car mount, dan dompet magnetic.',
     sellingPoint2: 'Proteksi sudut berstandar militer namun tetap tipis dan elegan.',
-    sellingPoint3: 'Modal Rp 28.000 dijual eceran Rp 55.000 - Rp 65.000 sangat laku di konter.',
-    wholesalePrice: 28000,
+    sellingPoint3: 'Casing harian yang tetap tipis dengan sudut tahan benturan.',
     suggestedRetailPrice: 55000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -315,10 +308,7 @@ export async function subscribeToProducts(
     (snapshot) => {
       const items: Product[] = [];
       snapshot.forEach((docSnap) => {
-        items.push({
-          id: docSnap.id,
-          ...(docSnap.data() as Product),
-        });
+        items.push(readPublicProduct(docSnap.id, docSnap.data() as Record<string, unknown>));
       });
       onSuccess(items);
     },
@@ -337,10 +327,7 @@ export async function getProductsOnce(): Promise<Product[]> {
     const snapshot = await getDocs(productsCol);
     const items: Product[] = [];
     snapshot.forEach((docSnap) => {
-      items.push({
-        id: docSnap.id,
-        ...(docSnap.data() as Product),
-      });
+      items.push(readPublicProduct(docSnap.id, docSnap.data() as Record<string, unknown>));
     });
     return items;
   } catch (error) {
@@ -349,35 +336,44 @@ export async function getProductsOnce(): Promise<Product[]> {
   }
 }
 
-export async function saveProduct(product: Product): Promise<string> {
-  const id = product.id || `PRD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-  const cleanData: Product = {
-    sku: product.sku.trim(),
-    name: product.name.trim(),
-    brand: product.brand.trim(),
-    category: product.category.trim(),
-    subcategory: product.subcategory.trim(),
-    imageUrl: product.imageUrl.trim() || 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600',
-    specification: product.specification.trim(),
-    compatibility: product.compatibility.trim(),
-    sellingPoint1: product.sellingPoint1.trim(),
-    sellingPoint2: product.sellingPoint2.trim(),
-    sellingPoint3: product.sellingPoint3.trim(),
-    wholesalePrice: Number(product.wholesalePrice) || 0,
-    suggestedRetailPrice: Number(product.suggestedRetailPrice) || 0,
-    stockStatus: product.stockStatus || 'In Stock',
-    positioning: product.positioning || 'Better',
-    targetCustomer: product.targetCustomer.trim(),
-    isProductFocus: Boolean(product.isProductFocus),
-    isBestSeller: Boolean(product.isBestSeller),
-    crossSellNotes: product.crossSellNotes.trim(),
-    isActive: Boolean(product.isActive),
-    updatedAt: new Date().toISOString(),
-    createdAt: product.createdAt || new Date().toISOString(),
-  };
+export function subscribeToProductAdmin(
+  onSuccess: (costs: Record<string, number>) => void,
+  onError?: (err: Error) => void
+): Unsubscribe {
+  return onSnapshot(
+    collection(db, PRODUCT_ADMIN_COLLECTION),
+    (snapshot) => {
+      const costs: Record<string, number> = {};
+      snapshot.forEach((docSnap) => {
+        const price = docSnap.data().wholesalePrice;
+        if (typeof price === 'number' && Number.isFinite(price)) {
+          costs[docSnap.id] = price;
+        }
+      });
+      onSuccess(costs);
+    },
+    (error) => {
+      console.warn('productAdmin listener warning:', error);
+      if (onError) onError(error);
+    }
+  );
+}
 
+function writeSplit(batch: ReturnType<typeof writeBatch>, id: string, product: Product, now?: string) {
+  const { publicData, adminData } = splitCatalogWrite(product, now);
+  batch.set(doc(db, COLLECTION_NAME, id), publicData);
+  batch.set(doc(db, PRODUCT_ADMIN_COLLECTION, id), adminData);
+}
+
+export async function saveProduct(product: Product): Promise<string> {
+  const id = (product.id || `PRD-${Date.now()}-${Math.floor(Math.random() * 1000)}`).replace(
+    /[^a-zA-Z0-9_-]/g,
+    '_'
+  );
+  const batch = writeBatch(db);
+  writeSplit(batch, id, product);
   try {
-    await setDoc(doc(db, COLLECTION_NAME, id), cleanData, { merge: true });
+    await batch.commit();
     return id;
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `${COLLECTION_NAME}/${id}`);
@@ -385,19 +381,38 @@ export async function saveProduct(product: Product): Promise<string> {
 }
 
 export async function toggleProductActive(id: string, currentStatus: boolean): Promise<void> {
+  const now = new Date().toISOString();
+  const publicRef = doc(db, COLLECTION_NAME, id);
+  const adminRef = doc(db, PRODUCT_ADMIN_COLLECTION, id);
   try {
-    await updateDoc(doc(db, COLLECTION_NAME, id), {
-      isActive: !currentStatus,
-      updatedAt: new Date().toISOString(),
+    const [publicSnap, adminSnap] = await Promise.all([getDoc(publicRef), getDoc(adminRef)]);
+    const plan = planActiveToggle({
+      currentActive: currentStatus,
+      publicWholesale: publicSnap.data()?.wholesalePrice,
+      adminWholesale: adminSnap.data()?.wholesalePrice,
+      now,
     });
+    const batch = writeBatch(db);
+    if (plan.adminWrite) {
+      batch.set(adminRef, plan.adminWrite);
+    }
+    batch.update(publicRef, {
+      isActive: plan.isActive,
+      updatedAt: now,
+      wholesalePrice: deleteField(),
+    });
+    await batch.commit();
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `${COLLECTION_NAME}/${id}`);
   }
 }
 
 export async function deleteProductById(id: string): Promise<void> {
+  const batch = writeBatch(db);
+  batch.delete(doc(db, COLLECTION_NAME, id));
+  batch.delete(doc(db, PRODUCT_ADMIN_COLLECTION, id));
   try {
-    await deleteDoc(doc(db, COLLECTION_NAME, id));
+    await batch.commit();
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `${COLLECTION_NAME}/${id}`);
   }
@@ -418,11 +433,8 @@ export async function seedInitialCatalogIfEmpty(): Promise<{ seeded: number; exi
   const batch = writeBatch(db);
   for (const sample of SAMPLE_PRODUCTS) {
     const id = sample.sku.replace(/[^a-zA-Z0-9_-]/g, '_');
-    batch.set(doc(db, COLLECTION_NAME, id), {
-      ...sample,
-      createdAt: now,
-      updatedAt: now,
-    });
+    const { publicData } = splitCatalogWrite({ ...sample, createdAt: now }, now);
+    batch.set(doc(db, COLLECTION_NAME, id), publicData);
   }
   await batch.commit();
   return { seeded: SAMPLE_PRODUCTS.length, existing: 0 };
@@ -434,35 +446,22 @@ export async function batchSaveProducts(productList: Product[]): Promise<number>
     let count = 0;
     for (const prod of productList) {
       if (!prod.sku || !prod.name) continue;
-      const id = (prod.id || prod.sku).replace(/[^a-zA-Z0-9_-]/g, '_');
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const cleanData: Product = {
-        sku: prod.sku.trim(),
-        name: prod.name.trim(),
+      const id = (prod.id || prod.sku).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 128);
+      writeSplit(batch, id, {
+        ...prod,
         brand: prod.brand?.trim() || 'Generic',
         category: prod.category?.trim() || 'Charger & Adapter',
         subcategory: prod.subcategory?.trim() || 'Lainnya',
-        imageUrl:
-          prod.imageUrl?.trim() ||
-          'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600',
         specification: prod.specification?.trim() || 'Spesifikasi standar pabrik',
         compatibility: prod.compatibility?.trim() || 'Universal Smartphone',
         sellingPoint1: prod.sellingPoint1?.trim() || 'Kualitas terjamin',
         sellingPoint2: prod.sellingPoint2?.trim() || 'Garansi resmi terpercaya',
-        sellingPoint3: prod.sellingPoint3?.trim() || 'Margin konter menguntungkan',
-        wholesalePrice: Number(prod.wholesalePrice) || 0,
-        suggestedRetailPrice: Number(prod.suggestedRetailPrice) || 0,
-        stockStatus: (prod.stockStatus as any) || 'In Stock',
-        positioning: (prod.positioning as any) || 'Better',
+        sellingPoint3: prod.sellingPoint3?.trim() || 'Siap dipakai harian',
+        stockStatus: prod.stockStatus || 'In Stock',
+        positioning: prod.positioning || 'Better',
         targetCustomer: prod.targetCustomer?.trim() || 'Konter HP dan toko retail',
-        isProductFocus: Boolean(prod.isProductFocus),
-        isBestSeller: Boolean(prod.isBestSeller),
-        crossSellNotes: prod.crossSellNotes?.trim() || '',
         isActive: prod.isActive !== false,
-        createdAt: prod.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      batch.set(docRef, cleanData, { merge: true });
+      });
       count++;
     }
     await batch.commit();

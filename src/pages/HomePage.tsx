@@ -10,6 +10,7 @@ import {
   Percent,
   CheckCircle2,
 } from 'lucide-react';
+import { dealerQuote } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 
@@ -48,13 +49,12 @@ export const HomePage: React.FC = () => {
           p.name.toLowerCase().includes(selectedDevice.toLowerCase())
         );
 
-  // Compute average margin
-  const avgMargin = Math.round(
-    activeProducts.reduce((acc, curr) => {
-      const profit = Math.max(0, curr.suggestedRetailPrice - curr.wholesalePrice);
-      return acc + (curr.suggestedRetailPrice > 0 ? (profit / curr.suggestedRetailPrice) * 100 : 0);
-    }, 0) / (activeProducts.length || 1)
-  );
+  const marginSamples = activeProducts
+    .map((product) => dealerQuote(product.suggestedRetailPrice, product.wholesalePrice))
+    .filter((quote): quote is NonNullable<typeof quote> => quote != null);
+  const avgMargin = marginSamples.length
+    ? Math.round(marginSamples.reduce((sum, quote) => sum + quote.marginPercent, 0) / marginSamples.length)
+    : null;
 
   const handleSelectDevice = (device: string) => {
     setSelectedDevice(device);
@@ -117,7 +117,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           <div className="bg-slate-900/40 p-2 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400 block font-medium">Fast Moving</span>
+            <span className="text-[10px] text-slate-400 block font-medium">Terlaris</span>
             <span className="text-sm font-bold text-amber-400 flex items-center gap-1 font-mono">
               <Trophy className="w-3.5 h-3.5" /> {bestSellerProducts.length} Item
             </span>
@@ -130,7 +130,7 @@ export const HomePage: React.FC = () => {
             <span className="text-sm font-bold text-emerald-400 flex items-center gap-1 font-mono">
               {viewMode === 'sales' ? (
                 <>
-                  <Percent className="w-3.5 h-3.5" /> +{avgMargin}%
+                  <Percent className="w-3.5 h-3.5" /> {avgMargin == null ? '—' : `+${avgMargin}%`}
                 </>
               ) : (
                 <>
@@ -212,10 +212,10 @@ export const HomePage: React.FC = () => {
               </span>
               <div>
                 <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">
-                  Dorongan Prioritas Manajemen
+                  Pilihan PortalTech
                 </span>
                 <h3 className="text-sm font-bold text-white leading-tight">
-                  Kampanye Produk Fokus Bulan Ini
+                  Produk fokus minggu ini
                 </h3>
               </div>
             </div>
@@ -254,7 +254,7 @@ export const HomePage: React.FC = () => {
               </span>
             </h4>
             <p className="text-[11px] text-slate-300">
-              Butuh saran pitch, kecocokan tipe HP, atau opsi Good/Better/Best?
+              Tanya Grok soal charger, kabel, atau tier Good / Better / Best.
             </p>
           </div>
         </div>
