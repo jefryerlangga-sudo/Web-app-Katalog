@@ -80,9 +80,7 @@ export function splitCatalogWrite(
     brand: clip(product.brand, 80),
     category: clip(product.category, 80),
     subcategory: clip(product.subcategory, 80),
-    imageUrl:
-      clip(product.imageUrl, 500) ||
-      'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600',
+    imageUrl: clip(product.imageUrl, 500),
     specification: clip(product.specification, 1000),
     compatibility: clip(product.compatibility, 600),
     sellingPoint1: clip(product.sellingPoint1, 200),

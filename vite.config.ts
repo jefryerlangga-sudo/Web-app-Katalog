@@ -10,6 +10,32 @@ function apiServerPlugin() {
   return {
     name: 'api-server-middleware',
     configureServer(server: any) {
+      server.middlewares.use('/api/catalog', (req: any, res: any) => {
+        if (req.method !== 'GET' && req.method !== 'HEAD') {
+          res.statusCode = 405;
+          res.end();
+          return;
+        }
+        (async () => {
+          try {
+            const { handleCatalogRequest } = await server.ssrLoadModule('/src/server/catalogHandler.ts');
+            const response = await handleCatalogRequest(
+              new Request('http://localhost/api/catalog', { method: req.method })
+            );
+            res.statusCode = response.status;
+            response.headers.forEach((value: string, key: string) => {
+              res.setHeader(key, value);
+            });
+            res.end(Buffer.from(await response.arrayBuffer()));
+          } catch (err: any) {
+            console.error('Error handling catalog in dev middleware:', err);
+            res.statusCode = 502;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Katalog tidak dapat dimuat' }));
+          }
+        })();
+      });
+
       server.middlewares.use('/api/ai-assistant', (req: any, res: any) => {
         if (req.method === 'POST') {
           let body = '';

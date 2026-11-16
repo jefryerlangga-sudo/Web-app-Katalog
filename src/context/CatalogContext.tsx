@@ -1,6 +1,8 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { APP_NAME, isStorefrontProduct } from '../config/app';
+import { BatchSaveProgress } from '../firebase/catalogBatch';
+import { fetchPublicCatalog, readCatalogCache, writeCatalogCache } from '../lib/publicCatalog';
 import {
   auth,
   loginWithEmail,
@@ -18,6 +20,7 @@ import {
   saveProduct,
   seedInitialCatalogIfEmpty,
   subscribeToProductAdmin,
+  getProductsOnce,
   subscribeToProducts,
   toggleProductActive,
 } from '../firebase/productsService';
@@ -64,7 +67,10 @@ interface CatalogContextType {
   logout: () => Promise<void>;
   seedData: () => Promise<{ seeded: number; existing: number }>;
   saveProductItem: (product: Product) => Promise<string>;
-  batchSaveProductItems: (products: Product[]) => Promise<number>;
+  batchSaveProductItems: (
+    products: Product[],
+    onProgress?: (progress: BatchSaveProgress) => void
+  ) => Promise<number>;
   toggleActiveItem: (id: string, current: boolean) => Promise<void>;
   deleteProductItem: (id: string) => Promise<void>;
   currentTab: string;
@@ -227,10 +233,81 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   useEffect(() => {
+    const cached = readCatalogCache();
+    if (!cached || cached.length === 0) return;
+    setProducts(cached);
+    setUsingPreviewCatalog(false);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!authReady) return;
     let unsubscribe: (() => void) | null = null;
     let active = true;
 
-    async function initCatalog() {
+    const showSamples = (message: string) => {
+      if (!active) return;
+      setProducts(SAMPLE_PRODUCTS);
+      setUsingPreviewCatalog(true);
+      setError(message);
+      setLoading(false);
+    };
+
+    const showProducts = (items: Product[], preview: boolean) => {
+      if (!active) return;
+      setProducts(items);
+      setUsingPreviewCatalog(preview);
+      if (!preview) setError(null);
+      setLoading(false);
+    };
+
+    async function loadGuestCatalog() {
+      const cached = readCatalogCache();
+      if (!cached) setLoading(true);
+      try {
+        const items = await fetchPublicCatalog();
+        if (!active) return;
+        if (items.length === 0) {
+          setProducts(SAMPLE_PRODUCTS);
+          setUsingPreviewCatalog(true);
+          setError(null);
+          setLoading(false);
+          return;
+        }
+        writeCatalogCache(items);
+        showProducts(items, false);
+      } catch (err) {
+        if (!active) return;
+        console.warn('Public catalog endpoint failed, falling back to Firestore:', err);
+        try {
+          const items = await getProductsOnce();
+          if (!active) return;
+          if (items.length === 0) {
+            if (cached) {
+              showProducts(cached, false);
+              setError('Katalog online belum bisa dimuat. Menampilkan salinan tersimpan.');
+              return;
+            }
+            showSamples('Katalog Firestore tidak dapat dimuat. Menampilkan sampel lokal. Checkout dimatikan.');
+            return;
+          }
+          writeCatalogCache(items);
+          showProducts(items, false);
+        } catch (fallbackErr) {
+          if (!active) return;
+          console.error('Firestore catalog fallback failed:', fallbackErr);
+          if (cached) {
+            showProducts(cached, false);
+            setError('Katalog online belum bisa dimuat. Menampilkan salinan tersimpan.');
+            return;
+          }
+          const message = fallbackErr instanceof Error ? fallbackErr.message : 'Database connection error';
+          showSamples(message);
+        }
+      }
+    }
+
+    async function loadAdminCatalog() {
       try {
         setLoading(true);
         const unsub = await subscribeToProducts(
@@ -242,36 +319,34 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
             } else {
               setProducts(items);
               setUsingPreviewCatalog(false);
+              setError(null);
             }
             setLoading(false);
           },
           (err) => {
             if (!active) return;
             console.error('Subscription error:', err);
-            setProducts(SAMPLE_PRODUCTS);
-            setUsingPreviewCatalog(true);
-            setError('Katalog Firestore tidak dapat dimuat. Menampilkan sampel lokal. Checkout dimatikan.');
-            setLoading(false);
+            showSamples('Katalog Firestore tidak dapat dimuat. Menampilkan sampel lokal. Checkout dimatikan.');
           }
         );
         unsubscribe = unsub;
       } catch (err: unknown) {
-        if (!active) return;
         const message = err instanceof Error ? err.message : 'Database connection error';
-        setProducts(SAMPLE_PRODUCTS);
-        setUsingPreviewCatalog(true);
-        setError(message);
-        setLoading(false);
+        showSamples(message);
       }
     }
 
-    initCatalog();
+    if (isAdmin) {
+      loadAdminCatalog();
+    } else {
+      loadGuestCatalog();
+    }
 
     return () => {
       active = false;
       if (unsubscribe) unsubscribe();
     };
-  }, []);
+  }, [authReady, isAdmin]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -408,9 +483,12 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return saveProduct(prod);
   };
 
-  const batchSaveProductItems = async (items: Product[]) => {
+  const batchSaveProductItems = async (
+    items: Product[],
+    onProgress?: (progress: BatchSaveProgress) => void
+  ) => {
     requireAdmin(isAdmin);
-    return batchSaveProducts(items);
+    return batchSaveProducts(items, onProgress);
   };
 
   const toggleActiveItem = async (id: string, current: boolean) => {

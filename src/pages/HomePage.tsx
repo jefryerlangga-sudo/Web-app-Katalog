@@ -10,7 +10,7 @@ import {
   Percent,
   CheckCircle2,
 } from 'lucide-react';
-import { APP_NAME } from '../config/app';
+import { APP_NAME, listStorefrontCategories } from '../config/app';
 import { dealerQuote } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
@@ -278,23 +278,26 @@ export const HomePage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          {[
-            { name: 'Charger & Adapter', count: 3, desc: 'GaN 30W, Dual Port, Travel', color: 'from-amber-900/40' },
-            { name: 'Kabel Data & Charging', count: 3, desc: 'Type-C 100W, Lightning, USB', color: 'from-blue-900/40' },
-            { name: 'Audio & TWS Earbuds', count: 2, desc: 'Anker Soundcore, Robot TWS', color: 'from-purple-900/40' },
-            { name: 'Powerbank & Baterai', count: 2, desc: 'Magsafe Wireless, 10000mAh', color: 'from-emerald-900/40' },
-            { name: 'Tempered Glass & Pelindung', count: 1, desc: '9D Ceramic Anti-Spy', color: 'from-rose-900/40' },
-            { name: 'Holder & Mount HP', count: 1, desc: 'Holder Motor Ojol Waterproof', color: 'from-cyan-900/40' },
-          ].map((cat) => (
-            <button
-              key={cat.name}
-              onClick={() => handleCategoryClick(cat.name)}
-              className={`p-3 rounded-2xl bg-gradient-to-br ${cat.color} to-slate-800/80 border border-slate-700/80 text-left hover:border-slate-600 transition-all active:scale-95`}
-            >
-              <h3 className="text-xs font-bold text-white line-clamp-1">{cat.name}</h3>
-              <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{cat.desc}</p>
-            </button>
-          ))}
+          {listStorefrontCategories(activeProducts.map((product) => product.category))
+            .map((name) => ({
+              name,
+              count: activeProducts.filter(
+                (product) => product.category.toLowerCase() === name.toLowerCase()
+              ).length,
+            }))
+            .filter((category) => category.count > 0)
+            .map(({ name, count }) => {
+            return (
+              <button
+                key={name}
+                onClick={() => handleCategoryClick(name)}
+                className="p-3 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-800/80 border border-slate-700/80 text-left hover:border-slate-600 transition-all active:scale-95"
+              >
+                <h3 className="text-xs font-bold text-white line-clamp-1">{name}</h3>
+                <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{count} SKU</p>
+              </button>
+            );
+          })}
         </div>
       </div>
 

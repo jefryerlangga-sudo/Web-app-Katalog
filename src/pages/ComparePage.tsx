@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { dealerQuote, rupiah } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
+import { ProductImage } from '../components/ProductImage';
 
 export const ComparePage: React.FC = () => {
   const {
@@ -111,15 +112,7 @@ export const ComparePage: React.FC = () => {
                 {/* Media and Identity */}
                 <div className="space-y-2">
                   <div className="relative w-full h-36 rounded-2xl bg-slate-950 overflow-hidden border border-slate-700/60">
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400';
-                      }}
-                    />
+                    <ProductImage src={product.imageUrl} alt={product.name} className="w-full h-full" />
                     <span
                       className={`absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border shadow-sm ${
                         tierColors[product.positioning]

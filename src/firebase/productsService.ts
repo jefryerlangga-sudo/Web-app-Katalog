@@ -12,6 +12,12 @@ import { isMasterAdminUser } from '../config/app';
 import { auth, db, handleFirestoreError, OperationType } from './config';
 import { Product } from '../types/product';
 import {
+  BatchSaveProgress,
+  PRODUCTS_PER_BATCH,
+  commitInChunks,
+  prepareCatalogWrites,
+} from './catalogBatch';
+import {
   PRODUCT_ADMIN_COLLECTION,
   PRODUCTS_COLLECTION,
   planActiveToggle,
@@ -332,7 +338,7 @@ export async function getProductsOnce(): Promise<Product[]> {
     return items;
   } catch (error) {
     console.warn('getProductsOnce failed:', error);
-    return [];
+    throw error;
   }
 }
 
@@ -440,34 +446,37 @@ export async function seedInitialCatalogIfEmpty(): Promise<{ seeded: number; exi
   return { seeded: SAMPLE_PRODUCTS.length, existing: 0 };
 }
 
-export async function batchSaveProducts(productList: Product[]): Promise<number> {
-  try {
-    const batch = writeBatch(db);
-    let count = 0;
-    for (const prod of productList) {
-      if (!prod.sku || !prod.name) continue;
-      const id = (prod.id || prod.sku).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 128);
-      writeSplit(batch, id, {
-        ...prod,
-        brand: prod.brand?.trim() || 'Generic',
-        category: prod.category?.trim() || 'Charger & Adapter',
-        subcategory: prod.subcategory?.trim() || 'Lainnya',
-        specification: prod.specification?.trim() || 'Spesifikasi standar pabrik',
-        compatibility: prod.compatibility?.trim() || 'Universal Smartphone',
-        sellingPoint1: prod.sellingPoint1?.trim() || 'Kualitas terjamin',
-        sellingPoint2: prod.sellingPoint2?.trim() || 'Garansi resmi terpercaya',
-        sellingPoint3: prod.sellingPoint3?.trim() || 'Siap dipakai harian',
-        stockStatus: prod.stockStatus || 'In Stock',
-        positioning: prod.positioning || 'Better',
-        targetCustomer: prod.targetCustomer?.trim() || 'Konter HP dan toko retail',
-        isActive: prod.isActive !== false,
-      });
-      count++;
-    }
-    await batch.commit();
-    return count;
-  } catch (error) {
-    handleFirestoreError(error, OperationType.WRITE, COLLECTION_NAME);
-  }
+export async function batchSaveProducts(
+  productList: Product[],
+  onProgress?: (progress: BatchSaveProgress) => void
+): Promise<number> {
+  const normalized = productList.map((prod) => ({
+    ...prod,
+    brand: prod.brand?.trim() || 'Generic',
+    category: prod.category?.trim() || 'Charger & Adapter',
+    subcategory: prod.subcategory?.trim() || 'Lainnya',
+    specification: prod.specification?.trim() || 'Spesifikasi standar pabrik',
+    compatibility: prod.compatibility?.trim() || 'Universal Smartphone',
+    sellingPoint1: prod.sellingPoint1?.trim() || 'Kualitas terjamin',
+    sellingPoint2: prod.sellingPoint2?.trim() || 'Garansi resmi terpercaya',
+    sellingPoint3: prod.sellingPoint3?.trim() || 'Siap dipakai harian',
+    stockStatus: prod.stockStatus || 'In Stock',
+    positioning: prod.positioning || 'Better',
+    targetCustomer: prod.targetCustomer?.trim() || 'Konter HP dan toko retail',
+    isActive: prod.isActive !== false,
+  }));
+  const writes = prepareCatalogWrites(normalized);
+  return commitInChunks(
+    writes,
+    PRODUCTS_PER_BATCH,
+    async (chunk) => {
+      const batch = writeBatch(db);
+      for (const item of chunk) {
+        writeSplit(batch, item.id, item.product);
+      }
+      await batch.commit();
+    },
+    onProgress
+  );
 }
 

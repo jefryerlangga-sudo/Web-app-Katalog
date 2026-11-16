@@ -11,6 +11,7 @@ import {
 import { dealerQuote } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
+import { LoadMoreList } from '../components/LoadMoreList';
 
 export const SearchCatalogPage: React.FC = () => {
   const { activeProducts, filters, setFilters, resetFilters, viewMode } = useCatalog();
@@ -309,11 +310,13 @@ export const SearchCatalogPage: React.FC = () => {
 
       {/* Products Results List */}
       {filteredProducts.length > 0 ? (
-        <div className="space-y-3">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id || product.sku} product={product} />
-          ))}
-        </div>
+        <LoadMoreList
+          items={filteredProducts}
+          resetKey={`${filters.searchQuery}|${filters.category}|${filters.brand}|${filters.sortBy}|${filters.compatibilityVehicle}|${filteredProducts.length}`}
+          className="space-y-3"
+          getKey={(product) => product.id || product.sku}
+          renderItem={(product) => <ProductCard product={product} />}
+        />
       ) : (
         /* Empty State */
         <div className="p-8 text-center bg-slate-800/40 rounded-3xl border border-slate-700/60 my-6 space-y-3">

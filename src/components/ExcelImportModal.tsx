@@ -12,7 +12,8 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { APP_NAME } from '../config/app';
+import { APP_NAME, CUSTOMER_CATALOG_DELAY_NOTE } from '../config/app';
+import { BatchSaveProgress } from '../firebase/catalogBatch';
 import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 
@@ -29,6 +30,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
   const [parseError, setParseError] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const [importSuccessCount, setImportSuccessCount] = useState<number | null>(null);
+  const [importProgress, setImportProgress] = useState<BatchSaveProgress | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
@@ -53,7 +55,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         keunggulan_3: 'Bodi kompak dan tidak mudah panas saat fast charging',
         target_profil_toko: 'Konter HP mall dan toko aksesoris premium',
         cross_sell: 'Kabel Ugreen Type-C 100W, Pelindung Kabel',
-        link_gambar: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600',
+        link_gambar: '',
         produk_fokus: 'YA',
         paling_laris: 'YA',
       },
@@ -74,7 +76,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         keunggulan_3: 'Item paling laris di konter pinggir jalan',
         target_profil_toko: 'Konter HP umum dan warung retail gadget',
         cross_sell: 'Kabel Baseus Lightning, Kabel Type-C',
-        link_gambar: 'https://images.unsplash.com/photo-1622445262464-84b1456045b6?w=600',
+        link_gambar: '',
         produk_fokus: 'TIDAK',
         paling_laris: 'YA',
       },
@@ -95,7 +97,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         keunggulan_3: 'Stok staple harian yang selalu dicari konsumen',
         target_profil_toko: 'Semua konter pulsa dan etalase toko retail',
         cross_sell: 'Robot Dual Charger RT-K6',
-        link_gambar: 'https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?w=600',
+        link_gambar: '',
         produk_fokus: 'TIDAK',
         paling_laris: 'YA',
       },
@@ -157,7 +159,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           const sellingPoint3 = String(row.sellingPoint3 || row.keunggulan_3 || 'Siap dipakai harian').trim();
           const targetCustomer = String(row.targetCustomer || row.target_profil_toko || 'Konter HP dan toko retail').trim();
           const crossSellNotes = String(row.crossSellNotes || row.cross_sell || row.paket_terkait || '').trim();
-          const imageUrl = String(row.imageUrl || row.link_gambar || row.foto || 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600').trim();
+          const imageUrl = String(row.imageUrl || row.link_gambar || row.foto || '').trim();
 
           const isProductFocus = String(row.isProductFocus || row.produk_fokus || row.fokus || '').toLowerCase().includes('ya') ||
             String(row.isProductFocus || row.produk_fokus || row.fokus || '').toLowerCase().includes('true');
@@ -207,17 +209,21 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     if (parsedItems.length === 0) return;
     setIsImporting(true);
     setParseError(null);
+    setImportProgress(null);
 
     try {
-      const count = await batchSaveProductItems(parsedItems);
+      const count = await batchSaveProductItems(parsedItems, (progress) => {
+        setImportProgress(progress);
+      });
       setImportSuccessCount(count);
       setParsedItems([]);
       setFileName(null);
     } catch (err: any) {
       console.error('Import batch error:', err);
-      setParseError(`Gagal menyimpan ke Firestore: ${err?.message || 'Periksa koneksi database'}`);
+      setParseError(err?.message || 'Gagal menyimpan ke Firestore. Periksa koneksi database.');
     } finally {
       setIsImporting(false);
+      setImportProgress(null);
     }
   };
 
@@ -258,7 +264,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
               <div>
                 <p className="font-bold text-xs">Berhasil Mengimpor {importSuccessCount} Produk!</p>
                 <p className="text-[11px] text-emerald-400/90 mt-0.5">
-                  Produk telah tersimpan ke database Firestore dan langsung dapat dicari di katalog.
+                  {CUSTOMER_CATALOG_DELAY_NOTE}.
                 </p>
               </div>
             </div>
@@ -384,7 +390,11 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
               {isImporting ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Mengimpor ke Firestore...</span>
+                  <span>
+                    {importProgress
+                      ? `Batch ${importProgress.chunkIndex + 1}/${importProgress.chunkCount} · ${importProgress.saved}/${importProgress.total}`
+                      : 'Mengimpor ke Firestore...'}
+                  </span>
                 </>
               ) : (
                 <>
