@@ -14,6 +14,7 @@ import {
 import {
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -45,7 +46,6 @@ function validProduct(overrides: Record<string, unknown> = {}) {
     sellingPoint1: 'A',
     sellingPoint2: 'B',
     sellingPoint3: 'C',
-    wholesalePrice: 135000,
     suggestedRetailPrice: RETAIL,
     stockStatus: 'In Stock',
     positioning: 'Best',
@@ -134,10 +134,13 @@ async function seedProduct(data = validProduct()) {
 test('guests can read products and cannot write them', async () => {
   await seedProduct();
   const guest = testEnv.unauthenticatedContext().firestore();
-  await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  const snap = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  assert.equal(Object.prototype.hasOwnProperty.call(snap.data(), 'wholesalePrice'), false);
   await assertSucceeds(getDocs(collection(guest, 'products')));
   await assertFails(setDoc(doc(guest, 'products', 'ACC-NEW-1'), validProduct({ sku: 'ACC-NEW-1' })));
   await assertFails(deleteDoc(doc(guest, 'products', PRODUCT_ID)));
+  await assertFails(getDoc(doc(guest, 'productAdmin', PRODUCT_ID)));
+  await assertFails(getDocs(collection(guest, 'productAdmin')));
 });
 
 test('customers and unverified owner emails cannot modify products', async () => {
@@ -170,6 +173,61 @@ test('verified master admin can write products and the admins collection', async
   await assertSucceeds(updateDoc(doc(master, 'products', PRODUCT_ID), { isActive: false }));
   await assertSucceeds(setDoc(doc(master, 'admins', 'master-1'), { email: MASTER_EMAIL, role: 'owner' }));
   await assertSucceeds(deleteDoc(doc(master, 'products', PRODUCT_ID)));
+});
+
+test('wholesale price is rejected on public products and locked to productAdmin', async () => {
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  const customer = dbFor('cust-1', 'cust@example.com', true);
+  const guest = testEnv.unauthenticatedContext().firestore();
+
+  await assertFails(setDoc(doc(master, 'products', PRODUCT_ID), validProduct({ wholesalePrice: 135000 })));
+  await assertSucceeds(setDoc(doc(master, 'products', PRODUCT_ID), validProduct()));
+  await assertSucceeds(setDoc(doc(master, 'productAdmin', PRODUCT_ID), {
+    wholesalePrice: 135000,
+    updatedAt: '2026-11-16T00:00:00.000Z',
+  }));
+  const adminSnap = await assertSucceeds(getDoc(doc(master, 'productAdmin', PRODUCT_ID)));
+  assert.equal(adminSnap.data()?.wholesalePrice, 135000);
+  await assertSucceeds(getDocs(collection(master, 'productAdmin')));
+
+  await assertFails(getDoc(doc(customer, 'productAdmin', PRODUCT_ID)));
+  await assertFails(getDocs(collection(customer, 'productAdmin')));
+  await assertFails(setDoc(doc(customer, 'productAdmin', PRODUCT_ID), {
+    wholesalePrice: 1,
+    updatedAt: '2026-11-16T00:00:00.000Z',
+  }));
+  await assertFails(getDoc(doc(guest, 'productAdmin', PRODUCT_ID)));
+
+  const publicSnap = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  assert.equal(publicSnap.data()?.suggestedRetailPrice, RETAIL);
+  assert.equal(Object.prototype.hasOwnProperty.call(publicSnap.data(), 'wholesalePrice'), false);
+});
+
+test('legacy wholesale field can be deleted by the master admin and is not redacted on read before that', async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), 'products', PRODUCT_ID), {
+      ...validProduct(),
+      wholesalePrice: 135000,
+    });
+  });
+  const guest = testEnv.unauthenticatedContext().firestore();
+  const legacy = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  assert.equal(legacy.data()?.wholesalePrice, 135000);
+
+  const customer = dbFor('cust-1', 'cust@example.com', true);
+  await assertFails(updateDoc(doc(customer, 'products', PRODUCT_ID), {
+    wholesalePrice: deleteField(),
+    updatedAt: '2026-11-16T01:00:00.000Z',
+  }));
+
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  await assertSucceeds(updateDoc(doc(master, 'products', PRODUCT_ID), {
+    wholesalePrice: deleteField(),
+    updatedAt: '2026-11-16T01:00:00.000Z',
+  }));
+  const cleaned = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  assert.equal(Object.prototype.hasOwnProperty.call(cleaned.data(), 'wholesalePrice'), false);
+  assert.equal(cleaned.data()?.suggestedRetailPrice, RETAIL);
 });
 
 test('customers cannot elevate role or read another profile', async () => {

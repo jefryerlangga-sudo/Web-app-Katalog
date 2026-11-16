@@ -277,8 +277,11 @@ export const AdminPage: React.FC = () => {
                     </h3>
 
                     <p className="text-[10px] text-slate-400 font-mono mt-0.5">
-                      Modal: Rp {item.wholesalePrice.toLocaleString('id-ID')} | HET: Rp{' '}
-                      {item.suggestedRetailPrice.toLocaleString('id-ID')}
+                      Modal:{' '}
+                      {typeof item.wholesalePrice === 'number'
+                        ? `Rp ${item.wholesalePrice.toLocaleString('id-ID')}`
+                        : 'belum di productAdmin'}{' '}
+                      | HET: Rp {item.suggestedRetailPrice.toLocaleString('id-ID')}
                     </p>
                   </div>
                 </div>
@@ -438,6 +441,9 @@ export const AdminPage: React.FC = () => {
                   <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">
                     Modal Grosir (Rp) *
                   </label>
+                  <p className="text-[9px] text-slate-500 mb-1 leading-snug">
+                    Disimpan di productAdmin, tidak di dokumen publik.
+                  </p>
                   <input
                     type="number"
                     required

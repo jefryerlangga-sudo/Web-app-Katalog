@@ -22,7 +22,7 @@ export const AiAssistantPage: React.FC = () => {
     {
       id: 'welcome',
       sender: 'assistant',
-      text: `Halo! Saya Asisten AI PortalTech untuk aksesoris handphone.\n\nSaya memakai katalog yang sedang dimuat (${activeProducts.length} produk aktif) dan tidak mengarang harga, stok, atau kecocokan HP.\n\nTanyakan rekomendasi charger, kabel, audio, powerbank, atau pelindung HP.`,
+      text: `Halo! Saya asisten belanja PortalTech.\n\nSaya memakai katalog yang sedang dimuat (${activeProducts.length} produk aktif). Harga yang saya sebut hanya harga eceran. Kalau server belum punya kunci Grok, saya tetap mencari lewat kata di katalog.\n\nTanyakan charger, kabel, audio, powerbank, atau pelindung HP.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -37,9 +37,9 @@ export const AiAssistantPage: React.FC = () => {
 
   const quickPrompts = [
     'Rekomendasi charger iPhone 15 fast charging di bawah 150rb',
-    'Bandingkan TWS Robot vs Anker untuk konter',
-    'Item aksesoris margin tertinggi untuk konter baru',
-    'Naskah pitch jualan kabel data Type-C 100W',
+    'Bandingkan TWS Robot dan Anker untuk dipakai harian',
+    'Aksesoris yang cocok untuk konter baru',
+    'Naskah singkat jualan kabel data Type-C 100W',
   ];
 
   const handleSendMessage = async (customPrompt?: string) => {
@@ -65,7 +65,6 @@ export const AiAssistantPage: React.FC = () => {
         category: p.category,
         positioning: p.positioning,
         suggestedRetailPrice: p.suggestedRetailPrice,
-        wholesalePrice: 0,
         stockStatus: p.stockStatus,
         compatibility: p.compatibility,
         specification: p.specification,
@@ -126,13 +125,13 @@ export const AiAssistantPage: React.FC = () => {
           </div>
           <div>
             <h1 className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span>Asisten AI Produk PortalTech</span>
+              <span>Asisten Grok PortalTech</span>
               <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-500/30">
-                Terverifikasi Firestore
+                Harga eceran
               </span>
             </h1>
             <p className="text-[10px] text-slate-400">
-              Hanya merekomendasikan harga resmi, SKU, dan spek terverifikasi
+              Jawaban dari server. Modal grosir tidak dikirim ke model.
             </p>
           </div>
         </div>
@@ -194,7 +193,7 @@ export const AiAssistantPage: React.FC = () => {
             <div className="w-7 h-7 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
               <RefreshCw className="w-4 h-4 animate-spin" />
             </div>
-            <span>Mencari rekomendasi dari database katalog Firestore...</span>
+            <span>Mencari rekomendasi dari katalog...</span>
           </div>
         )}
 
@@ -226,7 +225,7 @@ export const AiAssistantPage: React.FC = () => {
               handleSendMessage();
             }
           }}
-          placeholder="Tanya tipe HP, rekomendasi aksesoris, atau naskah pitch..."
+          placeholder="Tanya tipe HP atau jenis aksesoris..."
           disabled={isLoading}
           className="flex-1 bg-slate-800 border border-slate-700 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 shadow-inner"
         />

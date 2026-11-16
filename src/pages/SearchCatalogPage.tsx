@@ -8,6 +8,7 @@ import {
   RotateCcw,
   Check,
 } from 'lucide-react';
+import { dealerQuote } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 
@@ -150,17 +151,17 @@ export const SearchCatalogPage: React.FC = () => {
       if (filters.sortBy === 'name-asc') {
         return a.name.localeCompare(b.name);
       }
-      if (filters.sortBy === 'margin-desc') {
-        const marginA = a.suggestedRetailPrice - a.wholesalePrice;
-        const marginB = b.suggestedRetailPrice - b.wholesalePrice;
-        return marginB - marginA;
+      if (filters.sortBy === 'margin-desc' && viewMode === 'sales') {
+        const margin = (product: { suggestedRetailPrice: number; wholesalePrice?: number }) =>
+          dealerQuote(product.suggestedRetailPrice, product.wholesalePrice)?.profit ?? -1;
+        return margin(b) - margin(a);
       }
       // default: featured (Product Focus and Best Seller first)
       if (a.isProductFocus && !b.isProductFocus) return -1;
       if (!a.isProductFocus && b.isProductFocus) return 1;
       return 0;
     });
-  }, [activeProducts, filters]);
+  }, [activeProducts, filters, viewMode]);
 
   return (
     <div className="space-y-3 pb-20">

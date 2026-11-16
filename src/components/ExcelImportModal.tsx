@@ -89,7 +89,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
         status_stok: 'In Stock',
         kompatibilitas: 'Semua Android Type-C (Oppo, Vivo, Xiaomi, Samsung)',
         spesifikasi: 'Bahan PVC lentur anti kusut, arus 2.4A stabil',
-        keunggulan_1: 'Modal super murah Rp 12.000, margin konter di atas 50%',
+        keunggulan_1: 'Kabel harian yang lentur untuk Android Type-C',
         keunggulan_2: 'Kemasan toples mika display menarik di kasir konter',
         keunggulan_3: 'Stok staple harian yang selalu dicari konsumen',
         target_profil_toko: 'Semua konter pulsa dan etalase toko retail',
@@ -153,7 +153,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
           const specification = String(row.specification || row.spesifikasi || row.spek || '-').trim();
           const sellingPoint1 = String(row.sellingPoint1 || row.keunggulan_1 || 'Kualitas terjamin resmi').trim();
           const sellingPoint2 = String(row.sellingPoint2 || row.keunggulan_2 || 'Garansi distributor terpercaya').trim();
-          const sellingPoint3 = String(row.sellingPoint3 || row.keunggulan_3 || 'Margin konter menguntungkan').trim();
+          const sellingPoint3 = String(row.sellingPoint3 || row.keunggulan_3 || 'Siap dipakai harian').trim();
           const targetCustomer = String(row.targetCustomer || row.target_profil_toko || 'Konter HP dan toko retail').trim();
           const crossSellNotes = String(row.crossSellNotes || row.cross_sell || row.paket_terkait || '').trim();
           const imageUrl = String(row.imageUrl || row.link_gambar || row.foto || 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600').trim();
@@ -345,7 +345,11 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
                       </div>
                       <p className="text-xs font-bold text-white truncate">{item.name}</p>
                       <p className="text-[10px] text-slate-400 truncate">
-                        Modal: Rp {item.wholesalePrice.toLocaleString('id-ID')} | HET: Rp{' '}
+                        Modal:{' '}
+                        {typeof item.wholesalePrice === 'number'
+                          ? `Rp ${item.wholesalePrice.toLocaleString('id-ID')}`
+                          : 'belum diisi'}{' '}
+                        | HET: Rp{' '}
                         {item.suggestedRetailPrice.toLocaleString('id-ID')}
                       </p>
                     </div>

@@ -32,7 +32,7 @@
         },
         "imageUrl": {
           "type": "string",
-          "description": "Image URL of the part",
+          "description": "Image URL of the accessory",
           "maxLength": 500
         },
         "specification": {
@@ -59,10 +59,6 @@
           "type": "string",
           "description": "Third key sales pitch point",
           "maxLength": 200
-        },
-        "wholesalePrice": {
-          "type": "number",
-          "description": "Wholesale price stored on the public product document"
         },
         "suggestedRetailPrice": {
           "type": "number",
@@ -123,7 +119,6 @@
         "sellingPoint1",
         "sellingPoint2",
         "sellingPoint3",
-        "wholesalePrice",
         "suggestedRetailPrice",
         "stockStatus",
         "positioning",
@@ -133,6 +128,22 @@
         "crossSellNotes",
         "isActive"
       ]
+    },
+    "ProductAdmin": {
+      "title": "ProductAdmin",
+      "description": "Dealer cost for one catalog product. Same id as products/{productId}. Verified master admin only.",
+      "type": "object",
+      "properties": {
+        "wholesalePrice": {
+          "type": "number",
+          "description": "Wholesale or dealer cost. Not readable by guests or customers."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["wholesalePrice", "updatedAt"]
     },
     "UserProfile": {
       "title": "UserProfile",
@@ -195,7 +206,11 @@
   "firestore": {
     "/products/{productId}": {
       "schema": "Product",
-      "description": "HP accessories catalog. Public read. Verified master admin write."
+      "description": "HP accessories catalog. Public read. No wholesalePrice. Verified master admin write."
+    },
+    "/productAdmin/{productId}": {
+      "schema": "ProductAdmin",
+      "description": "Dealer cost. Read and write only for the verified master admin."
     },
     "/users/{userId}": {
       "schema": "UserProfile",

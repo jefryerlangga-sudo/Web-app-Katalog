@@ -1,6 +1,6 @@
 {
   "name": "PortalTech Catalog",
-  "description": "Online katalog dan portal belanja aksesoris HP PortalTech dengan akun customer dan admin master.",
+  "description": "Katalog dan portal belanja aksesoris HP PortalTech. Asisten AI memakai Grok di server.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
