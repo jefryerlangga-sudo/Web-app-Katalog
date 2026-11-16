@@ -30,6 +30,9 @@ const DEFAULT_BASE_URL = 'https://api.x.ai/v1/chat/completions';
 const MAX_PROMPT = 2000;
 const MAX_PRODUCTS = 40;
 
+/** Matches `express.json({ limit: '512kb' })` (1024-based kibibytes). */
+export const MAX_AI_BODY_BYTES = 512 * 1024;
+
 const STOP_WORDS = new Set([
   'yang',
   'untuk',

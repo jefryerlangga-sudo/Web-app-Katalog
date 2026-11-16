@@ -24,7 +24,7 @@ Customer yang daftar lewat aplikasi selalu menulis `users/{uid}.role = customer`
 ## 2. Kunci Grok (xAI), hanya di server
 
 1. Buat API key di [console.x.ai](https://console.x.ai).
-2. Simpan sebagai environment `XAI_API_KEY` pada proses Express (Cloud Run Variables & Secrets, atau file `.env` lokal yang tidak di-commit).
+2. Simpan sebagai environment `XAI_API_KEY` pada server (Cloud Run Variables & Secrets, Environment Variables di Vercel, atau file `.env` lokal yang tidak di-commit).
 3. Opsional: `XAI_MODEL`. Kosong memakai `grok-4.7`. Contoh lain yang masih dilayani API: `grok-4.6`.
 4. Opsional: `XAI_API_BASE_URL`. Kosong memakai `https://api.x.ai/v1/chat/completions` (endpoint chat OpenAI-compatible).
 
@@ -98,6 +98,8 @@ Set `VITE_WHATSAPP_NUMBER` saat **build** (kode negara, hanya digit, contoh bent
 
 Build Cloud Run / Docker harus menerima angka ini sebagai build arg, bukan sebagai env runtime saja. Lihat `README.md`.
 
+Di Vercel, isi `VITE_WHATSAPP_NUMBER` sebagai Environment Variable (Production dan Preview) sebelum build. Vite menempelkannya saat `npm run build`. Nilai ini masuk ke client dan bukan secret.
+
 ## 7. Menjalankan di luar AI Studio
 
 Di komputer: `npm ci`, isi `.env` dari `.env.example`, `npm run dev`. Produksi: `npm run build` lalu `npm start` (Express). Jangan mengandalkan `vite preview` untuk asisten.
@@ -114,7 +116,24 @@ gcloud run deploy portaltech-katalog \
 
 Tambahkan secret `XAI_API_KEY` di halaman service. `Dockerfile` di repo memakai `npm ci`, `npm run build`, lalu `npx tsx server.ts`.
 
-## 8. Cek setelah rules dan migrasi terpasang
+## 8. Vercel (Hobby, impor dari GitHub)
+
+Impor repo (Add New → Project → Import Git Repository). Framework preset **Vite**. `vercel.json` mengatur `npm run build`, output `dist`, dan rewrite SPA ke `/index.html` yang tidak menelan `/api/*`. `npm start` dan `Dockerfile` tetap untuk Express / Cloud Run.
+
+Environment Variables (Production dan Preview), sebelum deploy:
+
+- `XAI_API_KEY` — hanya di server. Jangan diawali `VITE_`. Kosong berarti pencarian kata.
+- `XAI_MODEL` — opsional. Kosong memakai `grok-4.7`.
+- `VITE_WHATSAPP_NUMBER` — saat **build**, hanya digit dengan kode negara. Bukan secret. Ubah lalu deploy ulang.
+- `XAI_API_BASE_URL` — opsional, sama seperti di komputer.
+
+`POST /api/ai-assistant` di Vercel adalah fungsi Node (`api/ai-assistant.ts`) yang memanggil handler yang sama dengan Express. Respons ke browser tetap teks jawaban. Kunci tidak ikut. Batas body 512kb sama. Batas 30 permintaan per menit per IP ada di proses Express (`server.ts`).
+
+Firebase Console → Authentication → Settings → Authorized domains: tambahkan host `.vercel.app` yang Vercel tampilkan (bentuknya `nama-proyek.vercel.app`). Firebase menolak pola `*.vercel.app`; isi nama host lengkap. Tambahkan host preview kalau login dipakai di sana. Tanpa itu, login Google gagal dengan `auth/unauthorized-domain`.
+
+Impor Git tidak mengisi env var dan tidak mengubah Firestore.
+
+## 9. Cek setelah rules dan migrasi terpasang
 
 Ini belum diuji terhadap Firestore produksi:
 
@@ -125,3 +144,4 @@ Ini belum diuji terhadap Firestore produksi:
 - Master admin terverifikasi bisa menambah produk dan melihat modal di mode Sales.
 - Pesanan dengan harga yang tidak sama dengan katalog ditolak.
 - `POST /api/ai-assistant` tidak mengembalikan `XAI_API_KEY`.
+- Login di host Vercel tidak gagal karena domain belum ada di Firebase Auth.
