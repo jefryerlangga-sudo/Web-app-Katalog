@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flame, Target } from 'lucide-react';
+import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 
@@ -29,7 +30,7 @@ export const ProductFocusPage: React.FC = () => {
         </div>
 
         <p className="text-xs text-slate-300 leading-relaxed">
-          Item prioritas PortalTech. Produk ini yang paling direkomendasikan untuk customer dan konter retail.
+          Item prioritas {APP_NAME}. Produk ini yang paling direkomendasikan untuk customer dan konter retail.
         </p>
 
         {viewMode === 'sales' ? (

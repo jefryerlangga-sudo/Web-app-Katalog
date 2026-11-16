@@ -1,9 +1,9 @@
 /**
- * PortalTech catalog identity.
+ * Partshop.Katalog catalog identity.
  * MASTER_ADMIN_EMAILS must stay in sync with isVerifiedMasterAdmin() in firestore.rules.
  * UI checks are not the security boundary; Firestore rules are.
  */
-export const APP_NAME = 'PortalTech';
+export const APP_NAME = 'Partshop.Katalog';
 export const APP_TAGLINE = 'Katalog & portal belanja aksesoris HP';
 
 /** Owner master-admin identity already present in firestore.rules. Do not add accounts here. */

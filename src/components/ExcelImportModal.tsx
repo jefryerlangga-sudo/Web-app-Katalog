@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import { APP_NAME } from '../config/app';
 import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 
@@ -104,7 +105,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template_Katalog');
 
-    XLSX.writeFile(workbook, 'Template_Input_Katalog_PortalTech.xlsx');
+    XLSX.writeFile(workbook, `Template_Input_Katalog_${APP_NAME}.xlsx`);
   };
 
   // Baca File Excel atau CSV

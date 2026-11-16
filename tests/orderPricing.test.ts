@@ -110,6 +110,8 @@ test('WhatsApp helper only builds a wa.me link and skips an empty number', () =>
   assert.equal(link.includes('graph.facebook.com'), false);
   assert.equal(link.includes('api.whatsapp.com'), false);
   const text = decodeURIComponent(link.split('text=')[1]);
+  assert.match(text, /^Halo Partshop\.Katalog, saya ingin menindaklanjuti pesanan ORD-1/);
+  assert.equal(text.includes('PortalTech'), false);
   assert.match(text, /ORD-1/);
   assert.match(text, /199\.000|199000/);
   assert.match(text, /dekat & gerbang/);

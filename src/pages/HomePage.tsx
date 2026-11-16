@@ -10,6 +10,7 @@ import {
   Percent,
   CheckCircle2,
 } from 'lucide-react';
+import { APP_NAME } from '../config/app';
 import { dealerQuote } from '../lib/money';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
@@ -87,9 +88,9 @@ export const HomePage: React.FC = () => {
       <div className="bg-gradient-to-br from-slate-800 via-slate-800/90 to-blue-950/60 p-4 rounded-3xl border border-slate-700/80 shadow-lg text-white">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1">
+            <span className="text-[11px] font-bold tracking-wide text-blue-400 flex items-center gap-1">
               <Briefcase className="w-3.5 h-3.5" />
-              <span>PortalTech Aksesoris HP</span>
+              <span>{APP_NAME}</span>
             </span>
             <h1 className="text-xl font-black mt-0.5 tracking-tight">
               {user?.displayName ? `Halo, ${user.displayName.split(' ')[0]}` : 'Katalog Aksesoris HP'}
@@ -211,8 +212,8 @@ export const HomePage: React.FC = () => {
                 <Flame className="w-5 h-5" />
               </span>
               <div>
-                <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">
-                  Pilihan PortalTech
+                <span className="text-[10px] font-bold text-rose-400 tracking-wide">
+                  Pilihan {APP_NAME}
                 </span>
                 <h3 className="text-sm font-bold text-white leading-tight">
                   Produk fokus minggu ini
@@ -231,7 +232,7 @@ export const HomePage: React.FC = () => {
 
           {viewMode === 'sales' && (
             <p className="text-[11px] text-rose-200/90 mt-2 bg-rose-950/50 p-2 rounded-xl border border-rose-500/20">
-              💡 <strong>Tips:</strong> Produk Fokus adalah rekomendasi PortalTech minggu ini untuk bundling dan repeat order.
+              💡 <strong>Tips:</strong> Produk Fokus adalah rekomendasi {APP_NAME} minggu ini untuk bundling dan repeat order.
             </p>
           )}
         </div>

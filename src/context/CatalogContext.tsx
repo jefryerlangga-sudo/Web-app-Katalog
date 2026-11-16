@@ -162,7 +162,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       name: user?.displayName || userProfile?.displayName || APP_NAME,
       email: user?.email || userProfile?.email || '',
       role: isAdmin ? 'admin' : 'customer',
-      territory: 'PortalTech — Katalog Aksesoris HP',
+      territory: `${APP_NAME} — Katalog Aksesoris HP`,
       dailyTargetVisit: 0,
     };
   }, [user, userProfile, isAdmin]);
