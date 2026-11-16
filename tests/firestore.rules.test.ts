@@ -230,6 +230,33 @@ test('legacy wholesale field can be deleted by the master admin and is not redac
   assert.equal(cleaned.data()?.suggestedRetailPrice, RETAIL);
 });
 
+test('master admin can store a legacy wholesale price in productAdmin while removing it from the public product', async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), 'products', PRODUCT_ID), {
+      ...validProduct(),
+      wholesalePrice: 135000,
+    });
+  });
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  const guest = testEnv.unauthenticatedContext().firestore();
+  const now = '2026-11-16T02:00:00.000Z';
+  await assertSucceeds(setDoc(doc(master, 'productAdmin', PRODUCT_ID), {
+    wholesalePrice: 135000,
+    updatedAt: now,
+  }));
+  await assertSucceeds(updateDoc(doc(master, 'products', PRODUCT_ID), {
+    isActive: false,
+    updatedAt: now,
+    wholesalePrice: deleteField(),
+  }));
+  const adminSnap = await assertSucceeds(getDoc(doc(master, 'productAdmin', PRODUCT_ID)));
+  assert.equal(adminSnap.data()?.wholesalePrice, 135000);
+  const publicSnap = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  assert.equal(publicSnap.data()?.isActive, false);
+  assert.equal(Object.prototype.hasOwnProperty.call(publicSnap.data(), 'wholesalePrice'), false);
+  await assertFails(getDoc(doc(guest, 'productAdmin', PRODUCT_ID)));
+});
+
 test('customers cannot elevate role or read another profile', async () => {
   const customer = dbFor('cust-1', 'cust@example.com', true);
   const other = dbFor('cust-2', 'other@example.com', true);

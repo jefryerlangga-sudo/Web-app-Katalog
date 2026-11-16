@@ -13,7 +13,6 @@ import { priceCart } from '../firebase/orderPricing';
 import { applyDealerCost } from '../firebase/productRecord';
 import {
   SAMPLE_PRODUCTS,
-  SAMPLE_WHOLESALE_BY_SKU,
   batchSaveProducts,
   deleteProductById,
   saveProduct,
@@ -280,7 +279,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return;
     }
     if (usingPreviewCatalog) {
-      setAdminCosts(SAMPLE_WHOLESALE_BY_SKU);
+      setAdminCosts({});
       return;
     }
     return subscribeToProductAdmin(setAdminCosts, () => setAdminCosts({}));

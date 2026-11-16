@@ -78,14 +78,14 @@ node scripts/migrate-wholesale-prices.mjs
 
 Itu hanya mencetak rencana. Menulis butuh tambahan `PORTALTECH_MIGRATE_CONFIRM=yes` dan `FIRESTORE_DATABASE_ID` yang di-set eksplisit. Baca ulang ID database di `firebase-applet-config.json` sebelum menulis.
 
-Dari aplikasi, master admin yang menyimpan produk (termasuk impor Excel) sudah menulis harga grosir ke `productAdmin` dan menimpa dokumen publik tanpa field itu. Tombol aktif/nonaktif juga menghapus `wholesalePrice` yang tersisa, tetapi **tidak menyalin** nilainya. Salin dulu, baru toggle, kalau Anda tidak memakai skrip.
+Dari aplikasi, master admin yang menyimpan produk (termasuk impor Excel) menulis harga grosir ke `productAdmin` dan menimpa dokumen publik tanpa field itu. Tombol aktif/nonaktif, sebelum menghapus `wholesalePrice` yang masih menempel di dokumen publik, menyalin angka itu ke `productAdmin/{id}` bila koleksi admin belum punya harga grosir. Tetap jalankan migrasi untuk dokumen yang tidak pernah di-toggle.
 
 ## 5. Data katalog yang sudah ada
 
 Aplikasi **tidak** menghapus dokumen `products`, termasuk sparepart motor yang mungkin sudah tersimpan.
 
 - Etalase customer menyembunyikan kategori `Braking System`, `Drivetrain`, dan `Engine & Electrical`.
-- Tombol sampel di panel admin hanya menulis sampel aksesoris HP jika collection `products` **kosong**, dan hanya untuk master admin terverifikasi. Jika sudah ada dokumen, tidak ada yang ditulis atau dihapus. Sampel menulis dokumen publik tanpa harga grosir, plus `productAdmin/{sku}` untuk modal.
+- Tombol sampel di panel admin hanya menulis sampel aksesoris HP jika collection `products` **kosong**, dan hanya untuk master admin terverifikasi. Jika sudah ada dokumen, tidak ada yang ditulis atau dihapus. Sampel hanya menulis dokumen publik (harga eceran). Harga grosir tidak ikut di sampel dan tidak ada di berkas JavaScript pelanggan.
 - Hapus atau nonaktifkan dokumen lama hanya manual, dari Console atau panel Admin, jika Anda memang menginginkannya.
 
 ## 6. WhatsApp

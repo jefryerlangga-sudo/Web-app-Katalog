@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import {
   applyDealerCost,
+  planActiveToggle,
   readPublicProduct,
   splitCatalogWrite,
 } from '../src/firebase/productRecord.ts';
@@ -69,4 +71,50 @@ test('dealer cost is attached only for an admin and only from the admin map', ()
 
   const missing = applyDealerCost(raw, {}, true);
   assert.equal('wholesalePrice' in missing, false);
+});
+
+test('toggle copies a legacy public wholesale price before it is removed', () => {
+  const now = '2026-11-16T00:00:00.000Z';
+  const copied = planActiveToggle({
+    currentActive: true,
+    publicWholesale: 135000,
+    adminWholesale: undefined,
+    now,
+  });
+  assert.equal(copied.isActive, false);
+  assert.deepEqual(copied.adminWrite, { wholesalePrice: 135000, updatedAt: now });
+
+  const kept = planActiveToggle({
+    currentActive: false,
+    publicWholesale: 135000,
+    adminWholesale: 90000,
+    now,
+  });
+  assert.equal(kept.isActive, true);
+  assert.equal(kept.adminWrite, null);
+
+  const absent = planActiveToggle({
+    currentActive: true,
+    publicWholesale: undefined,
+    adminWholesale: undefined,
+    now,
+  });
+  assert.equal(absent.adminWrite, null);
+  assert.equal(absent.isActive, false);
+});
+
+test('client sources do not embed the sample dealer price list', () => {
+  const banned = ['135000', '24000', '48000', '32000', '12000', '185000', '78000', '145000', '230000', '38000', '8500', '28000', 'SAMPLE_WHOLESALE'];
+  const files = [
+    '../src/firebase/productsService.ts',
+    '../src/components/ExcelImportModal.tsx',
+    '../src/pages/AdminPage.tsx',
+    '../src/context/CatalogContext.tsx',
+  ];
+  for (const file of files) {
+    const text = readFileSync(new URL(file, import.meta.url), 'utf8');
+    for (const token of banned) {
+      assert.equal(text.includes(token), false, `${file} still contains ${token}`);
+    }
+  }
 });

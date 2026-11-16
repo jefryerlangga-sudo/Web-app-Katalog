@@ -111,8 +111,39 @@ export function splitCatalogWrite(
 
 /**
  * Dealer cost is attached in memory for the verified master admin only.
- * Values come from productAdmin (or the local sample map), never from products/{id}.
+ * Values come from productAdmin, never from the public products document.
  */
+function asDealerPrice(value: unknown): number | null {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
+  return value;
+}
+
+/**
+ * Active/inactive toggle. A legacy wholesalePrice on the public document is copied
+ * into productAdmin before that field is removed. An existing positive dealer price
+ * is left in place.
+ */
+export function planActiveToggle(input: {
+  currentActive: boolean;
+  publicWholesale: unknown;
+  adminWholesale: unknown;
+  now: string;
+}): { isActive: boolean; adminWrite: ProductAdminWrite | null } {
+  const isActive = !input.currentActive;
+  const legacy = asDealerPrice(input.publicWholesale);
+  const existing = asDealerPrice(input.adminWholesale);
+  if (legacy == null || legacy === 0) {
+    return { isActive, adminWrite: null };
+  }
+  if (existing != null && existing > 0) {
+    return { isActive, adminWrite: null };
+  }
+  return {
+    isActive,
+    adminWrite: { wholesalePrice: legacy, updatedAt: input.now },
+  };
+}
+
 export function applyDealerCost(
   product: Product,
   costs: Record<string, number>,

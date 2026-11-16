@@ -76,7 +76,6 @@ export const AdminPage: React.FC = () => {
     sellingPoint1: '',
     sellingPoint2: '',
     sellingPoint3: '',
-    wholesalePrice: 45000,
     suggestedRetailPrice: 75000,
     stockStatus: 'In Stock',
     positioning: 'Better',
@@ -599,7 +598,7 @@ export const AdminPage: React.FC = () => {
                   onChange={(e) =>
                     setEditingProduct({ ...editingProduct, sellingPoint3: e.target.value })
                   }
-                  placeholder="Keunggulan 3 (cth: Laba konter tebal Rp 64.000 per unit)"
+                  placeholder="Keunggulan 3 (cth: Garansi resmi dan siap pakai harian)"
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white"
                 />
               </div>

@@ -2,10 +2,10 @@ import {
   collection,
   deleteField,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   Unsubscribe,
-  updateDoc,
   writeBatch,
 } from 'firebase/firestore';
 import { isMasterAdminUser } from '../config/app';
@@ -14,6 +14,7 @@ import { Product } from '../types/product';
 import {
   PRODUCT_ADMIN_COLLECTION,
   PRODUCTS_COLLECTION,
+  planActiveToggle,
   readPublicProduct,
   splitCatalogWrite,
 } from './productRecord';
@@ -297,23 +298,6 @@ export const SAMPLE_PRODUCTS: Product[] = [
   },
 ];
 
-
-export const SAMPLE_WHOLESALE_BY_SKU: Record<string, number> = {
-  'ACC-ANK-001': 135000,
-  'ACC-BAS-002': 65000,
-  'ACC-ROB-003': 24000,
-  'ACC-UGR-101': 48000,
-  'ACC-BAS-102': 32000,
-  'ACC-ROB-103': 12000,
-  'ACC-ANK-201': 185000,
-  'ACC-ROB-202': 78000,
-  'ACC-BAS-301': 145000,
-  'ACC-ACM-302': 230000,
-  'ACC-HLD-401': 38000,
-  'ACC-TG-501': 8500,
-  'ACC-CAS-601': 28000,
-};
-
 export async function subscribeToProducts(
   onSuccess: (products: Product[]) => void,
   onError?: (err: Error) => void
@@ -397,12 +381,27 @@ export async function saveProduct(product: Product): Promise<string> {
 }
 
 export async function toggleProductActive(id: string, currentStatus: boolean): Promise<void> {
+  const now = new Date().toISOString();
+  const publicRef = doc(db, COLLECTION_NAME, id);
+  const adminRef = doc(db, PRODUCT_ADMIN_COLLECTION, id);
   try {
-    await updateDoc(doc(db, COLLECTION_NAME, id), {
-      isActive: !currentStatus,
-      updatedAt: new Date().toISOString(),
+    const [publicSnap, adminSnap] = await Promise.all([getDoc(publicRef), getDoc(adminRef)]);
+    const plan = planActiveToggle({
+      currentActive: currentStatus,
+      publicWholesale: publicSnap.data()?.wholesalePrice,
+      adminWholesale: adminSnap.data()?.wholesalePrice,
+      now,
+    });
+    const batch = writeBatch(db);
+    if (plan.adminWrite) {
+      batch.set(adminRef, plan.adminWrite);
+    }
+    batch.update(publicRef, {
+      isActive: plan.isActive,
+      updatedAt: now,
       wholesalePrice: deleteField(),
     });
+    await batch.commit();
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `${COLLECTION_NAME}/${id}`);
   }
@@ -434,12 +433,8 @@ export async function seedInitialCatalogIfEmpty(): Promise<{ seeded: number; exi
   const batch = writeBatch(db);
   for (const sample of SAMPLE_PRODUCTS) {
     const id = sample.sku.replace(/[^a-zA-Z0-9_-]/g, '_');
-    writeSplit(
-      batch,
-      id,
-      { ...sample, wholesalePrice: SAMPLE_WHOLESALE_BY_SKU[sample.sku] ?? 0, createdAt: now },
-      now
-    );
+    const { publicData } = splitCatalogWrite({ ...sample, createdAt: now }, now);
+    batch.set(doc(db, COLLECTION_NAME, id), publicData);
   }
   await batch.commit();
   return { seeded: SAMPLE_PRODUCTS.length, existing: 0 };
