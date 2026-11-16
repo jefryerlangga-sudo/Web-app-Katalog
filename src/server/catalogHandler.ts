@@ -2,7 +2,7 @@
  * Public catalog read for guests. One Firestore runQuery sequence, then the CDN
  * holds the JSON so storefront visits do not each list the products collection.
  */
-import appletConfig from '../../firebase-applet-config.json';
+import appletConfig from '../../firebase-applet-config.json' with { type: 'json' };
 
 export const CATALOG_CACHE_CONTROL = 'public, s-maxage=1800, stale-while-revalidate=86400';
 export const CATALOG_PAGE_SIZE = 300;
