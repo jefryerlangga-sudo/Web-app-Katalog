@@ -1,4 +1,4 @@
-import { configuredWhatsAppNumber } from '../config/app';
+import { APP_NAME, configuredWhatsAppNumber } from '../config/app';
 import { Order } from '../types/product';
 
 /** User-opened wa.me link only. Returns null when no business number is configured. */
@@ -7,7 +7,7 @@ export function formatWhatsAppLink(number: string, order: Order): string | null 
   if (!digits) return null;
 
   const lines = [
-    `Halo PortalTech, saya ingin menindaklanjuti pesanan ${order.id}`,
+    `Halo ${APP_NAME}, saya ingin menindaklanjuti pesanan ${order.id}`,
     '',
     `Nama: ${order.customerName}`,
     `Email: ${order.customerEmail}`,

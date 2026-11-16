@@ -14,7 +14,9 @@ import {
 import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ExcelImportModal } from '../components/ExcelImportModal';
-import { ACCESSORY_CATEGORIES, isStorefrontProduct } from '../config/app';
+import { CUSTOMER_CATALOG_DELAY_NOTE, isStorefrontProduct, listStorefrontCategories } from '../config/app';
+import { ProductImage } from '../components/ProductImage';
+import { LoadMoreList } from '../components/LoadMoreList';
 
 export const AdminPage: React.FC = () => {
   const {
@@ -70,7 +72,7 @@ export const AdminPage: React.FC = () => {
     brand: '',
     category: 'Charger & Adapter',
     subcategory: '',
-    imageUrl: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600',
+    imageUrl: '',
     specification: '',
     compatibility: '',
     sellingPoint1: '',
@@ -107,8 +109,8 @@ export const AdminPage: React.FC = () => {
     setIsSubmitting(true);
     try {
       await saveProductItem(editingProduct as Product);
-      setSuccessMessage(`Produk ${editingProduct.sku} berhasil disimpan!`);
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setSuccessMessage(`Produk ${editingProduct.sku} berhasil disimpan. ${CUSTOMER_CATALOG_DELAY_NOTE}.`);
+      setTimeout(() => setSuccessMessage(null), 8000);
       setEditingProduct(null);
     } catch (err: any) {
       console.error('Gagal menyimpan produk:', err);
@@ -224,10 +226,13 @@ export const AdminPage: React.FC = () => {
           Daftar Item Katalog ({products.length})
         </h2>
 
-        <div className="space-y-2.5">
-          {products.map((item) => (
+        <LoadMoreList
+          items={products}
+          resetKey={String(products.length)}
+          className="space-y-2.5"
+          getKey={(item) => item.id || item.sku}
+          renderItem={(item) => (
             <div
-              key={item.id || item.sku}
               className={`p-3.5 rounded-2xl border transition-all ${
                 item.isActive !== false
                   ? 'bg-slate-800/80 border-slate-700/80'
@@ -237,15 +242,7 @@ export const AdminPage: React.FC = () => {
               <div className="flex items-start justify-between gap-2">
                 <div className="flex gap-2.5 min-w-0">
                   <div className="w-12 h-12 rounded-xl bg-slate-950 overflow-hidden flex-shrink-0 border border-slate-700">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400';
-                      }}
-                    />
+                    <ProductImage src={item.imageUrl} alt={item.name} className="w-full h-full" />
                   </div>
 
                   <div className="min-w-0">
@@ -317,8 +314,8 @@ export const AdminPage: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        />
       </div>
 
       {/* Edit / Create Full Form Modal */}
@@ -404,17 +401,14 @@ export const AdminPage: React.FC = () => {
                     }
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white"
                   >
-                    {ACCESSORY_CATEGORIES.map((category) => (
+                    {listStorefrontCategories([
+                      ...products.map((item) => item.category),
+                      editingProduct.category,
+                    ]).map((category) => (
                       <option key={category} value={category}>
                         {category}
                       </option>
                     ))}
-                    {editingProduct.category &&
-                      !ACCESSORY_CATEGORIES.includes(
-                        editingProduct.category as (typeof ACCESSORY_CATEGORIES)[number]
-                      ) && (
-                        <option value={editingProduct.category}>{editingProduct.category}</option>
-                      )}
                   </select>
                 </div>
                 <div>

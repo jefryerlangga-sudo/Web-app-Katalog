@@ -6,12 +6,12 @@ import {
   ShieldCheck,
   ShoppingCart,
   SlidersHorizontal,
-  Smartphone,
   Sparkles,
   User,
 } from 'lucide-react';
 import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
+import { BrandMark } from './BrandMark';
 
 export const Header: React.FC = () => {
   const {
@@ -34,21 +34,19 @@ export const Header: React.FC = () => {
       <div className="max-w-md mx-auto flex items-center justify-between gap-2">
         <button
           onClick={() => setCurrentTab('home')}
-          className="flex items-center gap-2 text-left active:opacity-80 transition-opacity"
+          className="flex items-center gap-2 min-w-0 text-left active:opacity-80 transition-opacity"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 flex-shrink-0">
-            <Smartphone className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-white leading-none">
+          <BrandMark />
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="font-extrabold text-sm tracking-tight text-white leading-none truncate">
                 {APP_NAME}
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              <span className="hidden sm:inline-flex shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
                 SHOP
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium truncate max-w-[140px] leading-tight mt-0.5">
+            <p className="text-[11px] text-slate-400 font-medium truncate leading-tight mt-0.5">
               {canvasserProfile.territory}
             </p>
           </div>

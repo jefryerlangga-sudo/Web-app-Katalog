@@ -18,6 +18,7 @@ import {
 import { dealerQuote, rupiah } from '../lib/money';
 import { Product } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
+import { ProductImage } from './ProductImage';
 
 interface ProductDetailModalProps {
   product: Product;
@@ -109,15 +110,7 @@ ${
         <div className="overflow-y-auto p-4 space-y-4 pb-24">
           {/* Main Visual & Key Badges */}
           <div className="relative w-full h-56 rounded-2xl bg-slate-950 overflow-hidden border border-slate-800">
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600';
-              }}
-            />
+            <ProductImage src={product.imageUrl} alt={product.name} className="w-full h-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
 
             <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">

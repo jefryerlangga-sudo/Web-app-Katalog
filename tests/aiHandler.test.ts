@@ -94,6 +94,8 @@ test('Grok request sends the key only on the outbound call and keeps dealer cost
   assert.match(body, /"model":"grok-4\.7"/);
   assert.equal(body.includes('135000'), false);
   assert.equal(body.includes('wholesale'), false);
+  assert.match(body, /asisten belanja Partshop\.Katalog/);
+  assert.equal(body.includes('PortalTech'), false);
   assert.equal(text, 'Pakai Anker 511, HET Rp 199.000.');
   assert.equal(text.includes('xai-test-key'), false);
 });

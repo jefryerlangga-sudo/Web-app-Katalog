@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lock, LogIn, Mail, User, X } from 'lucide-react';
 import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
+import { BrandMark } from './BrandMark';
 
 export const AuthModal: React.FC = () => {
   const { showAuthModal, setShowAuthModal, login, loginEmail, registerEmail, user } = useCatalog();
@@ -59,13 +60,16 @@ export const AuthModal: React.FC = () => {
     <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-black text-white">
-              {mode === 'login' ? 'Masuk' : 'Buat Akun'} — {APP_NAME}
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Customer bisa belanja. Kelola katalog hanya untuk master admin yang emailnya sudah terverifikasi.
-            </p>
+          <div className="flex items-start gap-3 min-w-0">
+            <BrandMark className="w-10 h-10" />
+            <div className="min-w-0">
+              <h2 className="text-lg font-black text-white leading-tight">
+                {mode === 'login' ? 'Masuk' : 'Buat Akun'} — {APP_NAME}
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
+                Customer bisa belanja. Kelola katalog hanya untuk master admin yang emailnya sudah terverifikasi.
+              </p>
+            </div>
           </div>
           <button
             type="button"

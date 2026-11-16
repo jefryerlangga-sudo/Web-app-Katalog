@@ -2,6 +2,7 @@ import React from 'react';
 import { Trophy, CheckCircle2 } from 'lucide-react';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
+import { LoadMoreList } from '../components/LoadMoreList';
 
 export const BestSellerPage: React.FC = () => {
   const { activeProducts, viewMode } = useCatalog();
@@ -56,11 +57,13 @@ export const BestSellerPage: React.FC = () => {
         </div>
 
         {bestSellers.length > 0 ? (
-          <div className="space-y-3">
-            {bestSellers.map((product) => (
-              <ProductCard key={product.id || product.sku} product={product} />
-            ))}
-          </div>
+          <LoadMoreList
+            items={bestSellers}
+            resetKey={String(bestSellers.length)}
+            className="space-y-3"
+            getKey={(product) => product.id || product.sku}
+            renderItem={(product) => <ProductCard product={product} />}
+          />
         ) : (
           <div className="p-8 text-center bg-slate-800/40 rounded-3xl border border-slate-700/60 my-6">
             <Trophy className="w-10 h-10 text-slate-500 mx-auto mb-2" />

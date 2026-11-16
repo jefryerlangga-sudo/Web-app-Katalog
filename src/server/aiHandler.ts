@@ -1,7 +1,9 @@
 /**
- * PortalTech sales assistant. Runs only on the server.
+ * Partshop.Katalog sales assistant. Runs only on the server.
  * XAI_API_KEY is read from the environment and is never returned to the client.
  */
+
+import { APP_NAME } from '../config/app';
 
 export interface PublicCatalogItem {
   sku: string;
@@ -173,7 +175,7 @@ export async function handleAiAssistantQuery(
     return keywordFallback(prompt, catalog);
   }
 
-  const systemInstruction = `Kamu adalah asisten belanja PortalTech untuk katalog aksesoris handphone di Indonesia.
+  const systemInstruction = `Kamu adalah asisten belanja ${APP_NAME} untuk katalog aksesoris handphone di Indonesia.
 
 ATURAN WAJIB:
 1. Jawab dalam Bahasa Indonesia yang jelas.

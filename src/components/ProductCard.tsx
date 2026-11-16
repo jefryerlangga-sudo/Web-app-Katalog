@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Product } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
+import { ProductImage } from './ProductImage';
 import { dealerQuote, rupiah } from '../lib/money';
 
 interface ProductCardProps {
@@ -80,15 +81,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="flex gap-3">
         {/* Product Thumbnail */}
         <div className="relative w-24 h-24 rounded-xl bg-slate-950 overflow-hidden flex-shrink-0 border border-slate-700/60">
-          <img
+          <ProductImage
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400';
-            }}
+            className="w-full h-full group-hover:scale-105 transition-transform duration-300"
           />
 
           {/* Positioning Tier Badge (Good / Better / Best) */}

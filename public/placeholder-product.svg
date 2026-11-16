@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Foto belum tersedia">
+  <rect width="640" height="480" fill="#0f172a"/>
+  <rect x="190" y="118" width="260" height="190" rx="22" fill="none" stroke="#94a3b8" stroke-width="10"/>
+  <circle cx="262" cy="178" r="18" fill="#94a3b8"/>
+  <path d="M214 284 L278 214 L328 262 L386 198 L426 284" fill="none" stroke="#94a3b8" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="320" y="372" text-anchor="middle" fill="#cbd5e1" font-family="ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700">Foto belum tersedia</text>
+</svg>

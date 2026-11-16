@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Check, MessageCircle, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCatalog } from '../context/CatalogContext';
+import { ProductImage } from '../components/ProductImage';
 import { listMyOrders } from '../firebase/ordersService';
 import { Order } from '../types/product';
 
@@ -134,7 +135,7 @@ export const CartPage: React.FC = () => {
           <div className="space-y-2">
             {cart.map((item) => (
               <div key={item.productId} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-3 flex gap-3">
-                <img src={item.imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover bg-slate-900" />
+                <ProductImage src={item.imageUrl} alt="" className="w-16 h-16 rounded-xl bg-slate-900" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-white truncate">{item.name}</p>
                   <p className="text-[11px] text-slate-400">

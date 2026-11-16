@@ -8,6 +8,7 @@ import {
   runtimeFromEnv,
   type AiRuntime,
 } from './src/server/aiHandler';
+import { handleCatalogRequest } from './src/server/catalogHandler';
 
 dotenv.config();
 
@@ -27,6 +28,22 @@ export function createApp(runtime: AiRuntime = runtimeFromEnv(), options: AppOpt
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
   app.use(express.json({ limit: MAX_AI_BODY_BYTES }));
+
+  app.get('/api/catalog', async (req, res) => {
+    try {
+      const response = await handleCatalogRequest(
+        new Request('http://localhost/api/catalog', { method: req.method })
+      );
+      res.status(response.status);
+      response.headers.forEach((value, key) => {
+        res.setHeader(key, value);
+      });
+      res.send(await response.text());
+    } catch {
+      console.error('catalog error');
+      res.status(502).set('Cache-Control', 'no-store').json({ error: 'Katalog tidak dapat dimuat' });
+    }
+  });
 
   app.post('/api/ai-assistant', async (req, res) => {
     if (limit > 0) {

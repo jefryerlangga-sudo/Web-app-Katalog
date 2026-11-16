@@ -7,6 +7,7 @@ import {
   Copy,
   Check,
 } from 'lucide-react';
+import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
 
 interface ChatMessage {
@@ -22,7 +23,7 @@ export const AiAssistantPage: React.FC = () => {
     {
       id: 'welcome',
       sender: 'assistant',
-      text: `Halo! Saya asisten belanja PortalTech.\n\nSaya memakai katalog yang sedang dimuat (${activeProducts.length} produk aktif). Harga yang saya sebut hanya harga eceran. Kalau server belum punya kunci Grok, saya tetap mencari lewat kata di katalog.\n\nTanyakan charger, kabel, audio, powerbank, atau pelindung HP.`,
+      text: `Halo! Saya asisten belanja ${APP_NAME}.\n\nSaya memakai katalog yang sedang dimuat (${activeProducts.length} produk aktif). Harga yang saya sebut hanya harga eceran. Kalau server belum punya kunci Grok, saya tetap mencari lewat kata di katalog.\n\nTanyakan charger, kabel, audio, powerbank, atau pelindung HP.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -124,8 +125,8 @@ export const AiAssistantPage: React.FC = () => {
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <h1 className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span>Asisten Grok PortalTech</span>
+            <h1 className="text-xs font-bold text-white flex flex-wrap items-center gap-1.5 leading-tight">
+              <span>Asisten Grok {APP_NAME}</span>
               <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-500/30">
                 Harga eceran
               </span>

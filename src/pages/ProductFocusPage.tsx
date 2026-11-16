@@ -1,7 +1,9 @@
 import React from 'react';
 import { Flame, Target } from 'lucide-react';
+import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
+import { LoadMoreList } from '../components/LoadMoreList';
 
 export const ProductFocusPage: React.FC = () => {
   const { activeProducts, viewMode } = useCatalog();
@@ -29,7 +31,7 @@ export const ProductFocusPage: React.FC = () => {
         </div>
 
         <p className="text-xs text-slate-300 leading-relaxed">
-          Item prioritas PortalTech. Produk ini yang paling direkomendasikan untuk customer dan konter retail.
+          Item prioritas {APP_NAME}. Produk ini yang paling direkomendasikan untuk customer dan konter retail.
         </p>
 
         {viewMode === 'sales' ? (
@@ -66,11 +68,13 @@ export const ProductFocusPage: React.FC = () => {
         </div>
 
         {focusProducts.length > 0 ? (
-          <div className="space-y-3">
-            {focusProducts.map((product) => (
-              <ProductCard key={product.id || product.sku} product={product} />
-            ))}
-          </div>
+          <LoadMoreList
+            items={focusProducts}
+            resetKey={String(focusProducts.length)}
+            className="space-y-3"
+            getKey={(product) => product.id || product.sku}
+            renderItem={(product) => <ProductCard product={product} />}
+          />
         ) : (
           <div className="p-8 text-center bg-slate-800/40 rounded-3xl border border-slate-700/60 my-6">
             <Target className="w-10 h-10 text-slate-500 mx-auto mb-2" />
