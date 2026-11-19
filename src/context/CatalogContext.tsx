@@ -97,6 +97,7 @@ const defaultFilters: ProductFilterState = {
   stockStatus: 'All',
   isProductFocus: null,
   isBestSeller: null,
+  promoOnly: false,
   positioning: 'All',
   compatibilityVehicle: '',
   sortBy: 'featured',
