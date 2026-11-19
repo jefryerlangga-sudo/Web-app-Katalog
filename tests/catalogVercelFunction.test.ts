@@ -6,7 +6,9 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
+import { endUserPrice } from '../src/config/pricing.ts';
 import { CATALOG_CACHE_CONTROL } from '../src/server/catalogHandler.ts';
+import { promoCampaign } from '../src/server/promoCampaign.ts';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
@@ -114,8 +116,24 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(existsSync(join(directory, 'firebase-applet-config.json')), true);
 
     let fetches = 0;
-    globalThis.fetch = (async () => {
+    let accountRole = 'grosir';
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      const url = String(input);
       fetches += 1;
+      if (url.includes('accounts:lookup')) {
+        return new Response(
+          JSON.stringify({
+            users: [{ localId: 'buyer-1', email: 'buyer@example.com', emailVerified: true }],
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+      if (url.includes('/documents/users/')) {
+        return new Response(
+          JSON.stringify({ fields: { role: { stringValue: accountRole } } }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
       return new Response(
         JSON.stringify([
           {
@@ -140,16 +158,28 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
       HEAD: (request: Request) => Promise<Response>;
       default: { fetch: (request: Request) => Promise<Response> };
     };
+    const locked = await mod.GET(new Request('https://katalog.local/api/catalog'));
+    assert.equal(locked.status, 401);
+    assert.equal(locked.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
+    assert.equal(JSON.stringify(await locked.json()).includes('sku'), false);
+    assert.equal(fetches, 0);
+
+    const authed = { headers: { Authorization: 'Bearer test-token' } };
     const stamp = Date.now();
-    const response = await mod.GET(new Request(`https://katalog.local/api/catalog?v=${stamp}`));
+    const response = await mod.GET(new Request(`https://katalog.local/api/catalog?v=${stamp}`, authed));
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
+    assert.equal(response.headers.get('Vary'), 'Authorization');
+    assert.equal(String(response.headers.get('Cache-Control')).includes('s-maxage'), false);
     const body = (await response.json()) as {
+      tier: string;
       products: Array<Record<string, unknown>>;
-      promo: { title: string; items: unknown[] };
+      promo: { title: string; items: Array<{ promoPrice: number }> };
     };
+    assert.equal(body.tier, 'grosir');
     assert.equal(body.products.length, 1);
     assert.equal(body.products[0].sku, 'PS-FOO-0009');
+    assert.equal(body.products[0].suggestedRetailPrice, 88000);
     assert.equal(body.promo.title, 'List Barang Promo');
     assert.equal(body.promo.items.length, 199);
     const serialized = JSON.stringify(body);
@@ -157,12 +187,24 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(serialized.includes('Cuci Gudang'), false);
     assert.equal(fetches > 0, true);
 
-    const head = await mod.HEAD(new Request('https://katalog.local/api/catalog', { method: 'HEAD' }));
+    accountRole = 'end_user';
+    const endUser = await mod.GET(new Request('https://katalog.local/api/catalog', authed));
+    const endBody = (await endUser.json()) as {
+      products: Array<{ suggestedRetailPrice: number }>;
+      promo: { items: Array<{ promoPrice: number }> };
+    };
+    assert.equal(endUser.status, 200);
+    assert.equal(endBody.products[0].suggestedRetailPrice, endUserPrice(88000));
+    assert.equal(endBody.promo.items[0].promoPrice, endUserPrice(promoCampaign.items[0].promoPrice));
+
+    const head = await mod.HEAD(
+      new Request('https://katalog.local/api/catalog', { method: 'HEAD', headers: authed.headers })
+    );
     assert.equal(head.status, 200);
     assert.equal(head.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
     assert.equal(await head.text(), '');
 
-    const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog'));
+    const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog', authed));
     assert.equal(viaDefault.status, 200);
     await viaDefault.text();
   } finally {
@@ -175,9 +217,9 @@ test('customer-facing promo title is List Barang Promo', () => {
   const home = readFileSync(new URL('../src/pages/HomePage.tsx', import.meta.url), 'utf8');
   const page = readFileSync(new URL('../src/pages/PromoPage.tsx', import.meta.url), 'utf8');
   const header = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8');
-  assert.match(home, /\{promoCampaign\.title\}/);
+  assert.match(home, /\{promo\.title\}/);
   assert.equal(home.includes('Cuci Gudang'), false);
   assert.equal(page.includes('Cuci Gudang'), false);
-  assert.match(page, /\{promoCampaign\.title\}/);
+  assert.match(page, /promo\?\.title/);
   assert.match(header, />\s*PROMO\s*</);
 });

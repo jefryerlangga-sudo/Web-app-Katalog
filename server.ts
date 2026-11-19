@@ -8,7 +8,7 @@ import {
   runtimeFromEnv,
   type AiRuntime,
 } from './src/server/aiHandler';
-import { handleCatalogRequest } from './src/server/catalogHandler';
+import { handleCatalogRequest, incomingCatalogRequest } from './src/server/catalogHandler';
 
 dotenv.config();
 
@@ -32,7 +32,7 @@ export function createApp(runtime: AiRuntime = runtimeFromEnv(), options: AppOpt
   app.get('/api/catalog', async (req, res) => {
     try {
       const response = await handleCatalogRequest(
-        new Request('http://localhost/api/catalog', { method: req.method })
+        incomingCatalogRequest(req.method, req.header('authorization'))
       );
       res.status(response.status);
       response.headers.forEach((value, key) => {

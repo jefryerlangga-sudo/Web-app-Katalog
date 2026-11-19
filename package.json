@@ -10,7 +10,7 @@
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "test": "tsx --test tests/orderPricing.test.ts tests/access.test.ts tests/rules-static.test.ts tests/wholesale.test.ts tests/aiHandler.test.ts tests/aiEndpoint.test.ts tests/aiVercelFunction.test.ts tests/catalogBatch.test.ts tests/catalogEndpoint.test.ts tests/placeholder.test.ts tests/categories.test.ts tests/promo.test.ts tests/catalogVercelFunction.test.ts",
+    "test": "tsx --test tests/orderPricing.test.ts tests/access.test.ts tests/tierPricing.test.ts tests/rules-static.test.ts tests/wholesale.test.ts tests/aiHandler.test.ts tests/aiEndpoint.test.ts tests/aiVercelFunction.test.ts tests/catalogBatch.test.ts tests/catalogEndpoint.test.ts tests/placeholder.test.ts tests/categories.test.ts tests/promo.test.ts tests/catalogVercelFunction.test.ts",
     "test:rules": "tsx --test tests/firestore.rules.test.ts",
     "test:rules:emulator": "npx --yes firebase-tools@14.27.0 emulators:exec --project demo-portaltech --only firestore \"npm run test:rules\""
   },

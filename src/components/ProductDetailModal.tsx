@@ -39,14 +39,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     compareList,
     setCurrentTab,
     addToCart,
+    promo,
   } = useCatalog();
 
   const [orderQty, setOrderQty] = useState<number>(10);
   const [copiedScript, setCopiedScript] = useState<boolean>(false);
 
   const inCompare = isInCompare(product.id || product.sku);
-  const promoOffer = promoOfferForProduct(product);
-  const inPromo = isPromoSku(product.sku);
+  const promoOffer = promoOfferForProduct(product, promo);
+  const inPromo = isPromoSku(product.sku, promo);
   const compareFull = compareList.length >= 3 && !inCompare;
   const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
   const unitProfit = quote?.profit ?? 0;

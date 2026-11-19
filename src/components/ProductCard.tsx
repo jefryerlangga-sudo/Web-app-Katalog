@@ -34,12 +34,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, promoView }) 
     isInCompare,
     compareList,
     addToCart,
+    promo,
   } = useCatalog();
 
   const [copiedPitch, setCopiedPitch] = useState(false);
 
   const inCompare = isInCompare(product.id || product.sku);
-  const inPromo = isPromoSku(product.sku);
+  const inPromo = isPromoSku(product.sku, promo);
   const compareFull = compareList.length >= 3 && !inCompare;
   const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
 

@@ -18,9 +18,15 @@ function apiServerPlugin() {
         }
         (async () => {
           try {
-            const { handleCatalogRequest } = await server.ssrLoadModule('/src/server/catalogHandler.ts');
+            const { handleCatalogRequest, incomingCatalogRequest } = await server.ssrLoadModule(
+              '/src/server/catalogHandler.ts'
+            );
+            const authorization = req.headers?.authorization;
             const response = await handleCatalogRequest(
-              new Request('http://localhost/api/catalog', { method: req.method })
+              incomingCatalogRequest(
+                req.method,
+                Array.isArray(authorization) ? authorization[0] : authorization
+              )
             );
             res.statusCode = response.status;
             response.headers.forEach((value: string, key: string) => {

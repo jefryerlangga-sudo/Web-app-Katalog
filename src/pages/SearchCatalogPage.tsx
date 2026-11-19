@@ -16,7 +16,7 @@ import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
 
 export const SearchCatalogPage: React.FC = () => {
-  const { activeProducts, filters, setFilters, resetFilters, viewMode } = useCatalog();
+  const { activeProducts, filters, setFilters, resetFilters, viewMode, promo } = useCatalog();
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
 
   // Extract unique categories & brands from active products
@@ -135,7 +135,7 @@ export const SearchCatalogPage: React.FC = () => {
         return false;
       }
 
-      if (filters.promoOnly && !isPromoSku(product.sku)) {
+      if (filters.promoOnly && !isPromoSku(product.sku, promo)) {
         return false;
       }
 
@@ -169,7 +169,7 @@ export const SearchCatalogPage: React.FC = () => {
       if (!a.isProductFocus && b.isProductFocus) return 1;
       return 0;
     });
-  }, [activeProducts, filters, viewMode]);
+  }, [activeProducts, filters, viewMode, promo]);
 
   return (
     <div className="space-y-3 pb-20">

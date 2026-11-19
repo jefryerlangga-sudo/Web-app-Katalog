@@ -1,9 +1,21 @@
+import type { CatalogTier } from '../config/pricing';
+import type { StorePromo } from './promo';
 import { Product } from '../types/product';
 
-const CACHE_KEY = 'partshop_catalog_cache_v1';
+const CACHE_KEY = 'partshop_catalog_cache_v2';
+const LEGACY_CACHE_KEY = 'partshop_catalog_cache_v1';
 
 interface CatalogCachePayload {
+  uid: string;
+  tier: CatalogTier;
   products: Product[];
+  promo: StorePromo;
+}
+
+export interface AuthorizedCatalog {
+  products: Product[];
+  promo: StorePromo;
+  tier: CatalogTier;
 }
 
 function browserStorage(kind: 'localStorage' | 'sessionStorage'): Storage | null {
@@ -15,23 +27,35 @@ function browserStorage(kind: 'localStorage' | 'sessionStorage'): Storage | null
   }
 }
 
-function readStorage(storage: Storage | null): Product[] | null {
+function readStorage(storage: Storage | null, uid: string, tier: CatalogTier): CatalogCachePayload | null {
   if (!storage) return null;
   try {
     const raw = storage.getItem(CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CatalogCachePayload;
-    if (!parsed || !Array.isArray(parsed.products) || parsed.products.length === 0) return null;
-    return parsed.products.map(stripDealerCost);
+    if (!parsed || parsed.uid !== uid || parsed.tier !== tier) return null;
+    if (!Array.isArray(parsed.products) || !parsed.promo) return null;
+    return {
+      uid,
+      tier,
+      products: parsed.products.map(stripDealerCost) as Product[],
+      promo: parsed.promo,
+    };
   } catch {
     return null;
   }
 }
 
-function writeStorage(storage: Storage | null, products: Product[]) {
+function writeStorage(storage: Storage | null, payload: CatalogCachePayload) {
   if (!storage) return;
   try {
-    storage.setItem(CACHE_KEY, JSON.stringify({ products: products.map(stripDealerCost) }));
+    storage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        ...payload,
+        products: payload.products.map(stripDealerCost),
+      })
+    );
   } catch {
     // Quota or private mode. The network response still paints the page.
   }
@@ -43,24 +67,65 @@ export function stripDealerCost<T extends object>(product: T): Omit<T, 'wholesal
   return copy;
 }
 
-export function readCatalogCache(): Product[] | null {
-  return readStorage(browserStorage('localStorage')) ?? readStorage(browserStorage('sessionStorage'));
+export function readCatalogCache(uid: string, tier: CatalogTier): CatalogCachePayload | null {
+  return (
+    readStorage(browserStorage('localStorage'), uid, tier) ??
+    readStorage(browserStorage('sessionStorage'), uid, tier)
+  );
 }
 
-export function writeCatalogCache(products: Product[]) {
-  const safe = products.map(stripDealerCost) as Product[];
-  writeStorage(browserStorage('localStorage'), safe);
-  writeStorage(browserStorage('sessionStorage'), safe);
+export function writeCatalogCache(uid: string, tier: CatalogTier, products: Product[], promo: StorePromo) {
+  const payload = { uid, tier, products, promo };
+  writeStorage(browserStorage('localStorage'), payload);
+  writeStorage(browserStorage('sessionStorage'), payload);
 }
 
-export async function fetchPublicCatalog(fetchImpl: typeof fetch = fetch): Promise<Product[]> {
-  const response = await fetchImpl('/api/catalog');
+export function clearCatalogCache() {
+  for (const kind of ['localStorage', 'sessionStorage'] as const) {
+    const storage = browserStorage(kind);
+    if (!storage) continue;
+    try {
+      storage.removeItem(CACHE_KEY);
+      storage.removeItem(LEGACY_CACHE_KEY);
+    } catch {
+      // Private mode.
+    }
+  }
+}
+
+export async function fetchAuthorizedCatalog(
+  idToken: string,
+  fetchImpl: typeof fetch = fetch
+): Promise<AuthorizedCatalog> {
+  const response = await fetchImpl('/api/catalog', {
+    cache: 'no-store',
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
+  if (response.status === 401 || response.status === 403) {
+    let message = response.status === 401 ? 'Masuk diperlukan' : 'Akun belum disetujui';
+    try {
+      const body = (await response.json()) as { error?: string };
+      if (body?.error) message = body.error;
+    } catch {
+      // Keep the status fallback.
+    }
+    throw new Error(message);
+  }
   if (!response.ok) {
     throw new Error(`Katalog tidak dapat dimuat (${response.status})`);
   }
-  const body = (await response.json()) as { products?: unknown };
-  if (!body || !Array.isArray(body.products)) {
+  const body = (await response.json()) as { products?: unknown; promo?: StorePromo; tier?: string };
+  if (
+    !body ||
+    !Array.isArray(body.products) ||
+    !body.promo ||
+    (body.tier !== 'grosir' && body.tier !== 'end_user')
+  ) {
     throw new Error('Katalog tidak dapat dimuat');
   }
-  return body.products.map((item) => stripDealerCost(item as Product) as Product);
+  return {
+    products: body.products.map((item) => stripDealerCost(item as Product) as Product),
+    promo: body.promo,
+    tier: body.tier,
+  };
 }

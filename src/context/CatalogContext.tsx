@@ -1,10 +1,15 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { accountRoleLabel, isApprovedAccountRole, isStoredAccountRole, type AssignableAccountRole } from '../config/accountRole';
 import { APP_NAME, isStorefrontProduct } from '../config/app';
+import type { CatalogTier } from '../config/pricing';
 import { BatchSaveProgress } from '../firebase/catalogBatch';
-import { fetchPublicCatalog, readCatalogCache, writeCatalogCache } from '../lib/publicCatalog';
+import { clearCatalogCache, fetchAuthorizedCatalog, readCatalogCache, writeCatalogCache } from '../lib/publicCatalog';
+import type { StorePromo } from '../lib/promo';
 import {
   auth,
+  db,
   loginWithEmail,
   loginWithGoogle,
   logoutUser,
@@ -20,11 +25,10 @@ import {
   saveProduct,
   seedInitialCatalogIfEmpty,
   subscribeToProductAdmin,
-  getProductsOnce,
   subscribeToProducts,
   toggleProductActive,
 } from '../firebase/productsService';
-import { ensureUserProfile, resolveIsAdmin, updateCustomerPhone } from '../firebase/usersService';
+import { ensureUserProfile, resolveIsAdmin, setUserRole, subscribeToUsers, updateCustomerPhone } from '../firebase/usersService';
 import {
   CanvasserProfile,
   CartItem,
@@ -58,6 +62,14 @@ interface CatalogContextType {
   userProfile: UserProfile | null;
   authReady: boolean;
   isAdmin: boolean;
+  gate: 'loading' | 'signed-out' | 'pending' | 'rejected' | 'ready';
+  priceTier: CatalogTier | null;
+  promo: StorePromo | null;
+  profileError: string | null;
+  accountDirectory: UserProfile[];
+  pendingCount: number;
+  accountLabel: string;
+  setAccountRole: (uid: string, role: AssignableAccountRole) => Promise<void>;
   canvasserProfile: CanvasserProfile;
   showAuthModal: boolean;
   setShowAuthModal: (open: boolean) => void;
@@ -157,12 +169,35 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [filters, setFilters] = useState<ProductFilterState>(defaultFilters);
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
   const [authReady, setAuthReady] = useState(false);
+  const [promo, setPromo] = useState<StorePromo | null>(null);
+  const [accountDirectory, setAccountDirectory] = useState<UserProfile[]>([]);
   const [currentTab, setCurrentTabState] = useState<string>('home');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [cart, setCart] = useState<CartItem[]>(() => loadCart());
 
   const isAdmin = useMemo<boolean>(() => resolveIsAdmin(user), [user]);
+  const priceTier = useMemo<CatalogTier | null>(() => {
+    if (isAdmin) return 'grosir';
+    if (userProfile?.role === 'end_user') return 'end_user';
+    if (userProfile?.role === 'grosir' || userProfile?.role === 'customer') return 'grosir';
+    return null;
+  }, [isAdmin, userProfile]);
+  const gate = useMemo<'loading' | 'signed-out' | 'pending' | 'rejected' | 'ready'>(() => {
+    if (!authReady) return 'loading';
+    if (!user) return 'signed-out';
+    if (isAdmin) return 'ready';
+    if (!userProfile) return profileError ? 'pending' : 'loading';
+    if (userProfile.role === 'rejected') return 'rejected';
+    if (isApprovedAccountRole(userProfile.role)) return 'ready';
+    return 'pending';
+  }, [authReady, user, isAdmin, userProfile, profileError]);
+  const pendingCount = useMemo(
+    () => accountDirectory.filter((entry) => entry.role === 'pending').length,
+    [accountDirectory]
+  );
+  const accountLabel = accountRoleLabel(userProfile?.role, isAdmin);
 
   const canvasserProfile: CanvasserProfile = useMemo(() => {
     return {
@@ -221,12 +256,17 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
         try {
           const profile = await ensureUserProfile(firebaseUser);
           setUserProfile(profile);
+          setProfileError(null);
         } catch (err) {
           console.error('Failed to ensure user profile:', err);
           setUserProfile(null);
+          setProfileError('Pendaftaran akun belum tersimpan. Coba masuk lagi, atau minta admin memeriksa aturan Firestore.');
         }
       } else {
         setUserProfile(null);
+        setProfileError(null);
+        setPromo(null);
+        setProducts([]);
       }
       setAuthReady(true);
     });
@@ -234,12 +274,35 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   useEffect(() => {
-    const cached = readCatalogCache();
-    if (!cached || cached.length === 0) return;
-    setProducts(cached);
-    setUsingPreviewCatalog(false);
-    setLoading(false);
-  }, []);
+    if (!user) return;
+    return onSnapshot(
+      doc(db, 'users', user.uid),
+      (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data() as Partial<UserProfile>;
+        setUserProfile({
+          uid: user.uid,
+          email: typeof data.email === 'string' ? data.email : user.email || '',
+          displayName: typeof data.displayName === 'string' ? data.displayName : user.displayName || 'Pelanggan',
+          photoURL: typeof data.photoURL === 'string' ? data.photoURL : '',
+          role: isStoredAccountRole(data.role) ? data.role : 'pending',
+          phone: typeof data.phone === 'string' ? data.phone : '',
+          createdAt: typeof data.createdAt === 'string' ? data.createdAt : '',
+          updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : '',
+        });
+        setProfileError(null);
+      },
+      () => undefined
+    );
+  }, [user]);
+
+  useEffect(() => {
+    if (!isAdmin) {
+      setAccountDirectory([]);
+      return;
+    }
+    return subscribeToUsers(setAccountDirectory, () => setAccountDirectory([]));
+  }, [isAdmin]);
 
   useEffect(() => {
     if (!authReady) return;
@@ -254,61 +317,19 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setLoading(false);
     };
 
-    const showProducts = (items: Product[], preview: boolean) => {
-      if (!active) return;
-      setProducts(items);
-      setUsingPreviewCatalog(preview);
-      if (!preview) setError(null);
-      setLoading(false);
-    };
-
-    async function loadGuestCatalog() {
-      const cached = readCatalogCache();
-      if (!cached) setLoading(true);
+    async function loadPromo(firebaseUser: User) {
       try {
-        const items = await fetchPublicCatalog();
+        const token = await firebaseUser.getIdToken();
+        const catalog = await fetchAuthorizedCatalog(token);
         if (!active) return;
-        if (items.length === 0) {
-          setProducts(SAMPLE_PRODUCTS);
-          setUsingPreviewCatalog(true);
-          setError(null);
-          setLoading(false);
-          return;
-        }
-        writeCatalogCache(items);
-        showProducts(items, false);
-      } catch (err) {
-        if (!active) return;
-        console.warn('Public catalog endpoint failed, falling back to Firestore:', err);
-        try {
-          const items = await getProductsOnce();
-          if (!active) return;
-          if (items.length === 0) {
-            if (cached) {
-              showProducts(cached, false);
-              setError('Katalog online belum bisa dimuat. Menampilkan salinan tersimpan.');
-              return;
-            }
-            showSamples('Katalog Firestore tidak dapat dimuat. Menampilkan sampel lokal. Checkout dimatikan.');
-            return;
-          }
-          writeCatalogCache(items);
-          showProducts(items, false);
-        } catch (fallbackErr) {
-          if (!active) return;
-          console.error('Firestore catalog fallback failed:', fallbackErr);
-          if (cached) {
-            showProducts(cached, false);
-            setError('Katalog online belum bisa dimuat. Menampilkan salinan tersimpan.');
-            return;
-          }
-          const message = fallbackErr instanceof Error ? fallbackErr.message : 'Database connection error';
-          showSamples(message);
-        }
+        setPromo(catalog.promo);
+      } catch {
+        if (active) setPromo(null);
       }
     }
 
     async function loadAdminCatalog() {
+      if (!user) return;
       try {
         setLoading(true);
         const unsub = await subscribeToProducts(
@@ -331,23 +352,73 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
           }
         );
         unsubscribe = unsub;
+        await loadPromo(user);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Database connection error';
         showSamples(message);
       }
     }
 
+    async function loadApprovedCatalog() {
+      if (!user || !priceTier) return;
+      const cached = readCatalogCache(user.uid, priceTier);
+      if (cached) {
+        setProducts(cached.products);
+        setPromo(cached.promo);
+        setUsingPreviewCatalog(false);
+        setLoading(false);
+      } else {
+        setProducts([]);
+        setPromo(null);
+        setLoading(true);
+      }
+      try {
+        const token = await user.getIdToken();
+        const catalog = await fetchAuthorizedCatalog(token);
+        if (!active) return;
+        if (catalog.tier !== priceTier) return;
+        setProducts(catalog.products);
+        setPromo(catalog.promo);
+        setUsingPreviewCatalog(false);
+        setError(null);
+        writeCatalogCache(user.uid, catalog.tier, catalog.products, catalog.promo);
+        setLoading(false);
+      } catch (err) {
+        if (!active) return;
+        if (cached) {
+          setError('Katalog online belum bisa dimuat. Menampilkan salinan tersimpan.');
+        } else {
+          setProducts([]);
+          setPromo(null);
+          setError(err instanceof Error ? err.message : 'Katalog tidak dapat dimuat');
+        }
+        setUsingPreviewCatalog(false);
+        setLoading(false);
+      }
+    }
+
+    if (!user || gate === 'signed-out' || gate === 'pending' || gate === 'rejected') {
+      setProducts([]);
+      setPromo(null);
+      setUsingPreviewCatalog(false);
+      setError(null);
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
     if (isAdmin) {
       loadAdminCatalog();
-    } else {
-      loadGuestCatalog();
+    } else if (gate === 'ready') {
+      loadApprovedCatalog();
     }
 
     return () => {
       active = false;
       if (unsubscribe) unsubscribe();
     };
-  }, [authReady, isAdmin]);
+  }, [authReady, isAdmin, user, gate, priceTier]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -469,9 +540,18 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const logout = async () => {
+    clearCatalogCache();
     await logoutUser();
     setUserProfile(null);
+    setProfileError(null);
+    setPromo(null);
+    setProducts([]);
     setViewModeState('customer');
+  };
+
+  const setAccountRole = async (uid: string, role: AssignableAccountRole) => {
+    requireAdmin(isAdmin);
+    await setUserRole(uid, role);
   };
 
   const seedData = async () => {
@@ -607,6 +687,14 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
         userProfile,
         authReady,
         isAdmin,
+        gate,
+        priceTier,
+        promo,
+        profileError,
+        accountDirectory,
+        pendingCount,
+        accountLabel,
+        setAccountRole,
         canvasserProfile,
         showAuthModal,
         setShowAuthModal,

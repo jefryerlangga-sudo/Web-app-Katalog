@@ -27,8 +27,8 @@ export const ACCESSORY_CATEGORIES = [
   'Modem & Jaringan',
 ] as const;
 
-/** Shown after an admin save. The customer catalog is served from the CDN cache. */
-export const CUSTOMER_CATALOG_DELAY_NOTE = 'Perubahan tampil di katalog customer maks. 30 menit';
+/** Shown after an admin save. Catalog responses are private and not shared on the CDN. */
+export const CUSTOMER_CATALOG_DELAY_NOTE = 'Perubahan harga tampil saat pelanggan memuat ulang katalog';
 
 /**
  * Legacy spare-part categories. Storefront hides them.

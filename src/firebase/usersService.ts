@@ -1,7 +1,11 @@
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { db, handleFirestoreError, OperationType } from './config';
-import { UserProfile } from '../types/product';
+import {
+  AssignableAccountRole,
+  isStoredAccountRole,
+} from '../config/accountRole';
+import { UserProfile, UserRole } from '../types/product';
 import { isMasterAdminUser } from '../config/app';
 
 const COLLECTION = 'users';
@@ -20,9 +24,14 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   }
 }
 
+function storedRole(value: unknown): UserRole {
+  return isStoredAccountRole(value) ? value : 'pending';
+}
+
 /**
- * Creates users/{uid} as role customer, or refreshes display fields.
- * Never writes role admin. Master access is the verified email in rules, not this field.
+ * Creates users/{uid} as pending, or refreshes display fields.
+ * Never writes role admin and never changes an existing role.
+ * Master access is the verified email in rules, not this field.
  */
 export async function ensureUserProfile(user: User): Promise<UserProfile> {
   if (!user.email) {
@@ -50,7 +59,7 @@ export async function ensureUserProfile(user: User): Promise<UserProfile> {
         email,
         displayName,
         photoURL,
-        role: 'customer',
+        role: storedRole(data.role),
         phone: typeof data.phone === 'string' ? data.phone : '',
         createdAt: typeof data.createdAt === 'string' ? data.createdAt : now,
         updatedAt: now,
@@ -62,7 +71,7 @@ export async function ensureUserProfile(user: User): Promise<UserProfile> {
       email,
       displayName,
       photoURL,
-      role: 'customer',
+      role: 'pending',
       phone: '',
       createdAt: now,
       updatedAt: now,
@@ -83,6 +92,43 @@ export async function updateCustomerPhone(uid: string, phone: string): Promise<v
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `${COLLECTION}/${uid}`);
   }
+}
+
+export async function setUserRole(uid: string, role: AssignableAccountRole): Promise<void> {
+  try {
+    await updateDoc(doc(db, COLLECTION, uid), {
+      role,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, `${COLLECTION}/${uid}`);
+  }
+}
+
+export function subscribeToUsers(
+  onData: (users: UserProfile[]) => void,
+  onError: (error: Error) => void
+): () => void {
+  return onSnapshot(
+    collection(db, COLLECTION),
+    (snapshot) => {
+      const users = snapshot.docs.map((entry) => {
+        const data = entry.data() as Partial<UserProfile>;
+        return {
+          uid: entry.id,
+          email: typeof data.email === 'string' ? data.email : '',
+          displayName: typeof data.displayName === 'string' ? data.displayName : '',
+          photoURL: typeof data.photoURL === 'string' ? data.photoURL : '',
+          role: storedRole(data.role),
+          phone: typeof data.phone === 'string' ? data.phone : '',
+          createdAt: typeof data.createdAt === 'string' ? data.createdAt : '',
+          updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : '',
+        };
+      });
+      onData(users);
+    },
+    (error) => onError(error)
+  );
 }
 
 export function resolveIsAdmin(user: User | null): boolean {

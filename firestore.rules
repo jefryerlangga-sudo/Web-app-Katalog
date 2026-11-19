@@ -2,8 +2,13 @@ rules_version = '2';
 // Not deployed by git merge. Publish this file from the Firebase console or CLI yourself.
 // Catalog writes require the verified master-admin email below.
 // Keep that email in sync with MASTER_ADMIN_EMAILS in src/config/app.ts.
-// products/{id} is public and must not store wholesalePrice.
+// products/{id} is readable only by the verified master admin and must not store wholesalePrice.
+// Clients must not read selling prices directly; GET /api/catalog applies the account tier.
+// Publish this file only after FIREBASE_SERVICE_ACCOUNT is set on the Vercel deployment
+// that serves /api/catalog. Publishing it earlier makes the previous public catalog API fail.
 // productAdmin/{id} holds dealer cost and is readable only by the verified master admin.
+// End-user unit price = ceil(base * 130 / 10000) * 100.
+// 130 = (1 + 0.30) * 100 and 10000 = 100 * 100. Keep in sync with src/config/pricing.ts.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
@@ -79,24 +84,74 @@ service cloud.firestore {
         isIsoLike(data.updatedAt);
     }
 
-    function isValidUser(data) {
+    function userProfileShape(data) {
       return data.keys().hasOnly([
           'uid', 'email', 'displayName', 'photoURL', 'role', 'phone', 'createdAt', 'updatedAt'
         ]) &&
-        data.uid == request.auth.uid &&
+        data.uid is string && data.uid.size() > 0 &&
         data.email is string && data.email.size() > 0 && data.email.size() <= 120 &&
-        data.email.lower() == authEmail() &&
         data.displayName is string && data.displayName.size() > 0 && data.displayName.size() <= 120 &&
         data.photoURL is string && data.photoURL.size() <= 500 &&
-        data.role == 'customer' &&
         data.phone is string && data.phone.size() <= 32 &&
         isIsoLike(data.createdAt) &&
         isIsoLike(data.updatedAt);
     }
 
+    function isStoredRole(role) {
+      return role in ['pending', 'rejected', 'grosir', 'end_user', 'customer'];
+    }
+
+    function isPendingSignup(data) {
+      return userProfileShape(data) &&
+        data.uid == request.auth.uid &&
+        data.email.lower() == authEmail() &&
+        data.role == 'pending';
+    }
+
+    function isSelfProfileUpdate() {
+      return userProfileShape(request.resource.data) &&
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.email.lower() == authEmail() &&
+        request.resource.data.uid == resource.data.uid &&
+        request.resource.data.role == resource.data.role &&
+        isStoredRole(resource.data.role) &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'email', 'displayName', 'photoURL', 'phone', 'updatedAt'
+        ]);
+    }
+
+    function isAdminRoleUpdate() {
+      return isVerifiedMasterAdmin() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'updatedAt']) &&
+        request.resource.data.role in ['pending', 'rejected', 'grosir', 'end_user'] &&
+        isIsoLike(request.resource.data.updatedAt);
+    }
+
+    function endUserUnitPrice(base) {
+      return math.ceil(base * 130 / 10000) * 100;
+    }
+
+    function buyerDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isApprovedBuyer() {
+      return isVerifiedMasterAdmin() || (
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        buyerDoc().role in ['grosir', 'end_user', 'customer']
+      );
+    }
+
+    function expectedUnitPrice(base) {
+      return isVerifiedMasterAdmin()
+        ? base
+        : (buyerDoc().role == 'end_user' ? endUserUnitPrice(base) : base);
+    }
+
     function pricedFromCatalog(item) {
       let product = get(/databases/$(database)/documents/products/$(item.productId)).data;
-      return product.suggestedRetailPrice == item.unitPrice
+      return expectedUnitPrice(product.suggestedRetailPrice) == item.unitPrice
         && product.sku == item.sku
         && product.name == item.name
         && product.isActive == true
@@ -168,12 +223,12 @@ service cloud.firestore {
         data.status == 'pending' &&
         data.note is string && data.note.size() <= 500 &&
         isIsoLike(data.createdAt) &&
-        isIsoLike(data.updatedAt);
+        isIsoLike(data.updatedAt) &&
+        isApprovedBuyer();
     }
 
     match /products/{productId} {
-      allow get: if isValidId(productId);
-      allow list: if true;
+      allow get, list: if isVerifiedMasterAdmin();
       allow create, update: if isVerifiedMasterAdmin() && isValidId(productId) && isValidProduct(request.resource.data);
       allow delete: if isVerifiedMasterAdmin() && isValidId(productId);
     }
@@ -189,15 +244,8 @@ service cloud.firestore {
       allow list: if isVerifiedMasterAdmin();
       allow create: if isSignedIn()
         && request.auth.uid == userId
-        && isValidUser(request.resource.data);
-      allow update: if isSignedIn()
-        && request.auth.uid == userId
-        && isValidUser(request.resource.data)
-        && request.resource.data.uid == resource.data.uid
-        && request.resource.data.role == 'customer'
-        && resource.data.role == 'customer'
-        && request.resource.data.createdAt == resource.data.createdAt
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['email', 'displayName', 'photoURL', 'phone', 'updatedAt']);
+        && isPendingSignup(request.resource.data);
+      allow update: if isSelfProfileUpdate() || isAdminRoleUpdate();
       allow delete: if isVerifiedMasterAdmin();
     }
 

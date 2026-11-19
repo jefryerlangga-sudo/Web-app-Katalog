@@ -15,7 +15,8 @@ import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ExcelImportModal } from '../components/ExcelImportModal';
 import { CUSTOMER_CATALOG_DELAY_NOTE, isStorefrontProduct, listStorefrontCategories } from '../config/app';
-import { isPromoSku, listPromoProducts, promoCampaign } from '../lib/promo';
+import { AccountApprovals } from '../components/AccountApprovals';
+import { isPromoSku, listPromoProducts } from '../lib/promo';
 import { PromoBadge } from '../components/PromoBadge';
 import { ProductImage } from '../components/ProductImage';
 import { LoadMoreList } from '../components/LoadMoreList';
@@ -32,6 +33,7 @@ export const AdminPage: React.FC = () => {
     user,
     setShowAuthModal,
     setCurrentTab,
+    promo,
   } = useCatalog();
 
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
@@ -156,6 +158,7 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="space-y-4 pb-24">
+      <AccountApprovals />
       {/* Header and Add Action */}
       <div className="bg-slate-800/90 border border-slate-700/80 p-4 rounded-3xl shadow-lg space-y-3">
         <div className="flex items-center justify-between">
@@ -215,12 +218,12 @@ export const AdminPage: React.FC = () => {
             <span>Isi sampel jika katalog kosong</span>
           </button>
         </div>
-        {promoCampaign.active && (
+        {promo?.active && (
           <div className="p-3 rounded-2xl border border-orange-500/40 bg-orange-950/30 space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-orange-300">Kelola Promo</p>
-                <h2 className="text-sm font-black text-white">{promoCampaign.title}</h2>
+                <h2 className="text-sm font-black text-white">{promo.title}</h2>
               </div>
               <button
                 type="button"
@@ -231,7 +234,7 @@ export const AdminPage: React.FC = () => {
               </button>
             </div>
             <p className="text-[11px] text-orange-50/90">
-              {listPromoProducts(products).length} dari {promoCampaign.items.length} SKU promo tampil.
+              {listPromoProducts(products, promo).length} dari {promo.items.length} SKU promo tampil.
               Yang nonaktif atau tidak ada di katalog disembunyikan.
             </p>
             <p className="text-[11px] text-slate-300">
@@ -293,7 +296,7 @@ export const AdminPage: React.FC = () => {
                         </span>
                       )}
 
-                      {isPromoSku(item.sku) && <PromoBadge />}
+                      {isPromoSku(item.sku, promo) && <PromoBadge />}
                     </div>
 
                     <h3 className="font-bold text-white text-xs mt-0.5 truncate max-w-[200px]">

@@ -1,20 +1,27 @@
 /**
- * Storefront join of the shipped campaign onto catalog products.
- * GET /api/catalog must not import this file. It imports ../config/app without
- * a specifier extension, which Node rejects in the Vercel function output.
+ * Storefront join of a campaign payload onto catalog products.
+ * This file must not import the promo JSON. Prices arrive from GET /api/catalog
+ * after login. The Vercel function loads the file from src/server/promoCampaign.ts.
  */
 import { isStorefrontProduct } from '../config/app';
-import { promoCampaign, type PromoCampaign } from '../server/promoCampaign.ts';
 import { Product } from '../types/product';
 
-export {
-  parsePromoCampaign,
-  promoCampaign,
-  publicPromoPayload,
-  type PromoCampaign,
-  type PromoCampaignItem,
-  type PublicPromoPayload,
-} from '../server/promoCampaign.ts';
+export interface StorePromoItem {
+  sku: string;
+  brand: string;
+  promoPrice: number;
+  stock: number;
+}
+
+export interface StorePromo {
+  id: string;
+  title: string;
+  active: boolean;
+  minPurchase: number;
+  brands: string[];
+  terms: string[];
+  items: StorePromoItem[];
+}
 
 export interface PromoListing {
   product: Product;
@@ -23,12 +30,6 @@ export interface PromoListing {
   promoPrice: number;
   promoStock: number;
   showRetailStrike: boolean;
-}
-
-const promoBySku = new Map(promoCampaign.items.map((item) => [item.sku, item]));
-
-export function isPromoSku(sku: string): boolean {
-  return promoCampaign.active && promoBySku.has(sku);
 }
 
 /** Strikethrough the catalog HET only when the promo price is actually lower. */
@@ -45,15 +46,21 @@ export function promoStockLabel(stock: number): string {
   return qty > 0 ? `Sisa ${qty}` : 'Stok promo habis';
 }
 
+export function isPromoSku(sku: string, campaign: StorePromo | null | undefined): boolean {
+  if (!campaign?.active) return false;
+  const wanted = String(sku ?? '').trim();
+  return campaign.items.some((item) => item.sku === wanted);
+}
+
 /**
  * Active storefront products whose SKU is in the campaign, in campaign order.
  * Missing and inactive SKUs are omitted. Promo fields on the product document are ignored.
  */
 export function listPromoProducts(
   products: Product[],
-  campaign: PromoCampaign = promoCampaign
+  campaign: StorePromo | null | undefined
 ): PromoListing[] {
-  if (!campaign.active) return [];
+  if (!campaign?.active) return [];
   const bySku = new Map<string, Product>();
   for (const product of products) {
     const sku = String(product?.sku ?? '').trim();
@@ -80,7 +87,10 @@ export function listPromoProducts(
   return listings;
 }
 
-export function promoOfferForProduct(product: Product): PromoListing | null {
-  const match = listPromoProducts([product]);
+export function promoOfferForProduct(
+  product: Product,
+  campaign: StorePromo | null | undefined
+): PromoListing | null {
+  const match = listPromoProducts([product], campaign);
   return match[0] ?? null;
 }

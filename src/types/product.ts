@@ -1,7 +1,7 @@
 export type StockStatus = 'In Stock' | 'Low Stock' | 'Pre-Order' | 'Out of Stock';
 export type PositioningTier = 'Good' | 'Better' | 'Best';
 export type ViewMode = 'sales' | 'customer';
-export type UserRole = 'customer';
+export type UserRole = 'pending' | 'rejected' | 'grosir' | 'end_user' | 'customer';
 export type OrderStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
 
 export interface Product {

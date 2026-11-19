@@ -6,15 +6,13 @@ import {
   CATALOG_CACHE_CONTROL,
   handleCatalogRequest,
 } from '../src/server/catalogHandler.ts';
+import { listPromoProducts, promoStockLabel, showRetailStrike } from '../src/lib/promo.ts';
 import {
-  listPromoProducts,
   parsePromoCampaign,
   promoCampaign,
-  promoStockLabel,
   publicPromoPayload,
-  showRetailStrike,
   type PromoCampaign,
-} from '../src/lib/promo.ts';
+} from '../src/server/promoCampaign.ts';
 import { Product } from '../src/types/product.ts';
 
 const FORBIDDEN = /wholesalePrice|wholesale|harga_modal|modal_grosir|dealerCost|productAdmin/i;
@@ -100,7 +98,7 @@ test('promo list keeps shipped prices after a full product overwrite and hides i
     name: 'Bukan promo',
   });
 
-  const listings = listPromoProducts([kept, inactive, hiddenCategory, unrelated]);
+  const listings = listPromoProducts([kept, inactive, hiddenCategory, unrelated], promoCampaign);
   assert.deepEqual(
     listings.map((item) => item.sku),
     ['PS-FOO-0009']
@@ -118,9 +116,10 @@ test('strikethrough only when promo price is below suggested retail', () => {
   assert.equal(showRetailStrike(80000, 88000), true);
   assert.equal(showRetailStrike(90000, 88000), false);
 
-  const cheaperRetailGap = listPromoProducts([
-    catalogProduct({ suggestedRetailPrice: 100000 }),
-  ]);
+  const cheaperRetailGap = listPromoProducts(
+    [catalogProduct({ suggestedRetailPrice: 100000 })],
+    promoCampaign
+  );
   assert.equal(cheaperRetailGap[0].showRetailStrike, true);
   assert.equal(cheaperRetailGap[0].promoPrice, 88000);
 
@@ -138,7 +137,7 @@ test('every shipped SKU is listed when the catalog copy is active, with no fake 
       suggestedRetailPrice: item.promoPrice,
     })
   );
-  const listings = listPromoProducts(products);
+  const listings = listPromoProducts(products, promoCampaign);
   assert.equal(listings.length, 199);
   assert.equal(listings.every((item) => item.showRetailStrike === false), true);
   assert.equal(listings.filter((item) => item.brand === 'Mcdodo').length, 49);
@@ -151,7 +150,7 @@ test('checkout still prices the catalog HET and ignores a lower promo figure', (
     sku: 'PS-FOO-0009',
     suggestedRetailPrice: 100000,
   });
-  const offer = listPromoProducts([product])[0];
+  const offer = listPromoProducts([product], promoCampaign)[0];
   const priced = priceCart(
     [
       {
@@ -172,6 +171,7 @@ test('checkout still prices the catalog HET and ignores a lower promo figure', (
 
 test('GET /api/catalog attaches the promo payload without changing the CDN cache header', async () => {
   const response = await handleCatalogRequest(new Request('https://katalog.local/api/catalog'), {
+    authorize: async () => ({ ok: true as const, access: { tier: 'grosir' as const } }),
     fetchImpl: async () =>
       new Response(
         JSON.stringify([
@@ -196,7 +196,8 @@ test('GET /api/catalog attaches the promo payload without changing the CDN cache
 
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
-  assert.equal(CATALOG_CACHE_CONTROL, 'public, s-maxage=1800, stale-while-revalidate=86400');
+  assert.equal(CATALOG_CACHE_CONTROL, 'private, no-store');
+  assert.equal(response.headers.get('Vary'), 'Authorization');
   const body = (await response.json()) as {
     products: Array<Record<string, unknown>>;
     promo: ReturnType<typeof publicPromoPayload>;
