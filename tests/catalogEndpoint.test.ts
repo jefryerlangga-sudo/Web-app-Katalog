@@ -200,6 +200,35 @@ test('catalog rejects logged-out, pending, and rejected callers with no product 
   assert.equal(queries, 0);
 });
 
+test('a Firestore quota failure is not described as a rejected account', async () => {
+  let queries = 0;
+  const fetchImpl: typeof fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('accounts:lookup')) {
+      return new Response(
+        JSON.stringify({
+          users: [{ localId: 'buyer-1', email: 'buyer@example.com', emailVerified: true }],
+        }),
+        { status: 200 }
+      );
+    }
+    if (url.includes('/documents/users/')) {
+      return new Response('quota', { status: 429 });
+    }
+    queries += 1;
+    return new Response('[]', { status: 200 });
+  };
+  const response = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer token' } }),
+    { fetchImpl }
+  );
+  assert.equal(response.status, 502);
+  const body = (await response.json()) as { error?: string; products?: unknown };
+  assert.equal(body.error, 'Katalog tidak dapat dimuat');
+  assert.equal(body.products, undefined);
+  assert.equal(queries, 0);
+});
+
 test('grosir keeps the selling price and end user pays 30 percent rounded up', async () => {
   const fetchImpl: typeof fetch = async (input) => {
     const url = String(input);

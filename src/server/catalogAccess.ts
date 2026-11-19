@@ -20,7 +20,13 @@ export interface CatalogAccess {
 
 export type CatalogAuthorization =
   | { ok: true; access: CatalogAccess }
-  | { ok: false; status: 401 | 403; error: string };
+  | { ok: false; status: 401 | 403 | 502; error: string };
+
+export class AccountReadError extends Error {
+  constructor(readonly status: number) {
+    super('role');
+  }
+}
 
 interface Identity {
   uid: string;
@@ -76,7 +82,7 @@ export async function readAccountRole(
     headers: { Authorization: `Bearer ${idToken}` },
   });
   if (response.status === 404) return null;
-  if (!response.ok) throw new Error('role');
+  if (!response.ok) throw new AccountReadError(response.status);
   const body = (await response.json()) as { fields?: { role?: { stringValue?: string } } };
   const role = body.fields?.role?.stringValue;
   return typeof role === 'string' ? role : null;
@@ -104,8 +110,11 @@ export async function authorizeCatalogRequest(
   let role: string | null;
   try {
     role = await readAccountRole(identity.uid, idToken, fetchImpl, options.source);
-  } catch {
-    return { ok: false, status: 403, error: 'Akun belum disetujui' };
+  } catch (error) {
+    if (error instanceof AccountReadError && (error.status === 401 || error.status === 403)) {
+      return { ok: false, status: 403, error: 'Akun belum disetujui' };
+    }
+    return { ok: false, status: 502, error: 'Katalog tidak dapat dimuat' };
   }
 
   const tier = tierForAccount({
