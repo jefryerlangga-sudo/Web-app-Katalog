@@ -27,8 +27,12 @@ export const ACCESSORY_CATEGORIES = [
   'Modem & Jaringan',
 ] as const;
 
-/** Shown after an admin save. Catalog responses are private and not shared on the CDN. */
-export const CUSTOMER_CATALOG_DELAY_NOTE = 'Perubahan harga tampil saat pelanggan memuat ulang katalog';
+/**
+ * Shown after an admin save. The server keeps one shared product snapshot and
+ * drops it when the admin saves. Customers then see the new prices on reload.
+ */
+export const CUSTOMER_CATALOG_DELAY_NOTE =
+  'Perubahan harga masuk ke katalog bersama setelah simpan, lalu tampil saat pelanggan memuat ulang';
 
 /**
  * Legacy spare-part categories. Storefront hides them.

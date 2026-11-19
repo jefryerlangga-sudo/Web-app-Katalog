@@ -1,13 +1,18 @@
 /**
  * Signed-in catalog read. Prices depend on the caller's approved tier, so the
- * response is private and is not stored on the shared CDN.
- * `promo` is the campaign shipped in the repo (no extra Firestore read).
+ * HTTP response is private and is not stored on the shared CDN.
+ * The base product list is one shared snapshot (in-process, and on Vercel the
+ * Runtime Cache). A normal visit reads the caller's role once, or not at all
+ * when that role is still in the short cache. The ~1,500 product documents are
+ * read only when the snapshot is missing or an admin has cleared it.
+ * `promo` is the campaign shipped in the repo (no Firestore read).
  * Import server modules with a .ts extension. Vercel emits each TypeScript file
  * as its own Node ESM module and does not resolve extensionless imports.
  */
 import appletConfig from '../../firebase-applet-config.json' with { type: 'json' };
 import { priceForTier, promoForTier, type CatalogTier } from '../config/pricing.ts';
 import { authorizeCatalogRequest, type CatalogAuthorization } from './catalogAccess.ts';
+import { getSharedCatalogCache, type CatalogCache } from './catalogCache.ts';
 import { publicPromoPayload } from './promoCampaign.ts';
 import { getServiceAccountAccessToken, serviceAccountConfigured } from './serviceAccount.ts';
 
@@ -96,6 +101,12 @@ export interface FetchActiveCatalogOptions {
   /** Service-account bearer. Bypasses security rules when product reads are admin-only. */
   accessToken?: string;
   authorize?: (request: Request) => Promise<CatalogAuthorization>;
+  /**
+   * Shared base-price snapshot. Pass null to skip it.
+   * Omitted on a real request uses the process/Runtime Cache.
+   * Omitted together with fetchImpl or endpoint skips it, so tests stay isolated.
+   */
+  catalogCache?: CatalogCache | null;
 }
 
 export function catalogResponseHeaders(): Record<string, string> {
@@ -244,6 +255,40 @@ function catalogJson(body: unknown, status: number): Response {
   return Response.json(body, { status, headers: catalogResponseHeaders() });
 }
 
+function resolveCatalogCache(options: FetchActiveCatalogOptions): CatalogCache | undefined {
+  if (options.catalogCache === null) return undefined;
+  if (options.catalogCache) return options.catalogCache;
+  if (options.fetchImpl || options.endpoint) return undefined;
+  return getSharedCatalogCache();
+}
+
+const snapshotLoads = new WeakMap<CatalogCache, Promise<PublicCatalogProduct[]>>();
+
+async function loadBaseCatalog(
+  options: FetchActiveCatalogOptions,
+  accessToken: string | undefined
+): Promise<PublicCatalogProduct[]> {
+  const cache = resolveCatalogCache(options);
+  if (!cache) return fetchActiveCatalog({ ...options, accessToken });
+
+  const pending = snapshotLoads.get(cache);
+  if (pending) return pending;
+
+  const run = (async () => {
+    const hit = await cache.getProducts();
+    if (hit) return hit as PublicCatalogProduct[];
+    const products = await fetchActiveCatalog({ ...options, accessToken });
+    await cache.setProducts(products);
+    return products;
+  })();
+  snapshotLoads.set(cache, run);
+  try {
+    return await run;
+  } finally {
+    if (snapshotLoads.get(cache) === run) snapshotLoads.delete(cache);
+  }
+}
+
 function priceProducts(products: PublicCatalogProduct[], tier: CatalogTier): PublicCatalogProduct[] {
   if (tier !== 'end_user') return products;
   return products.map((product) => ({
@@ -260,12 +305,14 @@ export async function handleCatalogRequest(
     return catalogJson({ error: 'Metode tidak diizinkan' }, 405);
   }
 
+  const cache = resolveCatalogCache(options);
   const authorize =
     options.authorize ??
     ((incoming: Request) =>
       authorizeCatalogRequest(incoming, {
         fetchImpl: options.fetchImpl,
         source: options.source,
+        roleCache: cache,
       }));
 
   const decision = await authorize(request);
@@ -283,7 +330,7 @@ export async function handleCatalogRequest(
   }
 
   try {
-    const products = await fetchActiveCatalog({ ...options, accessToken });
+    const products = await loadBaseCatalog(options, accessToken);
     const payload = {
       products: priceProducts(products, decision.access.tier),
       promo: promoForTier(publicPromoPayload(), decision.access.tier),
@@ -303,4 +350,32 @@ export async function handleCatalogRequest(
   } catch {
     return catalogJson({ error: 'Katalog tidak dapat dimuat' }, 502);
   }
+}
+
+/** Drops the shared base snapshot. Master admin only. No product data in the body. */
+export async function handleCatalogRefresh(
+  request: Request,
+  options: FetchActiveCatalogOptions = {}
+): Promise<Response> {
+  if (request.method !== 'POST') {
+    return catalogJson({ error: 'Metode tidak diizinkan' }, 405);
+  }
+  const cache = resolveCatalogCache(options);
+  const authorize =
+    options.authorize ??
+    ((incoming: Request) =>
+      authorizeCatalogRequest(incoming, {
+        fetchImpl: options.fetchImpl,
+        source: options.source,
+        roleCache: cache,
+      }));
+  const decision = await authorize(request);
+  if (!decision.ok) {
+    return catalogJson({ error: decision.error }, decision.status);
+  }
+  if (!decision.access.canRefresh) {
+    return catalogJson({ error: 'Hanya master admin yang dapat menyegarkan katalog' }, 403);
+  }
+  if (cache) await cache.clear();
+  return catalogJson({ ok: true }, 200);
 }

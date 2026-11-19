@@ -116,24 +116,36 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(existsSync(join(directory, 'firebase-applet-config.json')), true);
 
     let fetches = 0;
-    let accountRole = 'grosir';
-    globalThis.fetch = (async (input: RequestInfo | URL) => {
+    let productQueries = 0;
+    let roleReads = 0;
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       fetches += 1;
       if (url.includes('accounts:lookup')) {
+        const body = JSON.parse(String(init?.body || '{}')) as { idToken?: string };
+        const end = body.idToken === 'end-token';
         return new Response(
           JSON.stringify({
-            users: [{ localId: 'buyer-1', email: 'buyer@example.com', emailVerified: true }],
+            users: [
+              {
+                localId: end ? 'end-user' : 'grosir-user',
+                email: end ? 'end@example.com' : 'buyer@example.com',
+                emailVerified: true,
+              },
+            ],
           }),
           { status: 200, headers: { 'Content-Type': 'application/json' } }
         );
       }
       if (url.includes('/documents/users/')) {
+        roleReads += 1;
+        const end = url.includes('end-user');
         return new Response(
-          JSON.stringify({ fields: { role: { stringValue: accountRole } } }),
+          JSON.stringify({ fields: { role: { stringValue: end ? 'end_user' : 'grosir' } } }),
           { status: 200, headers: { 'Content-Type': 'application/json' } }
         );
       }
+      productQueries += 1;
       return new Response(
         JSON.stringify([
           {
@@ -164,9 +176,10 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(JSON.stringify(await locked.json()).includes('sku'), false);
     assert.equal(fetches, 0);
 
-    const authed = { headers: { Authorization: 'Bearer test-token' } };
+    const grosirAuth = { headers: { Authorization: 'Bearer grosir-token' } };
+    const endAuth = { headers: { Authorization: 'Bearer end-token' } };
     const stamp = Date.now();
-    const response = await mod.GET(new Request(`https://katalog.local/api/catalog?v=${stamp}`, authed));
+    const response = await mod.GET(new Request(`https://katalog.local/api/catalog?v=${stamp}`, grosirAuth));
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
     assert.equal(response.headers.get('Vary'), 'Authorization');
@@ -187,8 +200,7 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(serialized.includes('Cuci Gudang'), false);
     assert.equal(fetches > 0, true);
 
-    accountRole = 'end_user';
-    const endUser = await mod.GET(new Request('https://katalog.local/api/catalog', authed));
+    const endUser = await mod.GET(new Request('https://katalog.local/api/catalog', endAuth));
     const endBody = (await endUser.json()) as {
       products: Array<{ suggestedRetailPrice: number }>;
       promo: { items: Array<{ promoPrice: number }> };
@@ -198,15 +210,17 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(endBody.promo.items[0].promoPrice, endUserPrice(promoCampaign.items[0].promoPrice));
 
     const head = await mod.HEAD(
-      new Request('https://katalog.local/api/catalog', { method: 'HEAD', headers: authed.headers })
+      new Request('https://katalog.local/api/catalog', { method: 'HEAD', headers: grosirAuth.headers })
     );
     assert.equal(head.status, 200);
     assert.equal(head.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
     assert.equal(await head.text(), '');
 
-    const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog', authed));
+    const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog', grosirAuth));
     assert.equal(viaDefault.status, 200);
     await viaDefault.text();
+    assert.equal(productQueries, 1);
+    assert.equal(roleReads, 2);
   } finally {
     globalThis.fetch = previousFetch;
     await rm(directory, { recursive: true, force: true });

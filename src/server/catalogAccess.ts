@@ -6,7 +6,9 @@
  */
 import appletConfig from '../../firebase-applet-config.json' with { type: 'json' };
 import { tierForAccount } from '../config/accountRole.ts';
+import { isMasterAdminUser } from '../config/app.ts';
 import type { CatalogTier } from '../config/pricing.ts';
+import type { CatalogCache } from './catalogCache.ts';
 
 export interface CatalogTokenSource {
   projectId: string;
@@ -16,6 +18,8 @@ export interface CatalogTokenSource {
 
 export interface CatalogAccess {
   tier: CatalogTier;
+  /** Verified master admin. Only this caller may drop the shared product snapshot. */
+  canRefresh?: boolean;
 }
 
 export type CatalogAuthorization =
@@ -90,7 +94,7 @@ export async function readAccountRole(
 
 export async function authorizeCatalogRequest(
   request: Request,
-  options: { fetchImpl?: typeof fetch; source?: CatalogTokenSource } = {}
+  options: { fetchImpl?: typeof fetch; source?: CatalogTokenSource; roleCache?: CatalogCache } = {}
 ): Promise<CatalogAuthorization> {
   const header = request.headers.get('authorization') || '';
   const match = header.match(BEARER);
@@ -107,14 +111,24 @@ export async function authorizeCatalogRequest(
     return { ok: false, status: 401, error: 'Sesi tidak valid' };
   }
 
+  const canRefresh = isMasterAdminUser({
+    email: identity.email,
+    emailVerified: identity.emailVerified,
+  });
+  const cachedRole = options.roleCache ? await options.roleCache.getRole(identity.uid) : undefined;
+
   let role: string | null;
-  try {
-    role = await readAccountRole(identity.uid, idToken, fetchImpl, options.source);
-  } catch (error) {
-    if (error instanceof AccountReadError && (error.status === 401 || error.status === 403)) {
-      return { ok: false, status: 403, error: 'Akun belum disetujui' };
+  if (cachedRole !== undefined) {
+    role = cachedRole;
+  } else {
+    try {
+      role = await readAccountRole(identity.uid, idToken, fetchImpl, options.source);
+    } catch (error) {
+      if (error instanceof AccountReadError && (error.status === 401 || error.status === 403)) {
+        return { ok: false, status: 403, error: 'Akun belum disetujui' };
+      }
+      return { ok: false, status: 502, error: 'Katalog tidak dapat dimuat' };
     }
-    return { ok: false, status: 502, error: 'Katalog tidak dapat dimuat' };
   }
 
   const tier = tierForAccount({
@@ -129,5 +143,8 @@ export async function authorizeCatalogRequest(
       error: role === 'rejected' ? 'Akun belum disetujui' : 'Akun menunggu persetujuan',
     };
   }
-  return { ok: true, access: { tier } };
+  if (options.roleCache && cachedRole === undefined && role) {
+    await options.roleCache.setRole(identity.uid, role);
+  }
+  return { ok: true, access: { tier, canRefresh } };
 }

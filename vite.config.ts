@@ -11,23 +11,24 @@ function apiServerPlugin() {
     name: 'api-server-middleware',
     configureServer(server: any) {
       server.middlewares.use('/api/catalog', (req: any, res: any) => {
-        if (req.method !== 'GET' && req.method !== 'HEAD') {
+        if (req.method !== 'GET' && req.method !== 'HEAD' && req.method !== 'POST') {
           res.statusCode = 405;
           res.end();
           return;
         }
         (async () => {
           try {
-            const { handleCatalogRequest, incomingCatalogRequest } = await server.ssrLoadModule(
-              '/src/server/catalogHandler.ts'
-            );
+            const { handleCatalogRefresh, handleCatalogRequest, incomingCatalogRequest } =
+              await server.ssrLoadModule('/src/server/catalogHandler.ts');
             const authorization = req.headers?.authorization;
-            const response = await handleCatalogRequest(
-              incomingCatalogRequest(
-                req.method,
-                Array.isArray(authorization) ? authorization[0] : authorization
-              )
+            const incoming = incomingCatalogRequest(
+              req.method,
+              Array.isArray(authorization) ? authorization[0] : authorization
             );
+            const response =
+              req.method === 'POST'
+                ? await handleCatalogRefresh(incoming)
+                : await handleCatalogRequest(incoming);
             res.statusCode = response.status;
             response.headers.forEach((value: string, key: string) => {
               res.setHeader(key, value);

@@ -3,9 +3,11 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { endUserPrice } from '../src/config/pricing.ts';
 import { promoCampaign, publicPromoPayload } from '../src/server/promoCampaign.ts';
+import { createMemoryCatalogCache } from '../src/server/catalogCache.ts';
 import {
   CATALOG_CACHE_CONTROL,
   fetchActiveCatalog,
+  handleCatalogRefresh,
   handleCatalogRequest,
   type FetchActiveCatalogOptions,
 } from '../src/server/catalogHandler.ts';
@@ -313,4 +315,133 @@ test('grosir keeps the selling price and end user pays 30 percent rounded up', a
   assert.equal(adminBody.tier, 'grosir');
   assert.equal(adminBody.products[0].suggestedRetailPrice, 10001);
   assert.deepEqual(publicPromoPayload().items[0].promoPrice, promoCampaign.items[0].promoPrice);
+});
+
+test('one product snapshot is reused across visits and tiers', async () => {
+  let productReads = 0;
+  let roleReads = 0;
+  const cache = createMemoryCatalogCache();
+  const fetchImpl: typeof fetch = async (input, init) => {
+    const url = String(input);
+    if (url.includes('accounts:lookup')) {
+      const body = JSON.parse(String(init?.body || '{}')) as { idToken?: string };
+      const end = body.idToken === 'end-token';
+      return new Response(
+        JSON.stringify({
+          users: [
+            {
+              localId: end ? 'end-1' : 'grosir-1',
+              email: end ? 'end@example.com' : 'grosir@example.com',
+              emailVerified: true,
+            },
+          ],
+        }),
+        { status: 200 }
+      );
+    }
+    if (url.includes('/documents/users/')) {
+      roleReads += 1;
+      const end = url.includes('end-1');
+      return new Response(
+        JSON.stringify({ fields: { role: { stringValue: end ? 'end_user' : 'grosir' } } }),
+        { status: 200 }
+      );
+    }
+    productReads += 1;
+    return new Response(
+      JSON.stringify([
+        document('A', {
+          sku: text('A'),
+          name: text('Alpha'),
+          suggestedRetailPrice: integer(10000),
+          wholesalePrice: integer(1),
+          isActive: flag(true),
+        }),
+      ]),
+      { status: 200 }
+    );
+  };
+
+  const options = { fetchImpl, catalogCache: cache, endpoint: 'https://firestore.test/runQuery' };
+  const grosir = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer grosir-token' } }),
+    options
+  );
+  const endUser = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer end-token' } }),
+    options
+  );
+  const repeat = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer grosir-token' } }),
+    options
+  );
+
+  assert.equal(grosir.status, 200);
+  assert.equal(grosir.headers.get('Cache-Control'), 'private, no-store');
+  const grosirBody = (await grosir.json()) as { products: Array<{ suggestedRetailPrice: number }>; promo: { items: Array<{ promoPrice: number }> } };
+  const endBody = (await endUser.json()) as { products: Array<{ suggestedRetailPrice: number }>; promo: { items: Array<{ promoPrice: number }> } };
+  const repeatBody = (await repeat.json()) as { products: Array<{ suggestedRetailPrice: number }> };
+  assert.equal(grosirBody.products[0].suggestedRetailPrice, 10000);
+  assert.equal(endBody.products[0].suggestedRetailPrice, endUserPrice(10000));
+  assert.equal(endBody.promo.items[0].promoPrice, endUserPrice(promoCampaign.items[0].promoPrice));
+  assert.equal(repeatBody.products[0].suggestedRetailPrice, 10000);
+  assert.equal(productReads, 1);
+  assert.equal(roleReads, 2);
+  assert.equal(JSON.stringify(grosirBody).includes('wholesalePrice'), false);
+
+  const blocked = await handleCatalogRefresh(
+    new Request('https://katalog.local/api/catalog', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer grosir-token' },
+    }),
+    options
+  );
+  assert.equal(blocked.status, 403);
+  assert.equal(JSON.stringify(await blocked.json()).includes('sku'), false);
+
+  const stillCached = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer grosir-token' } }),
+    options
+  );
+  await stillCached.json();
+  assert.equal(productReads, 1);
+
+  const refresh = await handleCatalogRefresh(
+    new Request('https://katalog.local/api/catalog', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer owner-token' },
+    }),
+    {
+      catalogCache: cache,
+      fetchImpl: async (input) => {
+        const url = String(input);
+        if (url.includes('accounts:lookup')) {
+          return new Response(
+            JSON.stringify({
+              users: [{ localId: 'owner-1', email: 'jefryerlangga@gmail.com', emailVerified: true }],
+            }),
+            { status: 200 }
+          );
+        }
+        if (url.includes('/documents/users/')) {
+          return new Response(JSON.stringify({ fields: { role: { stringValue: 'pending' } } }), { status: 200 });
+        }
+        productReads += 1;
+        return new Response('[]', { status: 200 });
+      },
+    }
+  );
+  assert.equal(refresh.status, 200);
+  const refreshBody = (await refresh.json()) as { ok?: boolean; products?: unknown };
+  assert.equal(refreshBody.ok, true);
+  assert.equal(refreshBody.products, undefined);
+  assert.equal(productReads, 1);
+
+  const reloaded = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer grosir-token' } }),
+    options
+  );
+  await reloaded.json();
+  assert.equal(productReads, 2);
+  assert.equal(reloaded.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
 });

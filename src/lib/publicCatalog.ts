@@ -93,6 +93,18 @@ export function clearCatalogCache() {
   }
 }
 
+/** Asks the server to drop the shared base snapshot. Failure is safe: the snapshot expires on its own. */
+export async function refreshSharedCatalog(idToken: string, fetchImpl: typeof fetch = fetch): Promise<void> {
+  const response = await fetchImpl('/api/catalog', {
+    method: 'POST',
+    cache: 'no-store',
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
+  if (!response.ok) {
+    throw new Error('Katalog bersama belum disegarkan');
+  }
+}
+
 export async function fetchAuthorizedCatalog(
   idToken: string,
   fetchImpl: typeof fetch = fetch

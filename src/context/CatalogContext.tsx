@@ -5,7 +5,13 @@ import { accountRoleLabel, isApprovedAccountRole, isStoredAccountRole, type Assi
 import { APP_NAME, isStorefrontProduct } from '../config/app';
 import type { CatalogTier } from '../config/pricing';
 import { BatchSaveProgress } from '../firebase/catalogBatch';
-import { clearCatalogCache, fetchAuthorizedCatalog, readCatalogCache, writeCatalogCache } from '../lib/publicCatalog';
+import {
+  clearCatalogCache,
+  fetchAuthorizedCatalog,
+  readCatalogCache,
+  refreshSharedCatalog,
+  writeCatalogCache,
+} from '../lib/publicCatalog';
 import type { StorePromo } from '../lib/promo';
 import {
   auth,
@@ -552,16 +558,31 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const setAccountRole = async (uid: string, role: AssignableAccountRole) => {
     requireAdmin(isAdmin);
     await setUserRole(uid, role);
+    await notifyCatalogChanged();
+  };
+
+  const notifyCatalogChanged = async () => {
+    if (!user) return;
+    try {
+      const token = await user.getIdToken();
+      await refreshSharedCatalog(token);
+    } catch {
+      // The shared snapshot still expires on its TTL.
+    }
   };
 
   const seedData = async () => {
     requireAdmin(isAdmin);
-    return seedInitialCatalogIfEmpty();
+    const result = await seedInitialCatalogIfEmpty();
+    await notifyCatalogChanged();
+    return result;
   };
 
   const saveProductItem = async (prod: Product) => {
     requireAdmin(isAdmin);
-    return saveProduct(prod);
+    const id = await saveProduct(prod);
+    await notifyCatalogChanged();
+    return id;
   };
 
   const batchSaveProductItems = async (
@@ -569,17 +590,21 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     onProgress?: (progress: BatchSaveProgress) => void
   ) => {
     requireAdmin(isAdmin);
-    return batchSaveProducts(items, onProgress);
+    const saved = await batchSaveProducts(items, onProgress);
+    await notifyCatalogChanged();
+    return saved;
   };
 
   const toggleActiveItem = async (id: string, current: boolean) => {
     requireAdmin(isAdmin);
     await toggleProductActive(id, current);
+    await notifyCatalogChanged();
   };
 
   const deleteProductItem = async (id: string) => {
     requireAdmin(isAdmin);
     await deleteProductById(id);
+    await notifyCatalogChanged();
   };
 
   const addToCart = (product: Product, qty = 1) => {
