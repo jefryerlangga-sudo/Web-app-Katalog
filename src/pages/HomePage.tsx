@@ -158,7 +158,7 @@ export const HomePage: React.FC = () => {
                 <Tag className="w-5 h-5" />
               </span>
               <div className="min-w-0">
-                <span className="text-[10px] font-bold text-orange-300 tracking-wide">Promo Cuci Gudang</span>
+                <span className="text-[10px] font-bold text-orange-300 tracking-wide">{promoCampaign.title}</span>
                 <h3 className="text-sm font-bold text-white leading-tight">
                   {promoListings.length} SKU · Foomee, Olike, Rexi, Mcdodo, Baseus
                 </h3>
