@@ -16,9 +16,11 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { dealerQuote, rupiah } from '../lib/money';
+import { isPromoSku, promoOfferForProduct, promoStockLabel } from '../lib/promo';
 import { Product } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductImage } from './ProductImage';
+import { PromoBadge } from './PromoBadge';
 
 interface ProductDetailModalProps {
   product: Product;
@@ -43,6 +45,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const [copiedScript, setCopiedScript] = useState<boolean>(false);
 
   const inCompare = isInCompare(product.id || product.sku);
+  const promoOffer = promoOfferForProduct(product);
+  const inPromo = isPromoSku(product.sku);
   const compareFull = compareList.length >= 3 && !inCompare;
   const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
   const unitProfit = quote?.profit ?? 0;
@@ -134,6 +138,7 @@ ${
                     <Trophy className="w-3 h-3" /> Paling Laris
                   </span>
                 )}
+                {inPromo && <PromoBadge />}
               </div>
             </div>
           </div>
@@ -142,6 +147,22 @@ ${
           {viewMode === 'sales' && quote ? (
             /* INTERNAL SALES MODE: Canvasser Wholesale + Margins */
             <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-800/60 border border-slate-700 space-y-3">
+              {promoOffer && (
+                <p className="text-[11px] font-bold text-orange-300">
+                  Harga promo {rupiah(promoOffer.promoPrice)}
+                  {promoOffer.showRetailStrike && (
+                    <>
+                      {' '}
+                      · HET{' '}
+                      <span className="line-through text-slate-500 font-mono">
+                        {rupiah(product.suggestedRetailPrice)}
+                      </span>
+                    </>
+                  )}
+                  {' · '}
+                  {promoStockLabel(promoOffer.promoStock)}
+                </p>
+              )}
               <div className="flex items-baseline justify-between border-b border-slate-700/60 pb-2.5">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
@@ -222,11 +243,23 @@ ${
             <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/30 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold text-blue-300 tracking-wider">
-                  Harga Eceran Tertinggi (HET)
+                  {promoOffer?.showRetailStrike ? 'Harga Promo' : 'Harga Eceran Tertinggi (HET)'}
                 </span>
                 <p className="text-2xl font-black text-white font-mono mt-0.5">
-                  {rupiah(product.suggestedRetailPrice)}
+                  {rupiah(
+                    promoOffer?.showRetailStrike ? promoOffer.promoPrice : product.suggestedRetailPrice
+                  )}
                 </p>
+                {promoOffer?.showRetailStrike && (
+                  <p className="text-xs text-slate-500 line-through font-mono">
+                    {rupiah(product.suggestedRetailPrice)}
+                  </p>
+                )}
+                {promoOffer && (
+                  <p className="text-[11px] font-bold text-orange-300 mt-1">
+                    {promoStockLabel(promoOffer.promoStock)}
+                  </p>
+                )}
                 <p className="text-[11px] text-slate-400 mt-0.5">
                   {viewMode === 'sales'
                     ? 'Harga grosir belum tersimpan di koleksi admin. Etalase memakai HET.'

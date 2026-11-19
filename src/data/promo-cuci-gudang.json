@@ -1,0 +1,1214 @@
+{
+  "id": "cuci-gudang-partshop",
+  "title": "Promo Cuci Gudang – Partshop",
+  "active": true,
+  "minPurchase": 2500000,
+  "brands": [
+    "Foomee",
+    "Olike",
+    "Rexi",
+    "Mcdodo",
+    "Baseus"
+  ],
+  "terms": [
+    "Belanja semua produk min. Rp2.500.000 per 1 nota: GRATIS 1 rak display Foomee (rak dinding atau mini display), selama persediaan ada.",
+    "Satu nota, satu hadiah rak (tidak kelipatan).",
+    "Harga berlaku selama stok ada. Merek: Foomee, Olike, Rexi, Mcdodo, Baseus."
+  ],
+  "items": [
+    {
+      "sku": "PS-FOO-0009",
+      "brand": "Foomee",
+      "promoPrice": 88000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0014",
+      "brand": "Foomee",
+      "promoPrice": 165000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-FOO-0034",
+      "brand": "Foomee",
+      "promoPrice": 42000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-FOO-0035",
+      "brand": "Foomee",
+      "promoPrice": 42000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0037",
+      "brand": "Foomee",
+      "promoPrice": 28000,
+      "stock": 12
+    },
+    {
+      "sku": "PS-FOO-0038",
+      "brand": "Foomee",
+      "promoPrice": 28000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-FOO-0039",
+      "brand": "Foomee",
+      "promoPrice": 55000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-FOO-0046",
+      "brand": "Foomee",
+      "promoPrice": 26000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0048",
+      "brand": "Foomee",
+      "promoPrice": 39500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0057",
+      "brand": "Foomee",
+      "promoPrice": 63000,
+      "stock": 9
+    },
+    {
+      "sku": "PS-FOO-0021",
+      "brand": "Foomee",
+      "promoPrice": 35000,
+      "stock": 10
+    },
+    {
+      "sku": "PS-FOO-0091",
+      "brand": "Foomee",
+      "promoPrice": 50000,
+      "stock": 6
+    },
+    {
+      "sku": "PS-FOO-0098",
+      "brand": "Foomee",
+      "promoPrice": 39000,
+      "stock": 19
+    },
+    {
+      "sku": "PS-FOO-0102",
+      "brand": "Foomee",
+      "promoPrice": 20000,
+      "stock": 6
+    },
+    {
+      "sku": "PS-FOO-0103",
+      "brand": "Foomee",
+      "promoPrice": 28000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0117",
+      "brand": "Foomee",
+      "promoPrice": 15000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-FOO-0126",
+      "brand": "Foomee",
+      "promoPrice": 25000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-FOO-0130",
+      "brand": "Foomee",
+      "promoPrice": 19000,
+      "stock": 15
+    },
+    {
+      "sku": "PS-FOO-0131",
+      "brand": "Foomee",
+      "promoPrice": 29000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0004",
+      "brand": "Foomee",
+      "promoPrice": 36000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0078",
+      "brand": "Foomee",
+      "promoPrice": 20000,
+      "stock": 6
+    },
+    {
+      "sku": "PS-FOO-0079",
+      "brand": "Foomee",
+      "promoPrice": 20000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-FOO-0081",
+      "brand": "Foomee",
+      "promoPrice": 21000,
+      "stock": 9
+    },
+    {
+      "sku": "PS-FOO-0179",
+      "brand": "Foomee",
+      "promoPrice": 138000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0184",
+      "brand": "Foomee",
+      "promoPrice": 115000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0192",
+      "brand": "Foomee",
+      "promoPrice": 75000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-FOO-0029",
+      "brand": "Foomee",
+      "promoPrice": 62000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-FOO-0063",
+      "brand": "Foomee",
+      "promoPrice": 39000,
+      "stock": 14
+    },
+    {
+      "sku": "PS-FOO-0065",
+      "brand": "Foomee",
+      "promoPrice": 65000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0004",
+      "brand": "Olike",
+      "promoPrice": 43000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0009",
+      "brand": "Olike",
+      "promoPrice": 97500,
+      "stock": 5
+    },
+    {
+      "sku": "PS-OLI-0010",
+      "brand": "Olike",
+      "promoPrice": 97500,
+      "stock": 10
+    },
+    {
+      "sku": "PS-OLI-0032",
+      "brand": "Olike",
+      "promoPrice": 106000,
+      "stock": 25
+    },
+    {
+      "sku": "PS-OLI-0052",
+      "brand": "Olike",
+      "promoPrice": 65000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0243",
+      "brand": "Olike",
+      "promoPrice": 102000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0259",
+      "brand": "Olike",
+      "promoPrice": 54000,
+      "stock": 20
+    },
+    {
+      "sku": "PS-OLI-0282",
+      "brand": "Olike",
+      "promoPrice": 65000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0302",
+      "brand": "Olike",
+      "promoPrice": 11000,
+      "stock": 8
+    },
+    {
+      "sku": "PS-OLI-0166",
+      "brand": "Olike",
+      "promoPrice": 90000,
+      "stock": 12
+    },
+    {
+      "sku": "PS-OLI-0172",
+      "brand": "Olike",
+      "promoPrice": 90000,
+      "stock": 9
+    },
+    {
+      "sku": "PS-OLI-0194",
+      "brand": "Olike",
+      "promoPrice": 11600,
+      "stock": 5
+    },
+    {
+      "sku": "PS-OLI-0207",
+      "brand": "Olike",
+      "promoPrice": 162000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0550",
+      "brand": "Olike",
+      "promoPrice": 160000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0554",
+      "brand": "Olike",
+      "promoPrice": 121000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0566",
+      "brand": "Olike",
+      "promoPrice": 144000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0571",
+      "brand": "Olike",
+      "promoPrice": 129000,
+      "stock": 10
+    },
+    {
+      "sku": "PS-OLI-0579",
+      "brand": "Olike",
+      "promoPrice": 168000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0580",
+      "brand": "Olike",
+      "promoPrice": 138000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0583",
+      "brand": "Olike",
+      "promoPrice": 210000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0442",
+      "brand": "Olike",
+      "promoPrice": 210000,
+      "stock": 13
+    },
+    {
+      "sku": "PS-OLI-0443",
+      "brand": "Olike",
+      "promoPrice": 90000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0451",
+      "brand": "Olike",
+      "promoPrice": 288000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0458",
+      "brand": "Olike",
+      "promoPrice": 90000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0460",
+      "brand": "Olike",
+      "promoPrice": 375000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0001",
+      "brand": "Olike",
+      "promoPrice": 232000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0038",
+      "brand": "Olike",
+      "promoPrice": 114000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0039",
+      "brand": "Olike",
+      "promoPrice": 114000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0046",
+      "brand": "Olike",
+      "promoPrice": 200000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0041",
+      "brand": "Olike",
+      "promoPrice": 190000,
+      "stock": 21
+    },
+    {
+      "sku": "PS-OLI-0047",
+      "brand": "Olike",
+      "promoPrice": 326000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0048",
+      "brand": "Olike",
+      "promoPrice": 326000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0049",
+      "brand": "Olike",
+      "promoPrice": 326000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0081",
+      "brand": "Olike",
+      "promoPrice": 70000,
+      "stock": 8
+    },
+    {
+      "sku": "PS-OLI-0082",
+      "brand": "Olike",
+      "promoPrice": 70000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-OLI-0083",
+      "brand": "Olike",
+      "promoPrice": 70000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-OLI-0084",
+      "brand": "Olike",
+      "promoPrice": 66000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0085",
+      "brand": "Olike",
+      "promoPrice": 66000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0086",
+      "brand": "Olike",
+      "promoPrice": 66000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0088",
+      "brand": "Olike",
+      "promoPrice": 66000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0087",
+      "brand": "Olike",
+      "promoPrice": 66000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0143",
+      "brand": "Olike",
+      "promoPrice": 90000,
+      "stock": 28
+    },
+    {
+      "sku": "PS-OLI-0229",
+      "brand": "Olike",
+      "promoPrice": 1600000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0218",
+      "brand": "Olike",
+      "promoPrice": 260000,
+      "stock": 20
+    },
+    {
+      "sku": "PS-OLI-0222",
+      "brand": "Olike",
+      "promoPrice": 1300000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0224",
+      "brand": "Olike",
+      "promoPrice": 440000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0227",
+      "brand": "Olike",
+      "promoPrice": 720000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-OLI-0234",
+      "brand": "Olike",
+      "promoPrice": 830000,
+      "stock": 10
+    },
+    {
+      "sku": "PS-OLI-0236",
+      "brand": "Olike",
+      "promoPrice": 950000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0237",
+      "brand": "Olike",
+      "promoPrice": 1100000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0369",
+      "brand": "Olike",
+      "promoPrice": 175000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0370",
+      "brand": "Olike",
+      "promoPrice": 50000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0371",
+      "brand": "Olike",
+      "promoPrice": 175000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-OLI-0378",
+      "brand": "Olike",
+      "promoPrice": 380000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-OLI-0471",
+      "brand": "Olike",
+      "promoPrice": 315000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0476",
+      "brand": "Olike",
+      "promoPrice": 370000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0477",
+      "brand": "Olike",
+      "promoPrice": 370000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0490",
+      "brand": "Olike",
+      "promoPrice": 290000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-OLI-0493",
+      "brand": "Olike",
+      "promoPrice": 360000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0495",
+      "brand": "Olike",
+      "promoPrice": 265000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-OLI-0520",
+      "brand": "Olike",
+      "promoPrice": 155000,
+      "stock": 6
+    },
+    {
+      "sku": "PS-REX-0007",
+      "brand": "Rexi",
+      "promoPrice": 16000,
+      "stock": 20
+    },
+    {
+      "sku": "PS-REX-0070",
+      "brand": "Rexi",
+      "promoPrice": 37000,
+      "stock": 7
+    },
+    {
+      "sku": "PS-REX-0069",
+      "brand": "Rexi",
+      "promoPrice": 38000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-REX-0072",
+      "brand": "Rexi",
+      "promoPrice": 33000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0075",
+      "brand": "Rexi",
+      "promoPrice": 25000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0078",
+      "brand": "Rexi",
+      "promoPrice": 42000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0079",
+      "brand": "Rexi",
+      "promoPrice": 65000,
+      "stock": 8
+    },
+    {
+      "sku": "PS-REX-0080",
+      "brand": "Rexi",
+      "promoPrice": 50000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0009",
+      "brand": "Rexi",
+      "promoPrice": 25000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0015",
+      "brand": "Rexi",
+      "promoPrice": 42500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0016",
+      "brand": "Rexi",
+      "promoPrice": 43500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0019",
+      "brand": "Rexi",
+      "promoPrice": 47000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-REX-0020",
+      "brand": "Rexi",
+      "promoPrice": 54500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0022",
+      "brand": "Rexi",
+      "promoPrice": 54500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0025",
+      "brand": "Rexi",
+      "promoPrice": 27000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0027",
+      "brand": "Rexi",
+      "promoPrice": 13000,
+      "stock": 82
+    },
+    {
+      "sku": "PS-REX-0030",
+      "brand": "Rexi",
+      "promoPrice": 32000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0034",
+      "brand": "Rexi",
+      "promoPrice": 27000,
+      "stock": 16
+    },
+    {
+      "sku": "PS-REX-0038",
+      "brand": "Rexi",
+      "promoPrice": 31000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-REX-0054",
+      "brand": "Rexi",
+      "promoPrice": 24000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0057",
+      "brand": "Rexi",
+      "promoPrice": 34500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0058",
+      "brand": "Rexi",
+      "promoPrice": 190000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0061",
+      "brand": "Rexi",
+      "promoPrice": 26000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-REX-0062",
+      "brand": "Rexi",
+      "promoPrice": 26000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0063",
+      "brand": "Rexi",
+      "promoPrice": 29500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0084",
+      "brand": "Rexi",
+      "promoPrice": 17000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0085",
+      "brand": "Rexi",
+      "promoPrice": 29500,
+      "stock": 12
+    },
+    {
+      "sku": "PS-REX-0086",
+      "brand": "Rexi",
+      "promoPrice": 41000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-REX-0087",
+      "brand": "Rexi",
+      "promoPrice": 32000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0090",
+      "brand": "Rexi",
+      "promoPrice": 85000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0091",
+      "brand": "Rexi",
+      "promoPrice": 27500,
+      "stock": 8
+    },
+    {
+      "sku": "PS-REX-0094",
+      "brand": "Rexi",
+      "promoPrice": 26000,
+      "stock": 10
+    },
+    {
+      "sku": "PS-REX-0096",
+      "brand": "Rexi",
+      "promoPrice": 31000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0098",
+      "brand": "Rexi",
+      "promoPrice": 35000,
+      "stock": 15
+    },
+    {
+      "sku": "PS-REX-0102",
+      "brand": "Rexi",
+      "promoPrice": 29000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-REX-0103",
+      "brand": "Rexi",
+      "promoPrice": 52500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-REX-0104",
+      "brand": "Rexi",
+      "promoPrice": 29000,
+      "stock": 9
+    },
+    {
+      "sku": "PS-REX-0113",
+      "brand": "Rexi",
+      "promoPrice": 185000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0114",
+      "brand": "Rexi",
+      "promoPrice": 226000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0119",
+      "brand": "Rexi",
+      "promoPrice": 185000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-REX-0107",
+      "brand": "Rexi",
+      "promoPrice": 20000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0001",
+      "brand": "Mcdodo",
+      "promoPrice": 97500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0002",
+      "brand": "Mcdodo",
+      "promoPrice": 125000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0004",
+      "brand": "Mcdodo",
+      "promoPrice": 179000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0005",
+      "brand": "Mcdodo",
+      "promoPrice": 179000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0006",
+      "brand": "Mcdodo",
+      "promoPrice": 199000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0007",
+      "brand": "Mcdodo",
+      "promoPrice": 305000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0008",
+      "brand": "Mcdodo",
+      "promoPrice": 160000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0035",
+      "brand": "Mcdodo",
+      "promoPrice": 80500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0009",
+      "brand": "Mcdodo",
+      "promoPrice": 65000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0010",
+      "brand": "Mcdodo",
+      "promoPrice": 35500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0013",
+      "brand": "Mcdodo",
+      "promoPrice": 139000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-MCD-0014",
+      "brand": "Mcdodo",
+      "promoPrice": 139000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0011",
+      "brand": "Mcdodo",
+      "promoPrice": 87500,
+      "stock": 7
+    },
+    {
+      "sku": "PS-MCD-0012",
+      "brand": "Mcdodo",
+      "promoPrice": 79500,
+      "stock": 3
+    },
+    {
+      "sku": "PS-MCD-0015",
+      "brand": "Mcdodo",
+      "promoPrice": 52000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-MCD-0016",
+      "brand": "Mcdodo",
+      "promoPrice": 120000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-MCD-0020",
+      "brand": "Mcdodo",
+      "promoPrice": 99500,
+      "stock": 7
+    },
+    {
+      "sku": "PS-MCD-0021",
+      "brand": "Mcdodo",
+      "promoPrice": 125000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0022",
+      "brand": "Mcdodo",
+      "promoPrice": 147500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0023",
+      "brand": "Mcdodo",
+      "promoPrice": 66500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0024",
+      "brand": "Mcdodo",
+      "promoPrice": 99000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0025",
+      "brand": "Mcdodo",
+      "promoPrice": 99000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-MCD-0026",
+      "brand": "Mcdodo",
+      "promoPrice": 50500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0028",
+      "brand": "Mcdodo",
+      "promoPrice": 24500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0032",
+      "brand": "Mcdodo",
+      "promoPrice": 69500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0033",
+      "brand": "Mcdodo",
+      "promoPrice": 87500,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0040",
+      "brand": "Mcdodo",
+      "promoPrice": 62500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0042",
+      "brand": "Mcdodo",
+      "promoPrice": 39500,
+      "stock": 5
+    },
+    {
+      "sku": "PS-MCD-0043",
+      "brand": "Mcdodo",
+      "promoPrice": 35000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0046",
+      "brand": "Mcdodo",
+      "promoPrice": 139500,
+      "stock": 3
+    },
+    {
+      "sku": "PS-MCD-0047",
+      "brand": "Mcdodo",
+      "promoPrice": 277500,
+      "stock": 5
+    },
+    {
+      "sku": "PS-MCD-0048",
+      "brand": "Mcdodo",
+      "promoPrice": 179500,
+      "stock": 4
+    },
+    {
+      "sku": "PS-MCD-0049",
+      "brand": "Mcdodo",
+      "promoPrice": 179500,
+      "stock": 4
+    },
+    {
+      "sku": "PS-MCD-0050",
+      "brand": "Mcdodo",
+      "promoPrice": 62500,
+      "stock": 9
+    },
+    {
+      "sku": "PS-MCD-0051",
+      "brand": "Mcdodo",
+      "promoPrice": 229500,
+      "stock": 6
+    },
+    {
+      "sku": "PS-MCD-0052",
+      "brand": "Mcdodo",
+      "promoPrice": 242500,
+      "stock": 10
+    },
+    {
+      "sku": "PS-MCD-0056",
+      "brand": "Mcdodo",
+      "promoPrice": 345000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0058",
+      "brand": "Mcdodo",
+      "promoPrice": 379000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0059",
+      "brand": "Mcdodo",
+      "promoPrice": 365000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-MCD-0045",
+      "brand": "Mcdodo",
+      "promoPrice": 94500,
+      "stock": 7
+    },
+    {
+      "sku": "PS-MCD-0019",
+      "brand": "Mcdodo",
+      "promoPrice": 250000,
+      "stock": 5
+    },
+    {
+      "sku": "PS-MCD-0037",
+      "brand": "Mcdodo",
+      "promoPrice": 445000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0038",
+      "brand": "Mcdodo",
+      "promoPrice": 165000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0039",
+      "brand": "Mcdodo",
+      "promoPrice": 270000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0061",
+      "brand": "Mcdodo",
+      "promoPrice": 385000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0062",
+      "brand": "Mcdodo",
+      "promoPrice": 365000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-MCD-0064",
+      "brand": "Mcdodo",
+      "promoPrice": 245000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0066",
+      "brand": "Mcdodo",
+      "promoPrice": 245000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-MCD-0067",
+      "brand": "Mcdodo",
+      "promoPrice": 325000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0003",
+      "brand": "Baseus",
+      "promoPrice": 195000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0004",
+      "brand": "Baseus",
+      "promoPrice": 195000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0015",
+      "brand": "Baseus",
+      "promoPrice": 160000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-BAS-0006",
+      "brand": "Baseus",
+      "promoPrice": 105000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0007",
+      "brand": "Baseus",
+      "promoPrice": 99000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-BAS-0012",
+      "brand": "Baseus",
+      "promoPrice": 85000,
+      "stock": 2
+    },
+    {
+      "sku": "PS-BAS-0013",
+      "brand": "Baseus",
+      "promoPrice": 85000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0014",
+      "brand": "Baseus",
+      "promoPrice": 115000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0001",
+      "brand": "Baseus",
+      "promoPrice": 212000,
+      "stock": 4
+    },
+    {
+      "sku": "PS-BAS-0020",
+      "brand": "Baseus",
+      "promoPrice": 78000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-BAS-0031",
+      "brand": "Baseus",
+      "promoPrice": 221500,
+      "stock": 2
+    },
+    {
+      "sku": "PS-BAS-0032",
+      "brand": "Baseus",
+      "promoPrice": 219000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0033",
+      "brand": "Baseus",
+      "promoPrice": 149000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-BAS-0022",
+      "brand": "Baseus",
+      "promoPrice": 335000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0002",
+      "brand": "Baseus",
+      "promoPrice": 195000,
+      "stock": 1
+    },
+    {
+      "sku": "PS-BAS-0025",
+      "brand": "Baseus",
+      "promoPrice": 125000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-BAS-0026",
+      "brand": "Baseus",
+      "promoPrice": 140000,
+      "stock": 6
+    },
+    {
+      "sku": "PS-BAS-0027",
+      "brand": "Baseus",
+      "promoPrice": 128000,
+      "stock": 3
+    },
+    {
+      "sku": "PS-BAS-0028",
+      "brand": "Baseus",
+      "promoPrice": 115000,
+      "stock": 3
+    }
+  ]
+}

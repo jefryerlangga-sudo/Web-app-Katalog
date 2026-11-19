@@ -15,6 +15,8 @@ import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ExcelImportModal } from '../components/ExcelImportModal';
 import { CUSTOMER_CATALOG_DELAY_NOTE, isStorefrontProduct, listStorefrontCategories } from '../config/app';
+import { isPromoSku, listPromoProducts, promoCampaign } from '../lib/promo';
+import { PromoBadge } from '../components/PromoBadge';
 import { ProductImage } from '../components/ProductImage';
 import { LoadMoreList } from '../components/LoadMoreList';
 
@@ -213,6 +215,30 @@ export const AdminPage: React.FC = () => {
             <span>Isi sampel jika katalog kosong</span>
           </button>
         </div>
+        {promoCampaign.active && (
+          <div className="p-3 rounded-2xl border border-orange-500/40 bg-orange-950/30 space-y-1.5">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-orange-300">Kelola Promo</p>
+                <h2 className="text-sm font-black text-white">{promoCampaign.title}</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCurrentTab('promo')}
+                className="px-2.5 py-1.5 rounded-xl bg-orange-500 text-slate-950 text-[11px] font-bold"
+              >
+                Lihat etalase
+              </button>
+            </div>
+            <p className="text-[11px] text-orange-50/90">
+              {listPromoProducts(products).length} dari {promoCampaign.items.length} SKU promo tampil.
+              Yang nonaktif atau tidak ada di katalog disembunyikan.
+            </p>
+            <p className="text-[11px] text-slate-300">
+              Keanggotaan promo tidak disimpan di dokumen produk, jadi impor Excel tidak menghapusnya.
+            </p>
+          </div>
+        )}
         {products.some((item) => !isStorefrontProduct(item.category)) && (
           <p className="text-[11px] text-amber-200/90">
             Ada dokumen di luar kategori aksesoris HP. Dokumen itu tidak dihapus otomatis dan tidak tampil di etalase customer.
@@ -266,6 +292,8 @@ export const AdminPage: React.FC = () => {
                           Terlaris
                         </span>
                       )}
+
+                      {isPromoSku(item.sku) && <PromoBadge />}
                     </div>
 
                     <h3 className="font-bold text-white text-xs mt-0.5 truncate max-w-[200px]">

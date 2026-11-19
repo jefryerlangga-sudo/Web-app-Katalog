@@ -40,6 +40,7 @@ export interface ProductFilterState {
   stockStatus: string;
   isProductFocus: boolean | null;
   isBestSeller: boolean | null;
+  promoOnly: boolean;
   positioning: string;
   compatibilityVehicle: string;
   sortBy: 'featured' | 'price-asc' | 'price-desc' | 'name-asc' | 'margin-desc';

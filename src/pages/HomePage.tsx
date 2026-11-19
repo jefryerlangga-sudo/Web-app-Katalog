@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Flame,
   Trophy,
@@ -9,9 +9,11 @@ import {
   ChevronRight,
   Percent,
   CheckCircle2,
+  Tag,
 } from 'lucide-react';
 import { APP_NAME, listStorefrontCategories } from '../config/app';
 import { dealerQuote } from '../lib/money';
+import { listPromoProducts, promoCampaign } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 
@@ -29,6 +31,7 @@ export const HomePage: React.FC = () => {
 
   const focusProducts = activeProducts.filter((p) => p.isProductFocus);
   const bestSellerProducts = activeProducts.filter((p) => p.isBestSeller);
+  const promoListings = useMemo(() => listPromoProducts(activeProducts), [activeProducts]);
 
   // Filter cepat tipe HP & kendaraan untuk canvasser di lapangan
   const popularDevices = [
@@ -142,6 +145,32 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {promoCampaign.active && (
+        <button
+          type="button"
+          onClick={() => setCurrentTab('promo')}
+          className="w-full text-left p-3.5 rounded-3xl bg-gradient-to-r from-orange-950/90 via-slate-900 to-slate-900 border border-orange-500/40 shadow-lg"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-8 h-8 rounded-xl bg-orange-500/20 text-orange-300 flex items-center justify-center border border-orange-500/30 shrink-0">
+                <Tag className="w-5 h-5" />
+              </span>
+              <div className="min-w-0">
+                <span className="text-[10px] font-bold text-orange-300 tracking-wide">Promo Cuci Gudang</span>
+                <h3 className="text-sm font-bold text-white leading-tight">
+                  {promoListings.length} SKU · Foomee, Olike, Rexi, Mcdodo, Baseus
+                </h3>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded-xl bg-orange-500 text-slate-950 font-bold text-xs shrink-0">
+              Lihat Promo
+            </span>
+          </div>
+          <p className="text-[11px] text-orange-50/90 mt-2 leading-relaxed">{promoCampaign.terms[0]}</p>
+        </button>
+      )}
 
       {isAdmin && (
       <div className="bg-gradient-to-r from-blue-900/50 via-slate-800 to-emerald-950/50 p-3 rounded-2xl border border-blue-500/30 flex items-center justify-between gap-2 shadow-sm">

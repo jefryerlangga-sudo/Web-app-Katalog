@@ -7,8 +7,10 @@ import {
   Trophy,
   RotateCcw,
   Check,
+  Tag,
 } from 'lucide-react';
 import { dealerQuote } from '../lib/money';
+import { isPromoSku } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
@@ -43,6 +45,7 @@ export const SearchCatalogPage: React.FC = () => {
     if (filters.positioning !== 'All') count++;
     if (filters.isProductFocus !== null) count++;
     if (filters.isBestSeller !== null) count++;
+    if (filters.promoOnly) count++;
     if (filters.minPrice !== null || filters.maxPrice !== null) count++;
     if (filters.compatibilityVehicle) count++;
     return count;
@@ -129,6 +132,10 @@ export const SearchCatalogPage: React.FC = () => {
 
       // Best Seller
       if (filters.isBestSeller !== null && product.isBestSeller !== filters.isBestSeller) {
+        return false;
+      }
+
+      if (filters.promoOnly && !isPromoSku(product.sku)) {
         return false;
       }
 
@@ -248,6 +255,24 @@ export const SearchCatalogPage: React.FC = () => {
             <span>Paling Laris</span>
           </button>
 
+          <button
+            type="button"
+            onClick={() =>
+              setFilters((prev) => ({
+                ...prev,
+                promoOnly: !prev.promoOnly,
+              }))
+            }
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-bold whitespace-nowrap transition-all flex-shrink-0 border ${
+              filters.promoOnly
+                ? 'bg-orange-500 text-slate-950 border-orange-300 shadow-sm'
+                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+            }`}
+          >
+            <Tag className="w-3 h-3" />
+            <span>Promo</span>
+          </button>
+
           {/* Good / Better / Best quick chips */}
           {['Good', 'Better', 'Best'].map((tier) => (
             <button
@@ -312,7 +337,7 @@ export const SearchCatalogPage: React.FC = () => {
       {filteredProducts.length > 0 ? (
         <LoadMoreList
           items={filteredProducts}
-          resetKey={`${filters.searchQuery}|${filters.category}|${filters.brand}|${filters.sortBy}|${filters.compatibilityVehicle}|${filteredProducts.length}`}
+          resetKey={`${filters.searchQuery}|${filters.category}|${filters.brand}|${filters.sortBy}|${filters.compatibilityVehicle}|${filters.promoOnly}|${filteredProducts.length}`}
           className="space-y-3"
           getKey={(product) => product.id || product.sku}
           renderItem={(product) => <ProductCard product={product} />}

@@ -12,13 +12,20 @@ import {
 import { Product } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductImage } from './ProductImage';
+import { PromoBadge } from './PromoBadge';
 import { dealerQuote, rupiah } from '../lib/money';
+import { isPromoSku, promoStockLabel } from '../lib/promo';
 
 interface ProductCardProps {
   product: Product;
+  promoView?: {
+    promoPrice: number;
+    promoStock: number;
+    showRetailStrike: boolean;
+  };
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, promoView }) => {
   const {
     viewMode,
     setSelectedProduct,
@@ -32,6 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [copiedPitch, setCopiedPitch] = useState(false);
 
   const inCompare = isInCompare(product.id || product.sku);
+  const inPromo = isPromoSku(product.sku);
   const compareFull = compareList.length >= 3 && !inCompare;
   const quote = viewMode === 'sales' ? dealerQuote(product.suggestedRetailPrice, product.wholesalePrice) : null;
 
@@ -123,6 +131,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   <span>Terlaris</span>
                 </span>
               )}
+
+              {inPromo && <PromoBadge />}
             </div>
 
             {/* Product Name */}
@@ -138,10 +148,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
 
           {/* Stock Status Badge */}
-          <div className="mt-1 flex items-center justify-between">
+          <div className="mt-1 flex items-center justify-between gap-1 flex-wrap">
             <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${stockBadge}`}>
               {stockLabel}
             </span>
+            {promoView && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border bg-orange-500/15 text-orange-200 border-orange-500/40">
+                {promoStockLabel(promoView.promoStock)}
+              </span>
+            )}
             <span className="text-[10px] text-slate-400 flex items-center gap-0.5 truncate max-w-[120px]">
               <span>{product.subcategory}</span>
             </span>
@@ -199,6 +214,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   <Copy className="w-3.5 h-3.5" />
                 )}
               </button>
+            </div>
+          </div>
+        ) : promoView ? (
+          <div>
+            <p className="text-[10px] uppercase font-bold text-orange-300 tracking-wider">Harga Promo</p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-base font-extrabold text-orange-300 font-mono">
+                {rupiah(promoView.promoPrice)}
+              </p>
+              {promoView.showRetailStrike && (
+                <p className="text-xs text-slate-500 line-through font-mono">
+                  {rupiah(product.suggestedRetailPrice)}
+                </p>
+              )}
             </div>
           </div>
         ) : (

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
+import { promoCampaign } from '../lib/promo';
 import { BrandMark } from './BrandMark';
 
 export const Header: React.FC = () => {
@@ -32,25 +33,40 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white px-3 py-2.5">
       <div className="max-w-md mx-auto flex items-center justify-between gap-2">
-        <button
-          onClick={() => setCurrentTab('home')}
-          className="flex items-center gap-2 min-w-0 text-left active:opacity-80 transition-opacity"
-        >
-          <BrandMark />
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span className="font-extrabold text-sm tracking-tight text-white leading-none truncate">
-                {APP_NAME}
-              </span>
-              <span className="hidden sm:inline-flex shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                SHOP
-              </span>
+        <div className="flex items-center gap-2 min-w-0">
+          <button
+            onClick={() => setCurrentTab('home')}
+            className="flex items-center gap-2 min-w-0 text-left active:opacity-80 transition-opacity"
+          >
+            <BrandMark />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="font-extrabold text-sm tracking-tight text-white leading-none truncate">
+                  {APP_NAME}
+                </span>
+                <span className="hidden sm:inline-flex shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                  SHOP
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium truncate leading-tight mt-0.5">
+                {canvasserProfile.territory}
+              </p>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium truncate leading-tight mt-0.5">
-              {canvasserProfile.territory}
-            </p>
-          </div>
-        </button>
+          </button>
+          {promoCampaign.active && (
+            <button
+              type="button"
+              onClick={() => setCurrentTab('promo')}
+              className={`shrink-0 text-[10px] font-black px-1.5 py-0.5 rounded border ${
+                currentTab === 'promo'
+                  ? 'bg-orange-500 text-slate-950 border-orange-300'
+                  : 'bg-orange-500/20 text-orange-300 border-orange-500/40'
+              }`}
+            >
+              PROMO
+            </button>
+          )}
+        </div>
 
         <div className="flex items-center gap-1.5">
           <button

@@ -9,6 +9,7 @@ import { SearchCatalogPage } from './pages/SearchCatalogPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { ProductFocusPage } from './pages/ProductFocusPage';
 import { BestSellerPage } from './pages/BestSellerPage';
+import { PromoPage } from './pages/PromoPage';
 import { ComparePage } from './pages/ComparePage';
 import { AiAssistantPage } from './pages/AiAssistantPage';
 import { AdminPage } from './pages/AdminPage';
@@ -30,6 +31,8 @@ const AppContent: React.FC = () => {
         return <ProductFocusPage />;
       case 'bestseller':
         return <BestSellerPage />;
+      case 'promo':
+        return <PromoPage />;
       case 'compare':
         return <ComparePage />;
       case 'ai':

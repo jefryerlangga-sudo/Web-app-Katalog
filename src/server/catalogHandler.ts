@@ -1,8 +1,11 @@
 /**
  * Public catalog read for guests. One Firestore runQuery sequence, then the CDN
  * holds the JSON so storefront visits do not each list the products collection.
+ * `promo` is the campaign shipped in the repo (no extra Firestore read) and uses
+ * the same Cache-Control header as the product list.
  */
 import appletConfig from '../../firebase-applet-config.json' with { type: 'json' };
+import { publicPromoPayload } from '../lib/promo.ts';
 
 export const CATALOG_CACHE_CONTROL = 'public, s-maxage=1800, stale-while-revalidate=86400';
 export const CATALOG_PAGE_SIZE = 300;
@@ -221,7 +224,8 @@ export async function handleCatalogRequest(
 
   try {
     const products = await fetchActiveCatalog(options);
-    return new Response(request.method === 'HEAD' ? null : JSON.stringify({ products }), {
+    const payload = { products, promo: publicPromoPayload() };
+    return new Response(request.method === 'HEAD' ? null : JSON.stringify(payload), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
