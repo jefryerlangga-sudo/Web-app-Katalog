@@ -45,12 +45,14 @@ function catalogProduct(overrides: Partial<Product> = {}): Product {
   };
 }
 
-test('shipped cuci gudang campaign is the 199 public SKUs and has no dealer cost', () => {
+test('shipped promo campaign is the 199 public SKUs and has no dealer cost', () => {
   const fileUrl = new URL('../src/data/promo-cuci-gudang.json', import.meta.url);
   const rawText = readFileSync(fileUrl, 'utf8');
   assert.equal(FORBIDDEN.test(rawText), false);
   const parsed = parsePromoCampaign(JSON.parse(rawText));
   assert.equal(parsed.items.length, 199);
+  assert.equal(parsed.title, 'List Barang Promo');
+  assert.equal(rawText.includes('Cuci Gudang'), false);
   assert.equal(parsed.active, true);
   assert.equal(parsed.minPurchase, 2500000);
   assert.deepEqual(parsed.brands, ['Foomee', 'Olike', 'Rexi', 'Mcdodo', 'Baseus']);

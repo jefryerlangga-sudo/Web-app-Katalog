@@ -3,9 +3,12 @@
  * holds the JSON so storefront visits do not each list the products collection.
  * `promo` is the campaign shipped in the repo (no extra Firestore read) and uses
  * the same Cache-Control header as the product list.
+ * Import the server campaign module, not src/lib/promo.ts. Vercel emits each
+ * TypeScript file as its own Node ESM module and does not resolve extensionless
+ * imports.
  */
 import appletConfig from '../../firebase-applet-config.json' with { type: 'json' };
-import { publicPromoPayload } from '../lib/promo.ts';
+import { publicPromoPayload } from './promoCampaign.ts';
 
 export const CATALOG_CACHE_CONTROL = 'public, s-maxage=1800, stale-while-revalidate=86400';
 export const CATALOG_PAGE_SIZE = 300;
