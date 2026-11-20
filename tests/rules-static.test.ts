@@ -27,7 +27,8 @@ test('rules and app share the existing owner email and require a verified token'
 });
 
 test('rules do not grant catalog writes from a profile role or admins collection lookup', () => {
-  assert.equal(rules.includes("role == 'admin'"), false);
+  const catalog = rules.slice(rules.indexOf('match /products/'), rules.indexOf('function analyticsRoleOk'));
+  assert.equal(catalog.includes("role == 'admin'"), false);
   assert.match(rules, /data\.role == 'pending'/);
   assert.match(rules, /isAdminRoleUpdate\(\)/);
   assert.equal(rules.includes('allow list: if true'), false);

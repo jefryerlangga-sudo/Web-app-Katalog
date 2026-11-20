@@ -5,6 +5,7 @@ import {
   LogOut,
   ShieldCheck,
   ShoppingCart,
+  BarChart3,
   SlidersHorizontal,
   Sparkles,
   User,
@@ -184,6 +185,23 @@ export const Header: React.FC = () => {
                           {pendingCount}
                         </span>
                       )}
+                    </button>
+                  )}
+
+                  {isAdmin && (
+                    <button
+                      onClick={() => {
+                        setCurrentTab('laporan');
+                        setShowProfileMenu(false);
+                      }}
+                      className={`w-full flex items-center gap-2 p-2 rounded-xl font-medium ${
+                        currentTab === 'laporan'
+                          ? 'bg-blue-600 text-white'
+                          : 'text-slate-200 hover:bg-slate-700/60'
+                      }`}
+                    >
+                      <BarChart3 className="w-4 h-4 text-purple-300" />
+                      <span>Laporan</span>
                     </button>
                   )}
 

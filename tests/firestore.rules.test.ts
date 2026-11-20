@@ -22,7 +22,9 @@ import {
   setDoc,
   updateDoc,
   where,
+  arrayUnion,
 } from 'firebase/firestore';
+import { buildHitWrites, type AnalyticsEvent } from '../src/lib/analyticsAggregate.ts';
 import type { RulesTestContext } from '@firebase/rules-unit-testing';
 import { endUserPrice } from '../src/config/pricing.ts';
 
@@ -427,4 +429,77 @@ test('end users pay the marked-up price and pending accounts cannot order', asyn
   await assertSucceeds(setDoc(doc(endUser, 'orders', 'ORD-END'), priced));
   await assertFails(setDoc(doc(endUser, 'orders', 'ORD-BASE'), orderPayload('end-1', 'end@example.com')));
   await assertFails(setDoc(doc(pending, 'orders', 'ORD-WAIT'), orderPayload('wait-1', 'wait@example.com')));
+});
+
+const ANALYTICS_DAY = '2026-11-20';
+const ANALYTICS_SEEN = '2026-11-20T03:00:00.000Z';
+
+function hitPayload(uid: string, email: string, role: string, events: AnalyticsEvent[]) {
+  const [body] = buildHitWrites(events, { uid, email, name: 'Pelanggan', role }, {
+    date: ANALYTICS_DAY,
+    seen: ANALYTICS_SEEN,
+  });
+  return {
+    id: `${body.date}_${body.uid}`,
+    data: {
+      date: body.date,
+      uid: body.uid,
+      email: body.email,
+      name: body.name,
+      role: body.role,
+      seen: body.seen,
+      pages: body.pages,
+      events: arrayUnion(...body.events),
+    },
+  };
+}
+
+async function writeHit(db: TestDb, uid: string, email: string, role: string, events: AnalyticsEvent[]) {
+  const payload = hitPayload(uid, email, role, events);
+  await setDoc(doc(db, 'analyticsHits', payload.id), payload.data, { merge: true });
+}
+
+const visitEvents: AnalyticsEvent[] = [
+  { type: 'visit' },
+  { type: 'page', page: 'home' },
+  { type: 'click', click: 'product_view' },
+  { type: 'product', metric: 'views', product: { id: 'ACC-ANK-001', sku: 'ACC-ANK-001', name: 'Anker 511 Nano' } },
+];
+
+test('approved buyers can append their own analytics and cannot inflate or read it', async () => {
+  await seedBuyer('cust-1', 'cust@example.com', 'customer');
+  await seedBuyer('end-1', 'end@example.com', 'end_user');
+  await seedBuyer('wait-1', 'wait@example.com', 'pending');
+  const customer = dbFor('cust-1', 'cust@example.com', true);
+  const endUser = dbFor('end-1', 'end@example.com', true);
+  const pending = dbFor('wait-1', 'wait@example.com', true);
+  const guest = testEnv.unauthenticatedContext().firestore();
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  const customerId = `${ANALYTICS_DAY}_cust-1`;
+
+  await assertSucceeds(writeHit(customer, 'cust-1', 'cust@example.com', 'customer', visitEvents));
+  await assertFails(getDoc(doc(customer, 'analyticsHits', customerId)));
+  await assertFails(getDocs(collection(customer, 'analyticsHits')));
+  await assertFails(deleteDoc(doc(customer, 'analyticsHits', customerId)));
+
+  const stored = await assertSucceeds(getDoc(doc(master, 'analyticsHits', customerId)));
+  assert.equal(stored.data()?.email, 'cust@example.com');
+  assert.equal(Array.isArray(stored.data()?.events) && stored.data()?.events.length, 4);
+  await assertSucceeds(getDocs(collection(master, 'analyticsHits')));
+
+  await assertSucceeds(writeHit(customer, 'cust-1', 'cust@example.com', 'customer', [{ type: 'page', page: 'search' }]));
+  const after = await assertSucceeds(getDoc(doc(master, 'analyticsHits', customerId)));
+  assert.equal(after.data()?.events.length, 5);
+
+  await assertFails(setDoc(doc(customer, 'analyticsHits', customerId), {
+    events: arrayUnion('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'),
+  }, { merge: true }));
+  await assertFails(writeHit(customer, 'someone', 'cust@example.com', 'customer', [{ type: 'page', page: 'home' }]));
+  await assertFails(writeHit(customer, 'cust-1', 'other@example.com', 'customer', [{ type: 'page', page: 'home' }]));
+
+  await assertSucceeds(writeHit(endUser, 'end-1', 'end@example.com', 'end_user', [{ type: 'visit' }, { type: 'page', page: 'focus' }]));
+  await assertFails(writeHit(pending, 'wait-1', 'wait@example.com', 'pending', visitEvents));
+  await assertFails(writeHit(guest, 'ghost', 'ghost@example.com', 'customer', visitEvents));
+  await assertSucceeds(writeHit(master, 'master-1', MASTER_EMAIL, 'admin', [{ type: 'visit' }, { type: 'page', page: 'laporan' }]));
+  await assertSucceeds(deleteDoc(doc(master, 'analyticsHits', `${ANALYTICS_DAY}_master-1`)));
 });
