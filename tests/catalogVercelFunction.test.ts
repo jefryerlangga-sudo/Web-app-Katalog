@@ -6,7 +6,9 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
+import { endUserPrice } from '../src/config/pricing.ts';
 import { CATALOG_CACHE_CONTROL } from '../src/server/catalogHandler.ts';
+import { promoCampaign } from '../src/server/promoCampaign.ts';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
@@ -113,9 +115,63 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(existsSync(join(directory, 'src/data/promo-cuci-gudang.json')), true);
     assert.equal(existsSync(join(directory, 'firebase-applet-config.json')), true);
 
+    const blobDir = join(directory, 'node_modules', '@vercel', 'blob');
+    await mkdir(blobDir, { recursive: true });
+    await writeFile(
+      join(blobDir, 'package.json'),
+      JSON.stringify({ name: '@vercel/blob', type: 'module', exports: { '.': './index.js' } })
+    );
+    await writeFile(
+      join(blobDir, 'index.js'),
+      `const product = ${JSON.stringify({
+        id: 'PS-FOO-0009',
+        sku: 'PS-FOO-0009',
+        name: 'Foomee Adapter',
+        suggestedRetailPrice: 88000,
+        wholesalePrice: 1000,
+        isActive: true,
+      })};
+let body = JSON.stringify({ products: [product] });
+export async function get() {
+  return { statusCode: 200, stream: new Response(body).body, headers: new Headers(), blob: { pathname: 'catalog/products-v1.json' } };
+}
+export async function put(_pathname, next) {
+  body = typeof next === 'string' ? next : String(next);
+}
+`
+    );
+
     let fetches = 0;
-    globalThis.fetch = (async () => {
+    let productQueries = 0;
+    let roleReads = 0;
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
       fetches += 1;
+      if (url.includes('accounts:lookup')) {
+        const body = JSON.parse(String(init?.body || '{}')) as { idToken?: string };
+        const end = body.idToken === 'end-token';
+        return new Response(
+          JSON.stringify({
+            users: [
+              {
+                localId: end ? 'end-user' : 'grosir-user',
+                email: end ? 'end@example.com' : 'buyer@example.com',
+                emailVerified: true,
+              },
+            ],
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+      if (url.includes('/documents/users/')) {
+        roleReads += 1;
+        const end = url.includes('end-user');
+        return new Response(
+          JSON.stringify({ fields: { role: { stringValue: end ? 'end_user' : 'grosir' } } }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+      productQueries += 1;
       return new Response(
         JSON.stringify([
           {
@@ -140,16 +196,29 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
       HEAD: (request: Request) => Promise<Response>;
       default: { fetch: (request: Request) => Promise<Response> };
     };
+    const locked = await mod.GET(new Request('https://katalog.local/api/catalog'));
+    assert.equal(locked.status, 401);
+    assert.equal(locked.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
+    assert.equal(JSON.stringify(await locked.json()).includes('sku'), false);
+    assert.equal(fetches, 0);
+
+    const grosirAuth = { headers: { Authorization: 'Bearer grosir-token' } };
+    const endAuth = { headers: { Authorization: 'Bearer end-token' } };
     const stamp = Date.now();
-    const response = await mod.GET(new Request(`https://katalog.local/api/catalog?v=${stamp}`));
+    const response = await mod.GET(new Request(`https://katalog.local/api/catalog?v=${stamp}`, grosirAuth));
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
+    assert.equal(response.headers.get('Vary'), 'Authorization');
+    assert.equal(String(response.headers.get('Cache-Control')).includes('s-maxage'), false);
     const body = (await response.json()) as {
+      tier: string;
       products: Array<Record<string, unknown>>;
-      promo: { title: string; items: unknown[] };
+      promo: { title: string; items: Array<{ promoPrice: number }> };
     };
+    assert.equal(body.tier, 'grosir');
     assert.equal(body.products.length, 1);
     assert.equal(body.products[0].sku, 'PS-FOO-0009');
+    assert.equal(body.products[0].suggestedRetailPrice, 88000);
     assert.equal(body.promo.title, 'List Barang Promo');
     assert.equal(body.promo.items.length, 199);
     const serialized = JSON.stringify(body);
@@ -157,14 +226,27 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(serialized.includes('Cuci Gudang'), false);
     assert.equal(fetches > 0, true);
 
-    const head = await mod.HEAD(new Request('https://katalog.local/api/catalog', { method: 'HEAD' }));
+    const endUser = await mod.GET(new Request('https://katalog.local/api/catalog', endAuth));
+    const endBody = (await endUser.json()) as {
+      products: Array<{ suggestedRetailPrice: number }>;
+      promo: { items: Array<{ promoPrice: number }> };
+    };
+    assert.equal(endUser.status, 200);
+    assert.equal(endBody.products[0].suggestedRetailPrice, endUserPrice(88000));
+    assert.equal(endBody.promo.items[0].promoPrice, endUserPrice(promoCampaign.items[0].promoPrice));
+
+    const head = await mod.HEAD(
+      new Request('https://katalog.local/api/catalog', { method: 'HEAD', headers: grosirAuth.headers })
+    );
     assert.equal(head.status, 200);
     assert.equal(head.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
     assert.equal(await head.text(), '');
 
-    const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog'));
+    const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog', grosirAuth));
     assert.equal(viaDefault.status, 200);
     await viaDefault.text();
+    assert.equal(productQueries, 0);
+    assert.equal(roleReads, 2);
   } finally {
     globalThis.fetch = previousFetch;
     await rm(directory, { recursive: true, force: true });
@@ -175,9 +257,9 @@ test('customer-facing promo title is List Barang Promo', () => {
   const home = readFileSync(new URL('../src/pages/HomePage.tsx', import.meta.url), 'utf8');
   const page = readFileSync(new URL('../src/pages/PromoPage.tsx', import.meta.url), 'utf8');
   const header = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8');
-  assert.match(home, /\{promoCampaign\.title\}/);
+  assert.match(home, /\{promo\.title\}/);
   assert.equal(home.includes('Cuci Gudang'), false);
   assert.equal(page.includes('Cuci Gudang'), false);
-  assert.match(page, /\{promoCampaign\.title\}/);
+  assert.match(page, /promo\?\.title/);
   assert.match(header, />\s*PROMO\s*</);
 });

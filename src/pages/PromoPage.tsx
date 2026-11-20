@@ -4,13 +4,13 @@ import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
 import { rupiah } from '../lib/money';
-import { listPromoProducts, promoCampaign } from '../lib/promo';
+import { listPromoProducts } from '../lib/promo';
 
 export const PromoPage: React.FC = () => {
-  const { activeProducts, isAdmin } = useCatalog();
+  const { activeProducts, isAdmin, promo } = useCatalog();
   const [brand, setBrand] = useState<string>('Semua');
 
-  const listings = useMemo(() => listPromoProducts(activeProducts), [activeProducts]);
+  const listings = useMemo(() => listPromoProducts(activeProducts, promo), [activeProducts, promo]);
   const counts = useMemo(() => {
     const map = new Map<string, number>();
     for (const item of listings) {
@@ -19,7 +19,7 @@ export const PromoPage: React.FC = () => {
     return map;
   }, [listings]);
   const visible = brand === 'Semua' ? listings : listings.filter((item) => item.brand === brand);
-  const hidden = promoCampaign.items.length - listings.length;
+  const hidden = (promo?.items.length ?? 0) - listings.length;
 
   return (
     <div className="space-y-4 pb-20">
@@ -30,14 +30,14 @@ export const PromoPage: React.FC = () => {
           </div>
           <div className="min-w-0">
             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30">
-              Min. {rupiah(promoCampaign.minPurchase)} / nota
+              Min. {rupiah(promo?.minPurchase ?? 0)} / nota
             </span>
-            <h1 className="text-lg font-black text-white mt-1 leading-tight">{promoCampaign.title}</h1>
+            <h1 className="text-lg font-black text-white mt-1 leading-tight">{promo?.title ?? 'Promo'}</h1>
           </div>
         </div>
 
         <ul className="space-y-1.5 text-xs text-orange-50/95 leading-relaxed list-disc pl-4">
-          {promoCampaign.terms.map((term) => (
+          {(promo?.terms ?? []).map((term) => (
             <li key={term}>{term}</li>
           ))}
         </ul>
@@ -57,7 +57,7 @@ export const PromoPage: React.FC = () => {
           >
             Semua ({listings.length})
           </button>
-          {promoCampaign.brands.map((name) => (
+          {(promo?.brands ?? []).map((name) => (
             <button
               key={name}
               type="button"

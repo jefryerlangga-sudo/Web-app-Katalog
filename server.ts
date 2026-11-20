@@ -8,7 +8,7 @@ import {
   runtimeFromEnv,
   type AiRuntime,
 } from './src/server/aiHandler';
-import { handleCatalogRequest } from './src/server/catalogHandler';
+import { handleCatalogRefresh, handleCatalogRequest, incomingCatalogRequest } from './src/server/catalogHandler';
 
 dotenv.config();
 
@@ -29,10 +29,26 @@ export function createApp(runtime: AiRuntime = runtimeFromEnv(), options: AppOpt
   app.set('trust proxy', 1);
   app.use(express.json({ limit: MAX_AI_BODY_BYTES }));
 
+  app.post('/api/catalog', async (req, res) => {
+    try {
+      const response = await handleCatalogRefresh(
+        incomingCatalogRequest(req.method, req.header('authorization'))
+      );
+      res.status(response.status);
+      response.headers.forEach((value, key) => {
+        res.setHeader(key, value);
+      });
+      res.send(await response.text());
+    } catch {
+      console.error('catalog refresh error');
+      res.status(502).set('Cache-Control', 'no-store').json({ error: 'Katalog tidak dapat dimuat' });
+    }
+  });
+
   app.get('/api/catalog', async (req, res) => {
     try {
       const response = await handleCatalogRequest(
-        new Request('http://localhost/api/catalog', { method: req.method })
+        incomingCatalogRequest(req.method, req.header('authorization'))
       );
       res.status(response.status);
       response.headers.forEach((value, key) => {

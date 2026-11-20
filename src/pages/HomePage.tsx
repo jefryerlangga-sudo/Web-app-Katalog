@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { APP_NAME, listStorefrontCategories } from '../config/app';
 import { dealerQuote } from '../lib/money';
-import { listPromoProducts, promoCampaign } from '../lib/promo';
+import { listPromoProducts } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 
@@ -25,13 +25,14 @@ export const HomePage: React.FC = () => {
     setFilters,
     user,
     isAdmin,
+    promo,
   } = useCatalog();
 
   const [selectedDevice, setSelectedDevice] = useState<string>('Semua');
 
   const focusProducts = activeProducts.filter((p) => p.isProductFocus);
   const bestSellerProducts = activeProducts.filter((p) => p.isBestSeller);
-  const promoListings = useMemo(() => listPromoProducts(activeProducts), [activeProducts]);
+  const promoListings = useMemo(() => listPromoProducts(activeProducts, promo), [activeProducts, promo]);
 
   // Filter cepat tipe HP & kendaraan untuk canvasser di lapangan
   const popularDevices = [
@@ -146,7 +147,7 @@ export const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {promoCampaign.active && (
+      {promo?.active && (
         <button
           type="button"
           onClick={() => setCurrentTab('promo')}
@@ -158,7 +159,7 @@ export const HomePage: React.FC = () => {
                 <Tag className="w-5 h-5" />
               </span>
               <div className="min-w-0">
-                <span className="text-[10px] font-bold text-orange-300 tracking-wide">{promoCampaign.title}</span>
+                <span className="text-[10px] font-bold text-orange-300 tracking-wide">{promo.title}</span>
                 <h3 className="text-sm font-bold text-white leading-tight">
                   {promoListings.length} SKU · Foomee, Olike, Rexi, Mcdodo, Baseus
                 </h3>
@@ -168,7 +169,7 @@ export const HomePage: React.FC = () => {
               Lihat Promo
             </span>
           </div>
-          <p className="text-[11px] text-orange-50/90 mt-2 leading-relaxed">{promoCampaign.terms[0]}</p>
+          <p className="text-[11px] text-orange-50/90 mt-2 leading-relaxed">{promo.terms[0]}</p>
         </button>
       )}
 

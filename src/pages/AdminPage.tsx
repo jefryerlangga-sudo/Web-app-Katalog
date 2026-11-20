@@ -15,7 +15,8 @@ import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ExcelImportModal } from '../components/ExcelImportModal';
 import { CUSTOMER_CATALOG_DELAY_NOTE, isStorefrontProduct, listStorefrontCategories } from '../config/app';
-import { isPromoSku, listPromoProducts, promoCampaign } from '../lib/promo';
+import { AccountApprovals } from '../components/AccountApprovals';
+import { isPromoSku, listPromoProducts } from '../lib/promo';
 import { PromoBadge } from '../components/PromoBadge';
 import { ProductImage } from '../components/ProductImage';
 import { LoadMoreList } from '../components/LoadMoreList';
@@ -32,12 +33,15 @@ export const AdminPage: React.FC = () => {
     user,
     setShowAuthModal,
     setCurrentTab,
+    promo,
+    syncCatalog,
   } = useCatalog();
 
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   if (!user || !isAdmin) {
     return (
@@ -129,6 +133,20 @@ export const AdminPage: React.FC = () => {
     }
   };
 
+  const handleSyncCatalog = async () => {
+    setSyncing(true);
+    try {
+      await syncCatalog();
+      setSuccessMessage('Katalog pribadi sudah disinkronkan. Pelanggan melihat harga baru saat memuat ulang.');
+      setTimeout(() => setSuccessMessage(null), 8000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal menyinkronkan katalog';
+      setSuccessMessage(message);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const handleSeed = async () => {
     try {
       const result = await seedData();
@@ -156,6 +174,7 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="space-y-4 pb-24">
+      <AccountApprovals />
       {/* Header and Add Action */}
       <div className="bg-slate-800/90 border border-slate-700/80 p-4 rounded-3xl shadow-lg space-y-3">
         <div className="flex items-center justify-between">
@@ -177,6 +196,15 @@ export const AdminPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSyncCatalog}
+              disabled={syncing}
+              className="px-3 py-2 rounded-2xl bg-amber-500/90 hover:bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 disabled:opacity-60"
+            >
+              <RotateCcw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+              <span>{syncing ? 'Menyinkronkan...' : 'Sinkronkan Katalog'}</span>
+            </button>
             <button
               onClick={() => setShowImportModal(true)}
               className="px-3 py-2 rounded-2xl bg-emerald-600/90 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95 transition-all"
@@ -215,12 +243,12 @@ export const AdminPage: React.FC = () => {
             <span>Isi sampel jika katalog kosong</span>
           </button>
         </div>
-        {promoCampaign.active && (
+        {promo?.active && (
           <div className="p-3 rounded-2xl border border-orange-500/40 bg-orange-950/30 space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-orange-300">Kelola Promo</p>
-                <h2 className="text-sm font-black text-white">{promoCampaign.title}</h2>
+                <h2 className="text-sm font-black text-white">{promo.title}</h2>
               </div>
               <button
                 type="button"
@@ -231,7 +259,7 @@ export const AdminPage: React.FC = () => {
               </button>
             </div>
             <p className="text-[11px] text-orange-50/90">
-              {listPromoProducts(products).length} dari {promoCampaign.items.length} SKU promo tampil.
+              {listPromoProducts(products, promo).length} dari {promo.items.length} SKU promo tampil.
               Yang nonaktif atau tidak ada di katalog disembunyikan.
             </p>
             <p className="text-[11px] text-slate-300">
@@ -293,7 +321,7 @@ export const AdminPage: React.FC = () => {
                         </span>
                       )}
 
-                      {isPromoSku(item.sku) && <PromoBadge />}
+                      {isPromoSku(item.sku, promo) && <PromoBadge />}
                     </div>
 
                     <h3 className="font-bold text-white text-xs mt-0.5 truncate max-w-[200px]">

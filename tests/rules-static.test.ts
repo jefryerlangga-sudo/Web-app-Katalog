@@ -9,6 +9,8 @@ const catalog = readFileSync(new URL('../src/context/CatalogContext.tsx', import
 const orders = readFileSync(new URL('../src/firebase/ordersService.ts', import.meta.url), 'utf8');
 const whatsapp = readFileSync(new URL('../src/firebase/whatsappLink.ts', import.meta.url), 'utf8');
 const users = readFileSync(new URL('../src/firebase/usersService.ts', import.meta.url), 'utf8');
+const accountRole = readFileSync(new URL('../src/config/accountRole.ts', import.meta.url), 'utf8');
+const pricing = readFileSync(new URL('../src/config/pricing.ts', import.meta.url), 'utf8');
 const ai = readFileSync(new URL('../src/server/aiHandler.ts', import.meta.url), 'utf8');
 const server = readFileSync(new URL('../server.ts', import.meta.url), 'utf8');
 const pkg = readFileSync(new URL('../package.json', import.meta.url), 'utf8');
@@ -26,9 +28,14 @@ test('rules and app share the existing owner email and require a verified token'
 
 test('rules do not grant catalog writes from a profile role or admins collection lookup', () => {
   assert.equal(rules.includes("role == 'admin'"), false);
-  assert.match(rules, /data\.role == 'customer'/);
+  assert.match(rules, /data\.role == 'pending'/);
+  assert.match(rules, /isAdminRoleUpdate\(\)/);
+  assert.equal(rules.includes('allow list: if true'), false);
   assert.equal(rules.includes('documents/admins/'), false);
-  assert.match(rules, /suggestedRetailPrice == item\.unitPrice/);
+  assert.match(rules, /expectedUnitPrice\(product\.suggestedRetailPrice\) == item\.unitPrice/);
+  assert.match(rules, /base \* 130 \/ 10000/);
+  assert.match(pricing, /END_USER_MARKUP = 0\.3/);
+  assert.match(accountRole, /'customer'/);
   assert.match(rules, /data\.total == data\.subtotal/);
   assert.match(rules, /data\.status == 'pending'/);
 });
@@ -71,7 +78,7 @@ test('order code does not call a WhatsApp or payment API', () => {
   assert.equal(orderCode.includes('graph.facebook.com'), false);
   assert.match(orders, /priceCart/);
   assert.match(whatsapp, /wa\.me/);
-  assert.match(users, /role: 'customer'/);
+  assert.match(users, /role: 'pending'/);
   assert.equal(users.includes("role: 'admin'"), false);
   assert.equal(app.includes('6281234567890'), false);
 });

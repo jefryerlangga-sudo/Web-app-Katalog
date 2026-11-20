@@ -24,6 +24,7 @@ import {
   where,
 } from 'firebase/firestore';
 import type { RulesTestContext } from '@firebase/rules-unit-testing';
+import { endUserPrice } from '../src/config/pricing.ts';
 
 type TestDb = ReturnType<RulesTestContext['firestore']>;
 
@@ -131,16 +132,28 @@ async function seedProduct(data = validProduct()) {
   });
 }
 
-test('guests can read products and cannot write them', async () => {
+async function seedBuyer(uid: string, email: string, role = 'customer') {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), 'users', uid), profile(uid, email, role));
+  });
+}
+
+test('guests and customers cannot read product prices directly', async () => {
   await seedProduct();
   const guest = testEnv.unauthenticatedContext().firestore();
-  const snap = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
-  assert.equal(Object.prototype.hasOwnProperty.call(snap.data(), 'wholesalePrice'), false);
-  await assertSucceeds(getDocs(collection(guest, 'products')));
+  const customer = dbFor('cust-1', 'cust@example.com', true);
+  await assertFails(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  await assertFails(getDocs(collection(guest, 'products')));
+  await assertFails(getDoc(doc(customer, 'products', PRODUCT_ID)));
+  await assertFails(getDocs(collection(customer, 'products')));
   await assertFails(setDoc(doc(guest, 'products', 'ACC-NEW-1'), validProduct({ sku: 'ACC-NEW-1' })));
   await assertFails(deleteDoc(doc(guest, 'products', PRODUCT_ID)));
   await assertFails(getDoc(doc(guest, 'productAdmin', PRODUCT_ID)));
   await assertFails(getDocs(collection(guest, 'productAdmin')));
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  const snap = await assertSucceeds(getDoc(doc(master, 'products', PRODUCT_ID)));
+  assert.equal(snap.data()?.suggestedRetailPrice, RETAIL);
+  assert.equal(Object.prototype.hasOwnProperty.call(snap.data(), 'wholesalePrice'), false);
 });
 
 test('customers and unverified owner emails cannot modify products', async () => {
@@ -197,10 +210,12 @@ test('wholesale price is rejected on public products and locked to productAdmin'
     updatedAt: '2026-11-16T00:00:00.000Z',
   }));
   await assertFails(getDoc(doc(guest, 'productAdmin', PRODUCT_ID)));
+  await assertFails(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  await assertFails(getDoc(doc(customer, 'products', PRODUCT_ID)));
 
-  const publicSnap = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
-  assert.equal(publicSnap.data()?.suggestedRetailPrice, RETAIL);
-  assert.equal(Object.prototype.hasOwnProperty.call(publicSnap.data(), 'wholesalePrice'), false);
+  const adminSnapProduct = await assertSucceeds(getDoc(doc(master, 'products', PRODUCT_ID)));
+  assert.equal(adminSnapProduct.data()?.suggestedRetailPrice, RETAIL);
+  assert.equal(Object.prototype.hasOwnProperty.call(adminSnapProduct.data(), 'wholesalePrice'), false);
 });
 
 test('legacy wholesale field can be deleted by the master admin and is not redacted on read before that', async () => {
@@ -211,7 +226,9 @@ test('legacy wholesale field can be deleted by the master admin and is not redac
     });
   });
   const guest = testEnv.unauthenticatedContext().firestore();
-  const legacy = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  await assertFails(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  const legacy = await assertSucceeds(getDoc(doc(master, 'products', PRODUCT_ID)));
   assert.equal(legacy.data()?.wholesalePrice, 135000);
 
   const customer = dbFor('cust-1', 'cust@example.com', true);
@@ -220,12 +237,11 @@ test('legacy wholesale field can be deleted by the master admin and is not redac
     updatedAt: '2026-11-16T01:00:00.000Z',
   }));
 
-  const master = dbFor('master-1', MASTER_EMAIL, true);
   await assertSucceeds(updateDoc(doc(master, 'products', PRODUCT_ID), {
     wholesalePrice: deleteField(),
     updatedAt: '2026-11-16T01:00:00.000Z',
   }));
-  const cleaned = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  const cleaned = await assertSucceeds(getDoc(doc(master, 'products', PRODUCT_ID)));
   assert.equal(Object.prototype.hasOwnProperty.call(cleaned.data(), 'wholesalePrice'), false);
   assert.equal(cleaned.data()?.suggestedRetailPrice, RETAIL);
 });
@@ -239,6 +255,7 @@ test('master admin can store a legacy wholesale price in productAdmin while remo
   });
   const master = dbFor('master-1', MASTER_EMAIL, true);
   const guest = testEnv.unauthenticatedContext().firestore();
+  const customer = dbFor('cust-1', 'cust@example.com', true);
   const now = '2026-11-16T02:00:00.000Z';
   await assertSucceeds(setDoc(doc(master, 'productAdmin', PRODUCT_ID), {
     wholesalePrice: 135000,
@@ -251,7 +268,9 @@ test('master admin can store a legacy wholesale price in productAdmin while remo
   }));
   const adminSnap = await assertSucceeds(getDoc(doc(master, 'productAdmin', PRODUCT_ID)));
   assert.equal(adminSnap.data()?.wholesalePrice, 135000);
-  const publicSnap = await assertSucceeds(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  await assertFails(getDoc(doc(guest, 'products', PRODUCT_ID)));
+  await assertFails(getDoc(doc(customer, 'products', PRODUCT_ID)));
+  const publicSnap = await assertSucceeds(getDoc(doc(master, 'products', PRODUCT_ID)));
   assert.equal(publicSnap.data()?.isActive, false);
   assert.equal(Object.prototype.hasOwnProperty.call(publicSnap.data(), 'wholesalePrice'), false);
   await assertFails(getDoc(doc(guest, 'productAdmin', PRODUCT_ID)));
@@ -260,14 +279,17 @@ test('master admin can store a legacy wholesale price in productAdmin while remo
 test('customers cannot elevate role or read another profile', async () => {
   const customer = dbFor('cust-1', 'cust@example.com', true);
   const other = dbFor('cust-2', 'other@example.com', true);
-  await assertSucceeds(setDoc(doc(customer, 'users', 'cust-1'), profile('cust-1', 'cust@example.com')));
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  await assertSucceeds(setDoc(doc(customer, 'users', 'cust-1'), profile('cust-1', 'cust@example.com', 'pending')));
+  await assertFails(setDoc(doc(customer, 'users', 'cust-1'), profile('cust-1', 'cust@example.com', 'grosir')));
+  await assertFails(setDoc(doc(customer, 'users', 'cust-1'), profile('cust-1', 'cust@example.com', 'end_user')));
   await assertFails(setDoc(doc(customer, 'users', 'cust-1'), profile('cust-1', 'cust@example.com', 'admin')));
-  await assertFails(setDoc(doc(customer, 'users', 'cust-2'), profile('cust-2', 'cust@example.com')));
+  await assertFails(setDoc(doc(customer, 'users', 'cust-2'), profile('cust-2', 'cust@example.com', 'pending')));
   await assertFails(getDoc(doc(customer, 'users', 'cust-2')));
   await assertSucceeds(getDoc(doc(customer, 'users', 'cust-1')));
   await assertFails(
     updateDoc(doc(customer, 'users', 'cust-1'), {
-      role: 'admin',
+      role: 'grosir',
       updatedAt: '2026-11-08T13:00:00.000Z',
     })
   );
@@ -277,11 +299,37 @@ test('customers cannot elevate role or read another profile', async () => {
       updatedAt: '2026-11-08T13:00:00.000Z',
     })
   );
+  await assertSucceeds(
+    updateDoc(doc(master, 'users', 'cust-1'), {
+      role: 'grosir',
+      updatedAt: '2026-11-08T14:00:00.000Z',
+    })
+  );
+  await assertSucceeds(
+    updateDoc(doc(master, 'users', 'cust-1'), {
+      role: 'end_user',
+      updatedAt: '2026-11-08T15:00:00.000Z',
+    })
+  );
+  await assertFails(
+    updateDoc(doc(master, 'users', 'cust-1'), {
+      role: 'admin',
+      updatedAt: '2026-11-08T16:00:00.000Z',
+    })
+  );
+  await assertFails(
+    updateDoc(doc(customer, 'users', 'cust-1'), {
+      role: 'grosir',
+      updatedAt: '2026-11-08T17:00:00.000Z',
+    })
+  );
   await assertFails(getDocs(collection(other, 'users')));
+  await assertSucceeds(getDocs(collection(master, 'users')));
 });
 
-test('order create requires ownership, pending status, and catalog retail price', async () => {
+test('order create requires ownership, pending status, and the buyer tier price', async () => {
   await seedProduct();
+  await seedBuyer('cust-1', 'cust@example.com', 'customer');
   const customer = dbFor('cust-1', 'cust@example.com', true);
   const other = dbFor('cust-2', 'other@example.com', true);
   const guest = testEnv.unauthenticatedContext().firestore();
@@ -320,15 +368,18 @@ test('order create requires ownership, pending status, and catalog retail price'
 });
 
 test('inactive or missing products and master price edits are rejected', async () => {
+  await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct(validProduct({ isActive: false }));
   const customer = dbFor('cust-1', 'cust@example.com', true);
   await assertFails(setDoc(doc(customer, 'orders', 'ORD-OFF'), orderPayload('cust-1', 'cust@example.com')));
 
   await testEnv.clearFirestore();
+  await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct(validProduct({ stockStatus: 'Out of Stock' }));
   await assertFails(setDoc(doc(customer, 'orders', 'ORD-STOCK'), orderPayload('cust-1', 'cust@example.com')));
 
   await testEnv.clearFirestore();
+  await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct();
   await assertSucceeds(setDoc(doc(customer, 'orders', 'ORD-OK'), orderPayload('cust-1', 'cust@example.com')));
 
@@ -349,4 +400,31 @@ test('inactive or missing products and master price edits are rejected', async (
   assert.equal(stored?.total, RETAIL * 2);
   assert.equal(stored?.status, 'confirmed');
   assert.equal(stored?.userId, 'cust-1');
+});
+
+test('end users pay the marked-up price and pending accounts cannot order', async () => {
+  await seedProduct();
+  await seedBuyer('end-1', 'end@example.com', 'end_user');
+  await seedBuyer('wait-1', 'wait@example.com', 'pending');
+  const endUser = dbFor('end-1', 'end@example.com', true);
+  const pending = dbFor('wait-1', 'wait@example.com', true);
+  const unitPrice = endUserPrice(RETAIL);
+  const priced = orderPayload('end-1', 'end@example.com', {
+    items: [
+      {
+        productId: PRODUCT_ID,
+        sku: 'ACC-ANK-001',
+        name: 'Anker 511 Nano',
+        unitPrice,
+        quantity: 2,
+        lineTotal: unitPrice * 2,
+      },
+    ],
+    itemCount: 2,
+    subtotal: unitPrice * 2,
+    total: unitPrice * 2,
+  });
+  await assertSucceeds(setDoc(doc(endUser, 'orders', 'ORD-END'), priced));
+  await assertFails(setDoc(doc(endUser, 'orders', 'ORD-BASE'), orderPayload('end-1', 'end@example.com')));
+  await assertFails(setDoc(doc(pending, 'orders', 'ORD-WAIT'), orderPayload('wait-1', 'wait@example.com')));
 });

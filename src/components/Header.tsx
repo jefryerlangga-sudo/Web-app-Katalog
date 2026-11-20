@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { APP_NAME } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
-import { promoCampaign } from '../lib/promo';
 import { BrandMark } from './BrandMark';
 
 export const Header: React.FC = () => {
@@ -26,6 +25,9 @@ export const Header: React.FC = () => {
     currentTab,
     setShowAuthModal,
     cartCount,
+    promo,
+    pendingCount,
+    accountLabel,
   } = useCatalog();
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -53,7 +55,7 @@ export const Header: React.FC = () => {
               </p>
             </div>
           </button>
-          {promoCampaign.active && (
+          {promo?.active && (
             <button
               type="button"
               onClick={() => setCurrentTab('promo')}
@@ -109,7 +111,7 @@ export const Header: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 active:scale-95 hover:border-slate-600"
+              className="relative w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 active:scale-95 hover:border-slate-600"
             >
               {user?.photoURL ? (
                 <img
@@ -119,6 +121,11 @@ export const Header: React.FC = () => {
                 />
               ) : (
                 <User className="w-4 h-4" />
+              )}
+              {isAdmin && pendingCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-amber-400 text-slate-950 text-[9px] font-black flex items-center justify-center">
+                  {pendingCount > 99 ? '99+' : pendingCount}
+                </span>
               )}
             </button>
 
@@ -136,7 +143,7 @@ export const Header: React.FC = () => {
                   </p>
                   <div className="flex items-center gap-1.5 mt-2">
                     <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded font-semibold text-[10px]">
-                      {isAdmin ? 'Master Admin' : user ? 'Customer' : 'Guest'}
+                      {accountLabel}
                     </span>
                     {isAdmin && (
                       <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded font-semibold text-[10px] flex items-center gap-1">
@@ -172,6 +179,11 @@ export const Header: React.FC = () => {
                     >
                       <SlidersHorizontal className="w-4 h-4 text-purple-400" />
                       <span>Kelola Katalog (Admin)</span>
+                      {pendingCount > 0 && (
+                        <span className="ml-auto min-w-5 h-5 px-1 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black flex items-center justify-center">
+                          {pendingCount}
+                        </span>
+                      )}
                     </button>
                   )}
 

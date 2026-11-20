@@ -15,9 +15,14 @@ import { AiAssistantPage } from './pages/AiAssistantPage';
 import { AdminPage } from './pages/AdminPage';
 import { CartPage } from './pages/CartPage';
 import { RefreshCw } from 'lucide-react';
+import { AccessGate } from './components/AccessGate';
 
 const AppContent: React.FC = () => {
-  const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog } = useCatalog();
+  const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate } = useCatalog();
+
+  if (gate !== 'ready') {
+    return <AccessGate />;
+  }
 
   const renderCurrentView = () => {
     switch (currentTab) {
