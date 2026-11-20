@@ -16,6 +16,21 @@ function allow(tier: 'grosir' | 'end_user') {
   return async () => ({ ok: true as const, access: { tier } });
 }
 
+function seededBlob(products: Array<Record<string, unknown>>) {
+  let current = products.map((product) => ({ ...product }));
+  return {
+    snapshot() {
+      return current;
+    },
+    async read() {
+      return current.map((product) => ({ ...product }));
+    },
+    async write(next: readonly object[]) {
+      current = next.map((product) => ({ ...(product as Record<string, unknown>) }));
+    },
+  };
+}
+
 function text(value: string) {
   return { stringValue: value };
 }
@@ -114,6 +129,30 @@ test('GET /api/catalog returns public JSON with the shared cache header', async 
       ),
     endpoint: 'https://firestore.test/runQuery',
     pageSize: 10,
+    blobStore: seededBlob([
+      {
+        id: 'ACC-1',
+        sku: 'ACC-1',
+        name: 'Charger',
+        brand: '',
+        category: '',
+        subcategory: '',
+        imageUrl: '',
+        specification: '',
+        compatibility: '',
+        sellingPoint1: '',
+        sellingPoint2: '',
+        sellingPoint3: '',
+        suggestedRetailPrice: 15000,
+        stockStatus: 'In Stock',
+        positioning: 'Better',
+        targetCustomer: '',
+        isProductFocus: false,
+        isBestSeller: false,
+        crossSellNotes: '',
+        isActive: true,
+      },
+    ]),
   });
 
   assert.equal(response.status, 200);
@@ -140,6 +179,14 @@ test('catalog route stays outside the SPA rewrite and does not use the client SD
   assert.match(handler, /authorizeCatalogRequest/);
   assert.match(access, /accounts:lookup/);
   assert.equal(handler.includes('s-maxage'), false);
+  assert.equal(handler.includes('FIREBASE_SERVICE_ACCOUNT'), false);
+  assert.equal(handler.includes('serviceAccount'), false);
+  const blob = readFileSync(new URL('../src/server/catalogBlob.ts', import.meta.url), 'utf8');
+  const envExample = readFileSync(new URL('../.env.example', import.meta.url), 'utf8');
+  assert.match(blob, /access: 'private'/);
+  assert.match(blob, /allowOverwrite: true/);
+  assert.equal(envExample.includes('FIREBASE_SERVICE_ACCOUNT'), false);
+  assert.match(envExample, /BLOB_READ_WRITE_TOKEN/);
   assert.equal(handler.includes("from 'firebase/"), false);
   assert.match(express, /app\.get\('\/api\/catalog'/);
   assert.match(express, /incomingCatalogRequest/);
@@ -261,9 +308,36 @@ test('grosir keeps the selling price and end user pays 30 percent rounded up', a
 
   let role = 'grosir';
   let email = 'grosir@example.com';
+  const pricedOptions = {
+    fetchImpl,
+    blobStore: seededBlob([
+      {
+        id: 'PS-1',
+        sku: 'PS-1',
+        name: 'Kabel',
+        brand: '',
+        category: '',
+        subcategory: '',
+        imageUrl: '',
+        specification: '',
+        compatibility: '',
+        sellingPoint1: '',
+        sellingPoint2: '',
+        sellingPoint3: '',
+        suggestedRetailPrice: 10001,
+        stockStatus: 'In Stock',
+        positioning: 'Better',
+        targetCustomer: '',
+        isProductFocus: false,
+        isBestSeller: false,
+        crossSellNotes: '',
+        isActive: true,
+      },
+    ]),
+  };
   const grosir = await handleCatalogRequest(
     new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer token' } }),
-    { fetchImpl }
+    pricedOptions
   );
   assert.equal(grosir.status, 200);
   const grosirBody = (await grosir.json()) as {
@@ -280,7 +354,7 @@ test('grosir keeps the selling price and end user pays 30 percent rounded up', a
   role = 'customer';
   const legacy = await handleCatalogRequest(
     new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer token' } }),
-    { fetchImpl }
+    pricedOptions
   );
   const legacyBody = (await legacy.json()) as { products: Array<{ suggestedRetailPrice: number }> };
   assert.equal(legacy.status, 200);
@@ -289,7 +363,7 @@ test('grosir keeps the selling price and end user pays 30 percent rounded up', a
   role = 'end_user';
   const endUser = await handleCatalogRequest(
     new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer token' } }),
-    { fetchImpl }
+    pricedOptions
   );
   const endBody = (await endUser.json()) as {
     tier: string;
@@ -308,7 +382,7 @@ test('grosir keeps the selling price and end user pays 30 percent rounded up', a
   email = 'jefryerlangga@gmail.com';
   const admin = await handleCatalogRequest(
     new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer token' } }),
-    { fetchImpl }
+    pricedOptions
   );
   const adminBody = (await admin.json()) as { tier: string; products: Array<{ suggestedRetailPrice: number }> };
   assert.equal(admin.status, 200);
@@ -362,7 +436,36 @@ test('one product snapshot is reused across visits and tiers', async () => {
     );
   };
 
-  const options = { fetchImpl, catalogCache: cache, endpoint: 'https://firestore.test/runQuery' };
+  const blob = seededBlob([
+    {
+      id: 'A',
+      sku: 'A',
+      name: 'Alpha',
+      brand: '',
+      category: '',
+      subcategory: '',
+      imageUrl: '',
+      specification: '',
+      compatibility: '',
+      sellingPoint1: '',
+      sellingPoint2: '',
+      sellingPoint3: '',
+      suggestedRetailPrice: 10000,
+      stockStatus: 'In Stock',
+      positioning: 'Better',
+      targetCustomer: '',
+      isProductFocus: false,
+      isBestSeller: false,
+      crossSellNotes: '',
+      isActive: true,
+    },
+  ]);
+  const options = {
+    fetchImpl,
+    catalogCache: cache,
+    endpoint: 'https://firestore.test/runQuery',
+    blobStore: blob,
+  };
   const grosir = await handleCatalogRequest(
     new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer grosir-token' } }),
     options
@@ -385,7 +488,7 @@ test('one product snapshot is reused across visits and tiers', async () => {
   assert.equal(endBody.products[0].suggestedRetailPrice, endUserPrice(10000));
   assert.equal(endBody.promo.items[0].promoPrice, endUserPrice(promoCampaign.items[0].promoPrice));
   assert.equal(repeatBody.products[0].suggestedRetailPrice, 10000);
-  assert.equal(productReads, 1);
+  assert.equal(productReads, 0);
   assert.equal(roleReads, 2);
   assert.equal(JSON.stringify(grosirBody).includes('wholesalePrice'), false);
 
@@ -404,7 +507,7 @@ test('one product snapshot is reused across visits and tiers', async () => {
     options
   );
   await stillCached.json();
-  assert.equal(productReads, 1);
+  assert.equal(productReads, 0);
 
   const refresh = await handleCatalogRefresh(
     new Request('https://katalog.local/api/catalog', {
@@ -413,7 +516,9 @@ test('one product snapshot is reused across visits and tiers', async () => {
     }),
     {
       catalogCache: cache,
-      fetchImpl: async (input) => {
+      blobStore: blob,
+      endpoint: 'https://firestore.test/runQuery',
+      fetchImpl: async (input, init) => {
         const url = String(input);
         if (url.includes('accounts:lookup')) {
           return new Response(
@@ -424,10 +529,25 @@ test('one product snapshot is reused across visits and tiers', async () => {
           );
         }
         if (url.includes('/documents/users/')) {
+          const auth = new Headers(init?.headers).get('authorization') || '';
+          assert.equal(auth, 'Bearer owner-token');
           return new Response(JSON.stringify({ fields: { role: { stringValue: 'pending' } } }), { status: 200 });
         }
         productReads += 1;
-        return new Response('[]', { status: 200 });
+        const auth = new Headers(init?.headers).get('authorization') || '';
+        assert.equal(auth, 'Bearer owner-token');
+        return new Response(
+          JSON.stringify([
+            document('A', {
+              sku: text('A'),
+              name: text('Alpha'),
+              suggestedRetailPrice: integer(10000),
+              wholesalePrice: integer(2222),
+              isActive: flag(true),
+            }),
+          ]),
+          { status: 200 }
+        );
       },
     }
   );
@@ -436,12 +556,96 @@ test('one product snapshot is reused across visits and tiers', async () => {
   assert.equal(refreshBody.ok, true);
   assert.equal(refreshBody.products, undefined);
   assert.equal(productReads, 1);
+  assert.equal(JSON.stringify(blob.snapshot()).includes('wholesalePrice'), false);
 
   const reloaded = await handleCatalogRequest(
     new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer grosir-token' } }),
     options
   );
   await reloaded.json();
-  assert.equal(productReads, 2);
+  assert.equal(productReads, 1);
   assert.equal(reloaded.headers.get('Cache-Control'), CATALOG_CACHE_CONTROL);
+});
+
+test('an unseeded blob blocks customers and lets the master admin seed it', async () => {
+  let productReads = 0;
+  let stored: Array<Record<string, unknown>> | null = null;
+  const emptyBlob = {
+    async read() {
+      return stored;
+    },
+    async write(next: readonly object[]) {
+      stored = next.map((product) => ({ ...(product as Record<string, unknown>) }));
+    },
+  };
+  const fetchImpl: typeof fetch = async (input, init) => {
+    const url = String(input);
+    if (url.includes('accounts:lookup')) {
+      const body = JSON.parse(String(init?.body || '{}')) as { idToken?: string };
+      const admin = body.idToken === 'owner-token';
+      return new Response(
+        JSON.stringify({
+          users: [
+            {
+              localId: admin ? 'owner-1' : 'buyer-1',
+              email: admin ? 'jefryerlangga@gmail.com' : 'buyer@example.com',
+              emailVerified: true,
+            },
+          ],
+        }),
+        { status: 200 }
+      );
+    }
+    if (url.includes('/documents/users/')) {
+      const auth = new Headers(init?.headers).get('authorization') || '';
+      assert.match(auth, /^Bearer /);
+      const admin = auth.endsWith('owner-token');
+      return new Response(
+        JSON.stringify({ fields: { role: { stringValue: admin ? 'pending' : 'grosir' } } }),
+        { status: 200 }
+      );
+    }
+    productReads += 1;
+    assert.equal(new Headers(init?.headers).get('authorization'), 'Bearer owner-token');
+    return new Response(
+      JSON.stringify([
+        document('A', {
+          sku: text('A'),
+          name: text('Alpha'),
+          suggestedRetailPrice: integer(10000),
+          wholesalePrice: integer(50),
+          isActive: flag(true),
+        }),
+      ]),
+      { status: 200 }
+    );
+  };
+  const customer = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer buyer-token' } }),
+    { fetchImpl, blobStore: emptyBlob, endpoint: 'https://firestore.test/runQuery' }
+  );
+  assert.equal(customer.status, 503);
+  const denied = (await customer.json()) as { error?: string; products?: unknown };
+  assert.match(denied.error || '', /Sinkronkan Katalog/);
+  assert.equal(denied.products, undefined);
+  assert.equal(productReads, 0);
+
+  const admin = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer owner-token' } }),
+    { fetchImpl, blobStore: emptyBlob, endpoint: 'https://firestore.test/runQuery' }
+  );
+  assert.equal(admin.status, 200);
+  const seeded = (await admin.json()) as { products: Array<Record<string, unknown>> };
+  assert.equal(seeded.products[0].suggestedRetailPrice, 10000);
+  assert.equal(JSON.stringify(seeded).includes('wholesalePrice'), false);
+  assert.equal(productReads, 1);
+  assert.equal(JSON.stringify(stored).includes('wholesalePrice'), false);
+
+  const again = await handleCatalogRequest(
+    new Request('https://katalog.local/api/catalog', { headers: { Authorization: 'Bearer buyer-token' } }),
+    { fetchImpl, blobStore: emptyBlob, endpoint: 'https://firestore.test/runQuery' }
+  );
+  assert.equal(again.status, 200);
+  assert.equal(productReads, 1);
+  await again.json();
 });

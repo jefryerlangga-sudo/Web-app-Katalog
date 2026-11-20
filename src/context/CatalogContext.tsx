@@ -76,6 +76,7 @@ interface CatalogContextType {
   pendingCount: number;
   accountLabel: string;
   setAccountRole: (uid: string, role: AssignableAccountRole) => Promise<void>;
+  syncCatalog: () => Promise<void>;
   canvasserProfile: CanvasserProfile;
   showAuthModal: boolean;
   setShowAuthModal: (open: boolean) => void;
@@ -567,8 +568,15 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const token = await user.getIdToken();
       await refreshSharedCatalog(token);
     } catch {
-      // The shared snapshot still expires on its TTL.
+      // The previous private snapshot stays until a later sync.
     }
+  };
+
+  const syncCatalog = async () => {
+    requireAdmin(isAdmin);
+    if (!user) throw new Error('Masuk diperlukan');
+    const token = await user.getIdToken();
+    await refreshSharedCatalog(token);
   };
 
   const seedData = async () => {
@@ -720,6 +728,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
         pendingCount,
         accountLabel,
         setAccountRole,
+        syncCatalog,
         canvasserProfile,
         showAuthModal,
         setShowAuthModal,

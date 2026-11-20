@@ -115,6 +115,32 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     assert.equal(existsSync(join(directory, 'src/data/promo-cuci-gudang.json')), true);
     assert.equal(existsSync(join(directory, 'firebase-applet-config.json')), true);
 
+    const blobDir = join(directory, 'node_modules', '@vercel', 'blob');
+    await mkdir(blobDir, { recursive: true });
+    await writeFile(
+      join(blobDir, 'package.json'),
+      JSON.stringify({ name: '@vercel/blob', type: 'module', exports: { '.': './index.js' } })
+    );
+    await writeFile(
+      join(blobDir, 'index.js'),
+      `const product = ${JSON.stringify({
+        id: 'PS-FOO-0009',
+        sku: 'PS-FOO-0009',
+        name: 'Foomee Adapter',
+        suggestedRetailPrice: 88000,
+        wholesalePrice: 1000,
+        isActive: true,
+      })};
+let body = JSON.stringify({ products: [product] });
+export async function get() {
+  return { statusCode: 200, stream: new Response(body).body, headers: new Headers(), blob: { pathname: 'catalog/products-v1.json' } };
+}
+export async function put(_pathname, next) {
+  body = typeof next === 'string' ? next : String(next);
+}
+`
+    );
+
     let fetches = 0;
     let productQueries = 0;
     let roleReads = 0;
@@ -219,7 +245,7 @@ test('compiled api/catalog.js loads the way the Vercel Node function does', asyn
     const viaDefault = await mod.default.fetch(new Request('https://katalog.local/api/catalog', grosirAuth));
     assert.equal(viaDefault.status, 200);
     await viaDefault.text();
-    assert.equal(productQueries, 1);
+    assert.equal(productQueries, 0);
     assert.equal(roleReads, 2);
   } finally {
     globalThis.fetch = previousFetch;

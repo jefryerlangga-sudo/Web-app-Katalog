@@ -34,12 +34,14 @@ export const AdminPage: React.FC = () => {
     setShowAuthModal,
     setCurrentTab,
     promo,
+    syncCatalog,
   } = useCatalog();
 
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   if (!user || !isAdmin) {
     return (
@@ -131,6 +133,20 @@ export const AdminPage: React.FC = () => {
     }
   };
 
+  const handleSyncCatalog = async () => {
+    setSyncing(true);
+    try {
+      await syncCatalog();
+      setSuccessMessage('Katalog pribadi sudah disinkronkan. Pelanggan melihat harga baru saat memuat ulang.');
+      setTimeout(() => setSuccessMessage(null), 8000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal menyinkronkan katalog';
+      setSuccessMessage(message);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const handleSeed = async () => {
     try {
       const result = await seedData();
@@ -180,6 +196,15 @@ export const AdminPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSyncCatalog}
+              disabled={syncing}
+              className="px-3 py-2 rounded-2xl bg-amber-500/90 hover:bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 disabled:opacity-60"
+            >
+              <RotateCcw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+              <span>{syncing ? 'Menyinkronkan...' : 'Sinkronkan Katalog'}</span>
+            </button>
             <button
               onClick={() => setShowImportModal(true)}
               className="px-3 py-2 rounded-2xl bg-emerald-600/90 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95 transition-all"

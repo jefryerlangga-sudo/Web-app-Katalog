@@ -13,8 +13,12 @@ import appletConfig from '../../firebase-applet-config.json' with { type: 'json'
 import { priceForTier, promoForTier, type CatalogTier } from '../config/pricing.ts';
 import { authorizeCatalogRequest, type CatalogAuthorization } from './catalogAccess.ts';
 import { getSharedCatalogCache, type CatalogCache } from './catalogCache.ts';
+import {
+  CATALOG_UNSEEDED_ERROR,
+  defaultCatalogBlobStore,
+  type CatalogBlobStore,
+} from './catalogBlob.ts';
 import { publicPromoPayload } from './promoCampaign.ts';
-import { getServiceAccountAccessToken, serviceAccountConfigured } from './serviceAccount.ts';
 
 /** Browser and CDN must not reuse one account's prices for another. */
 export const CATALOG_CACHE_CONTROL = 'private, no-store';
@@ -107,6 +111,8 @@ export interface FetchActiveCatalogOptions {
    * Omitted together with fetchImpl or endpoint skips it, so tests stay isolated.
    */
   catalogCache?: CatalogCache | null;
+  /** Private Blob snapshot. Omitted with fetchImpl/endpoint skips the real store. */
+  blobStore?: CatalogBlobStore | null;
 }
 
 export function catalogResponseHeaders(): Record<string, string> {
@@ -262,31 +268,53 @@ function resolveCatalogCache(options: FetchActiveCatalogOptions): CatalogCache |
   return getSharedCatalogCache();
 }
 
-const snapshotLoads = new WeakMap<CatalogCache, Promise<PublicCatalogProduct[]>>();
+function resolveBlobStore(options: FetchActiveCatalogOptions): CatalogBlobStore | undefined {
+  if (options.blobStore === null) return undefined;
+  if (options.blobStore) return options.blobStore;
+  if (options.fetchImpl || options.endpoint) return undefined;
+  return {
+    read: async () => {
+      const store = await defaultCatalogBlobStore();
+      return store.read();
+    },
+    write: async (products) => {
+      const store = await defaultCatalogBlobStore();
+      await store.write(products);
+    },
+  };
+}
 
-async function loadBaseCatalog(
+function bearerToken(request: Request): string | null {
+  const match = (request.headers.get('authorization') || '').match(/^Bearer\s+(\S+)$/i);
+  return match?.[1] ?? null;
+}
+
+const UNSYNCED_STATUS = 503;
+
+async function readSnapshot(
   options: FetchActiveCatalogOptions,
-  accessToken: string | undefined
-): Promise<PublicCatalogProduct[]> {
-  const cache = resolveCatalogCache(options);
-  if (!cache) return fetchActiveCatalog({ ...options, accessToken });
-
-  const pending = snapshotLoads.get(cache);
-  if (pending) return pending;
-
-  const run = (async () => {
-    const hit = await cache.getProducts();
-    if (hit) return hit as PublicCatalogProduct[];
-    const products = await fetchActiveCatalog({ ...options, accessToken });
-    await cache.setProducts(products);
-    return products;
-  })();
-  snapshotLoads.set(cache, run);
-  try {
-    return await run;
-  } finally {
-    if (snapshotLoads.get(cache) === run) snapshotLoads.delete(cache);
+  cache: CatalogCache | undefined,
+  blob: CatalogBlobStore | undefined,
+  idToken: string | null,
+  canSeed: boolean
+): Promise<PublicCatalogProduct[] | 'unseeded'> {
+  if (cache) {
+    const memory = await cache.getProducts();
+    if (memory) return memory as PublicCatalogProduct[];
   }
+  if (blob) {
+    const stored = await blob.read();
+    if (stored) {
+      const products = stored as unknown as PublicCatalogProduct[];
+      if (cache) await cache.setProducts(products);
+      return products;
+    }
+  }
+  if (!canSeed || !idToken) return 'unseeded';
+  const products = await fetchActiveCatalog({ ...options, accessToken: idToken });
+  if (blob) await blob.write(products);
+  if (cache) await cache.setProducts(products);
+  return products;
 }
 
 function priceProducts(products: PublicCatalogProduct[], tier: CatalogTier): PublicCatalogProduct[] {
@@ -320,17 +348,18 @@ export async function handleCatalogRequest(
     return catalogJson({ error: decision.error }, decision.status);
   }
 
-  let accessToken = options.accessToken;
-  if (!accessToken && serviceAccountConfigured()) {
-    try {
-      accessToken = await getServiceAccountAccessToken(options.fetchImpl ?? fetch);
-    } catch {
-      return catalogJson({ error: 'Katalog tidak dapat dimuat' }, 502);
-    }
-  }
-
+  const blob = resolveBlobStore(options);
   try {
-    const products = await loadBaseCatalog(options, accessToken);
+    const products = await readSnapshot(
+      options,
+      cache,
+      blob,
+      bearerToken(request),
+      Boolean(decision.access.canRefresh)
+    );
+    if (products === 'unseeded') {
+      return catalogJson({ error: CATALOG_UNSEEDED_ERROR }, UNSYNCED_STATUS);
+    }
     const payload = {
       products: priceProducts(products, decision.access.tier),
       promo: promoForTier(publicPromoPayload(), decision.access.tier),
@@ -352,7 +381,7 @@ export async function handleCatalogRequest(
   }
 }
 
-/** Drops the shared base snapshot. Master admin only. No product data in the body. */
+/** Rebuilds the private Blob snapshot from Firestore. Master admin only. */
 export async function handleCatalogRefresh(
   request: Request,
   options: FetchActiveCatalogOptions = {}
@@ -376,6 +405,24 @@ export async function handleCatalogRefresh(
   if (!decision.access.canRefresh) {
     return catalogJson({ error: 'Hanya master admin yang dapat menyegarkan katalog' }, 403);
   }
-  if (cache) await cache.clear();
-  return catalogJson({ ok: true }, 200);
+  const idToken = bearerToken(request);
+  if (!idToken) {
+    return catalogJson({ error: 'Masuk diperlukan' }, 401);
+  }
+  const blob = resolveBlobStore(options);
+  try {
+    const products = await fetchActiveCatalog({ ...options, accessToken: idToken });
+    if (blob) await blob.write(products);
+    if (cache) {
+      await cache.clear();
+      await cache.setProducts(products);
+    }
+    const body = JSON.stringify({ ok: true, count: products.length });
+    if (body.includes('wholesalePrice')) {
+      return catalogJson({ error: 'Katalog tidak dapat dimuat' }, 502);
+    }
+    return catalogJson({ ok: true, count: products.length }, 200);
+  } catch {
+    return catalogJson({ error: 'Katalog tidak dapat dimuat' }, 502);
+  }
 }

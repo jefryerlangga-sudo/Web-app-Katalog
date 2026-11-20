@@ -3,9 +3,9 @@ rules_version = '2';
 // Catalog writes require the verified master-admin email below.
 // Keep that email in sync with MASTER_ADMIN_EMAILS in src/config/app.ts.
 // products/{id} is readable only by the verified master admin and must not store wholesalePrice.
-// Clients must not read selling prices directly; GET /api/catalog applies the account tier.
-// Publish this file only after FIREBASE_SERVICE_ACCOUNT is set on the Vercel deployment
-// that serves /api/catalog. Publishing it earlier makes the previous public catalog API fail.
+// Customers read prices from the private Vercel Blob snapshot via GET /api/catalog, not from Firestore.
+// Publish this file only after that app version is deployed and the master admin has synced the Blob.
+// Publishing it earlier makes the previous public catalog API fail.
 // productAdmin/{id} holds dealer cost and is readable only by the verified master admin.
 // End-user unit price = ceil(base * 130 / 10000) * 100.
 // 130 = (1 + 0.30) * 100 and 10000 = 100 * 100. Keep in sync with src/config/pricing.ts.

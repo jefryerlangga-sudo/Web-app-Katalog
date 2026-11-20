@@ -28,11 +28,11 @@ export const ACCESSORY_CATEGORIES = [
 ] as const;
 
 /**
- * Shown after an admin save. The server keeps one shared product snapshot and
- * drops it when the admin saves. Customers then see the new prices on reload.
+ * Shown after an admin save. The save also rewrites the private catalog snapshot.
+ * Customers see the new prices the next time they load the catalog.
  */
 export const CUSTOMER_CATALOG_DELAY_NOTE =
-  'Perubahan harga masuk ke katalog bersama setelah simpan, lalu tampil saat pelanggan memuat ulang';
+  'Perubahan harga masuk ke katalog pribadi setelah simpan, lalu tampil saat pelanggan memuat ulang';
 
 /**
  * Legacy spare-part categories. Storefront hides them.

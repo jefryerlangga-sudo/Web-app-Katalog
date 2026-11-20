@@ -192,6 +192,37 @@ test('GET /api/catalog attaches the promo payload without changing the CDN cache
       ),
     endpoint: 'https://firestore.test/runQuery',
     pageSize: 10,
+    blobStore: {
+      async read() {
+        return [
+          {
+            id: 'PS-FOO-0009',
+            sku: 'PS-FOO-0009',
+            name: 'Foomee Adapter',
+            brand: '',
+            category: '',
+            subcategory: '',
+            imageUrl: '',
+            specification: '',
+            compatibility: '',
+            sellingPoint1: '',
+            sellingPoint2: '',
+            sellingPoint3: '',
+            suggestedRetailPrice: 88000,
+            stockStatus: 'In Stock',
+            positioning: 'Better',
+            targetCustomer: '',
+            isProductFocus: false,
+            isBestSeller: false,
+            crossSellNotes: '',
+            isActive: true,
+          },
+        ];
+      },
+      async write() {
+        throw new Error('GET must not write the snapshot');
+      },
+    },
   });
 
   assert.equal(response.status, 200);
