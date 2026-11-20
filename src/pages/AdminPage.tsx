@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  BarChart3,
   SlidersHorizontal,
   Plus,
   Edit2,
@@ -174,6 +175,22 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="space-y-4 pb-24">
+      <button
+        type="button"
+        onClick={() => setCurrentTab('laporan')}
+        className="w-full rounded-3xl border border-purple-500/40 bg-purple-950/40 p-4 flex items-center justify-between gap-3 text-left"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center border border-purple-500/30">
+            <BarChart3 className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-black text-white">Laporan</p>
+            <p className="text-[11px] text-slate-400">Kunjungan, klik, dan history pembelian</p>
+          </div>
+        </div>
+        <span className="shrink-0 text-[11px] font-bold text-purple-200">Buka</span>
+      </button>
       <AccountApprovals />
       {/* Header and Add Action */}
       <div className="bg-slate-800/90 border border-slate-700/80 p-4 rounded-3xl shadow-lg space-y-3">

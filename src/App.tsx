@@ -14,8 +14,10 @@ import { ComparePage } from './pages/ComparePage';
 import { AiAssistantPage } from './pages/AiAssistantPage';
 import { AdminPage } from './pages/AdminPage';
 import { CartPage } from './pages/CartPage';
+import { ExampleReportsPage, ReportsPage } from './pages/ReportsPage';
 import { RefreshCw } from 'lucide-react';
 import { AccessGate } from './components/AccessGate';
+import { AnalyticsBinder } from './components/AnalyticsBinder';
 
 const AppContent: React.FC = () => {
   const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate } = useCatalog();
@@ -46,6 +48,8 @@ const AppContent: React.FC = () => {
         return <CartPage />;
       case 'admin':
         return isAdmin ? <AdminPage /> : <HomePage />;
+      case 'laporan':
+        return isAdmin ? <ReportsPage /> : <HomePage />;
       default:
         return <HomePage />;
     }
@@ -53,6 +57,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+      <AnalyticsBinder />
       {/* Fixed Header */}
       <Header />
 
@@ -100,7 +105,21 @@ const AppContent: React.FC = () => {
   );
 };
 
+function contohLaporanRequested(): boolean {
+  if (typeof window === 'undefined') return false;
+  return new URLSearchParams(window.location.search).get('contoh-laporan') === '1';
+}
+
 export default function App() {
+  if (contohLaporanRequested()) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+        <main className="max-w-md w-full mx-auto p-3">
+          <ExampleReportsPage />
+        </main>
+      </div>
+    );
+  }
   return (
     <CatalogProvider>
       <AppContent />

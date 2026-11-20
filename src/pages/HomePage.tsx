@@ -189,13 +189,21 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => setCurrentTab('admin')}
-          className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] whitespace-nowrap shadow-md active:scale-95 transition-all flex items-center gap-1"
-        >
-          <span>Input Produk</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex flex-col gap-1.5 shrink-0">
+          <button
+            onClick={() => setCurrentTab('admin')}
+            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] whitespace-nowrap shadow-md active:scale-95 transition-all flex items-center gap-1"
+          >
+            <span>Input Produk</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setCurrentTab('laporan')}
+            className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-[11px] whitespace-nowrap shadow-md active:scale-95 transition-all"
+          >
+            Laporan
+          </button>
+        </div>
       </div>
       )}
 

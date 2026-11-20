@@ -21,6 +21,7 @@ import {
   logoutUser,
   registerWithEmail,
 } from '../firebase/config';
+import { trackAddToCart, trackCheckout, trackProductOpen } from '../firebase/analyticsClient';
 import { buildWhatsAppOrderLink, createOrder } from '../firebase/ordersService';
 import { priceCart } from '../firebase/orderPricing';
 import { applyDealerCost } from '../firebase/productRecord';
@@ -172,7 +173,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewModeState] = useState<ViewMode>('customer');
   const [compareList, setCompareList] = useState<Product[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProductState] = useState<Product | null>(null);
   const [filters, setFilters] = useState<ProductFilterState>(defaultFilters);
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -231,7 +232,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const setCurrentTab = useCallback(
     (tab: string) => {
-      if (tab === 'admin' && !isAdmin) {
+      if ((tab === 'admin' || tab === 'laporan') && !isAdmin) {
         if (!user) setShowAuthModal(true);
         return;
       }
@@ -247,7 +248,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [isAdmin, viewMode]);
 
   useEffect(() => {
-    if (!isAdmin && currentTab === 'admin') {
+    if (!isAdmin && (currentTab === 'admin' || currentTab === 'laporan')) {
       setCurrentTabState('home');
     }
   }, [isAdmin, currentTab]);
@@ -492,7 +493,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
       return changed ? next : prev;
     });
-    setSelectedProduct((current) => {
+    setSelectedProductState((current) => {
       if (!current) return current;
       return (
         catalogProducts.find(
@@ -642,7 +643,20 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
         },
       ];
     });
+    trackAddToCart({
+      id: productId,
+      sku: product.sku,
+      name: product.name,
+    });
   };
+
+  const setSelectedProduct = useCallback((product: Product | null) => {
+    setSelectedProductState(product);
+    if (!product) return;
+    const id = product.id || product.sku;
+    if (!id) return;
+    trackProductOpen({ id, sku: product.sku, name: product.name });
+  }, []);
 
   const updateCartQty = (productId: string, quantity: number) => {
     setCart((prev) =>
@@ -689,6 +703,10 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     clearCart();
 
     const whatsAppLink = input.openWhatsApp === false ? null : buildWhatsAppOrderLink(order);
+    trackCheckout(
+      order.items.map((item) => ({ id: item.productId, sku: item.sku, name: item.name })),
+      Boolean(whatsAppLink)
+    );
     if (whatsAppLink) {
       window.open(whatsAppLink, '_blank', 'noopener,noreferrer');
     }

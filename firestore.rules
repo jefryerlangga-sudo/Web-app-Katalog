@@ -7,6 +7,9 @@ rules_version = '2';
 // Publish this file only after that app version is deployed and the master admin has synced the Blob.
 // Publishing it earlier makes the previous public catalog API fail.
 // productAdmin/{id} holds dealer cost and is readable only by the verified master admin.
+// analyticsDays/{YYYY-MM-DD} stores visit and click counters. Approved buyers may only
+// increment their own visitor slot and known counters by a small step. The master admin reads them.
+// Publish this file only after the app version that writes those documents is deployed.
 // End-user unit price = ceil(base * 130 / 10000) * 100.
 // 130 = (1 + 0.30) * 100 and 10000 = 100 * 100. Keep in sync with src/config/pricing.ts.
 service cloud.firestore {
@@ -269,6 +272,48 @@ service cloud.firestore {
         && request.resource.data.subtotal == resource.data.subtotal
         && request.resource.data.total == resource.data.total
         && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isVerifiedMasterAdmin();
+    }
+
+    function analyticsRoleOk(role) {
+      return isVerifiedMasterAdmin()
+        ? role == 'admin'
+        : (role is string && role == buyerDoc().role && isStoredRole(role));
+    }
+
+    // One document per signed-in user per Jakarta day. Events only grow, at most 8 per write.
+    function analyticsHitOk(hitId) {
+      let data = request.resource.data;
+      let beforeEvents = resource == null ? [] : resource.data.get('events', []);
+      let afterEvents = data.get('events', []);
+      return hitId == data.date + '_' + request.auth.uid
+        && data.date is string
+        && data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && data.uid == request.auth.uid
+        && data.email is string
+        && data.email.size() > 0
+        && data.email.size() <= 120
+        && data.email.lower() == authEmail()
+        && data.name is string
+        && data.name.size() > 0
+        && data.name.size() <= 80
+        && isIsoLike(data.seen)
+        && data.pages is string
+        && data.pages.size() <= 80
+        && data.pages.matches('^[a-z,]{0,80}$')
+        && analyticsRoleOk(data.role)
+        && data.keys().size() <= 12
+        && afterEvents is list
+        && beforeEvents is list
+        && afterEvents.size() >= beforeEvents.size()
+        && afterEvents.size() <= beforeEvents.size() + 8
+        && afterEvents.size() <= 800
+        && afterEvents.hasAll(beforeEvents);
+    }
+
+    match /analyticsHits/{hitId} {
+      allow get, list: if isVerifiedMasterAdmin();
+      allow create, update: if isSignedIn() && isApprovedBuyer() && analyticsHitOk(hitId);
       allow delete: if isVerifiedMasterAdmin();
     }
 
