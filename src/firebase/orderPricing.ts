@@ -1,5 +1,5 @@
 import { MAX_ORDER_LINES, MAX_QTY_PER_LINE } from '../config/app';
-import { CartItem, OrderItem, Product } from '../types/product';
+import { CartItem, Order, OrderItem, Product } from '../types/product';
 
 export interface PricedOrderDraft {
   items: OrderItem[];
@@ -63,6 +63,22 @@ export function priceCart(cart: CartItem[], catalog: Product[]): PricedOrderDraf
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
   return { items, itemCount, subtotal, total: subtotal };
+}
+
+/**
+ * Older orders store their lines on the order document.
+ * Newer orders store lines in orders/{id}/items. Those lines replace a header
+ * total so the report shows the prices the rules already checked.
+ */
+export function presentOrder(order: Order, lines?: OrderItem[] | null): Order {
+  if (Array.isArray(order.items) && order.items.length > 0) return order;
+  const next = Array.isArray(lines) ? lines : [];
+  if (next.length === 0) {
+    return { ...order, items: [] };
+  }
+  const subtotal = next.reduce((sum, item) => sum + item.lineTotal, 0);
+  const itemCount = next.reduce((sum, item) => sum + item.quantity, 0);
+  return { ...order, items: next, subtotal, total: subtotal, itemCount };
 }
 
 export function normalizePhone(input: string): string {

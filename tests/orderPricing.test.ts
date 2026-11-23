@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { formatWhatsAppLink } from '../src/firebase/whatsappLink.ts';
+import { purchaseExportSheets, summarizePurchases } from '../src/lib/analyticsAggregate.ts';
 import {
   normalizePhone,
+  presentOrder,
   priceCart,
 } from '../src/firebase/orderPricing.ts';
 import { Order, Product } from '../src/types/product.ts';
@@ -66,12 +68,64 @@ test('missing, inactive, and unbounded carts are rejected, and empty stock still
   assert.throws(() => priceCart([cartLine(), { ...cartLine(), productId: 'ACC-ANK-001' }], [product()]), /duplikat/);
   assert.throws(() => priceCart([{ ...cartLine(), quantity: 1.5 }], [product()]), /Jumlah/);
   assert.throws(() => priceCart([{ ...cartLine(), quantity: 100 }], [product()]), /Jumlah/);
-  const lines = Array.from({ length: 11 }, (_, index) => ({
+  const twenty = Array.from({ length: 20 }, (_, index) => ({
     ...cartLine(),
     productId: `P-${index}`,
   }));
-  const catalog = lines.map((line, index) => product({ id: `P-${index}`, sku: `P-${index}`, name: `Item ${index}` }));
-  assert.throws(() => priceCart(lines, catalog), /Maksimal/);
+  const catalog = twenty.map((line, index) => product({ id: `P-${index}`, sku: `P-${index}`, name: `Item ${index}` }));
+  assert.equal(priceCart(twenty, catalog).items.length, 20);
+  const twentyOne = [...twenty, { ...cartLine(), productId: 'P-20' }];
+  const catalog21 = [...catalog, product({ id: 'P-20', sku: 'P-20', name: 'Item 20' })];
+  assert.throws(() => priceCart(twentyOne, catalog21), /Maksimal/);
+});
+
+test('existing orders keep their embedded lines, and new orders are rebuilt from item docs', () => {
+  const legacy: Order = {
+    id: 'ORD-OLD',
+    userId: 'uid',
+    customerName: 'Sari',
+    customerEmail: 'sari@example.com',
+    customerPhone: '081234567890',
+    items: [
+      { productId: 'A', sku: 'A', name: 'Kabel', unitPrice: 10000, quantity: 2, lineTotal: 20000 },
+    ],
+    itemCount: 2,
+    subtotal: 20000,
+    total: 20000,
+    status: 'pending',
+    note: '',
+    createdAt: '2026-11-08T12:00:00.000Z',
+    updatedAt: '2026-11-08T12:00:00.000Z',
+  };
+  const kept = presentOrder(legacy, []);
+  assert.equal(kept.items[0].name, 'Kabel');
+  assert.equal(kept.total, 20000);
+
+  const fresh = presentOrder(
+    { ...legacy, id: 'ORD-NEW', items: [], itemCount: 1, subtotal: 1, total: 1 },
+    [
+      { productId: 'B', sku: 'B', name: 'Charger', unitPrice: 50000, quantity: 1, lineTotal: 50000 },
+      { productId: 'C', sku: 'C', name: 'Glass', unitPrice: 15000, quantity: 3, lineTotal: 45000 },
+    ]
+  );
+  assert.equal(fresh.items.length, 2);
+  assert.equal(fresh.itemCount, 4);
+  assert.equal(fresh.total, 95000);
+  assert.equal(fresh.subtotal, 95000);
+
+  const summary = summarizePurchases([kept, fresh], new Map([['uid', 'grosir']]), {
+    status: 'all',
+    customer: '',
+  });
+  assert.equal(summary.orders.length, 2);
+  assert.equal(summary.orders.find((order) => order.id === 'ORD-OLD')?.items.length, 1);
+  assert.equal(summary.orders.find((order) => order.id === 'ORD-NEW')?.items.length, 2);
+  assert.equal(summary.orders.find((order) => order.id === 'ORD-NEW')?.total, 95000);
+  const sheets = purchaseExportSheets(summary);
+  const exported = sheets.lines.map((row) => row[1]);
+  assert.equal(exported.includes('A'), true);
+  assert.equal(exported.includes('B'), true);
+  assert.equal(exported.includes('C'), true);
 });
 
 test('phone numbers are reduced to 8-20 digits', () => {
