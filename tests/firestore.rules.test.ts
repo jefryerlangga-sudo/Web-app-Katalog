@@ -28,6 +28,15 @@ import { buildHitWrites, type AnalyticsEvent } from '../src/lib/analyticsAggrega
 import type { RulesTestContext } from '@firebase/rules-unit-testing';
 import { endUserPrice } from '../src/config/pricing.ts';
 
+function productFor(id: string, price: number, overrides: Record<string, unknown> = {}) {
+  return validProduct({
+    sku: id,
+    name: `Produk ${id}`,
+    suggestedRetailPrice: price,
+    ...overrides,
+  });
+}
+
 type TestDb = ReturnType<RulesTestContext['firestore']>;
 
 const MASTER_EMAIL = 'jefryerlangga@gmail.com';
@@ -378,7 +387,7 @@ test('inactive or missing products and master price edits are rejected', async (
   await testEnv.clearFirestore();
   await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct(validProduct({ stockStatus: 'Out of Stock' }));
-  await assertFails(setDoc(doc(customer, 'orders', 'ORD-STOCK'), orderPayload('cust-1', 'cust@example.com')));
+  await assertSucceeds(setDoc(doc(customer, 'orders', 'ORD-STOCK'), orderPayload('cust-1', 'cust@example.com')));
 
   await testEnv.clearFirestore();
   await seedBuyer('cust-1', 'cust@example.com', 'grosir');
@@ -502,4 +511,104 @@ test('approved buyers can append their own analytics and cannot inflate or read 
   await assertFails(writeHit(guest, 'ghost', 'ghost@example.com', 'customer', visitEvents));
   await assertSucceeds(writeHit(master, 'master-1', MASTER_EMAIL, 'admin', [{ type: 'visit' }, { type: 'page', page: 'laporan' }]));
   await assertSucceeds(deleteDoc(doc(master, 'analyticsHits', `${ANALYTICS_DAY}_master-1`)));
+});
+
+function orderOfSize(uid: string, email: string, count: number, role: 'grosir' | 'end_user') {
+  const items = Array.from({ length: count }, (_, index) => {
+    const id = `P${index}`;
+    const base = 10000 + index * 1500;
+    const unitPrice = role === 'end_user' ? endUserPrice(base) : base;
+    return {
+      productId: id,
+      sku: id,
+      name: `Produk ${id}`,
+      unitPrice,
+      quantity: 1,
+      lineTotal: unitPrice,
+    };
+  });
+  const total = items.reduce((sum, item) => sum + item.lineTotal, 0);
+  return orderPayload(uid, email, {
+    items,
+    itemCount: count,
+    subtotal: total,
+    total,
+  });
+}
+
+async function seedCatalog(count: number, role: string, email: string, uid: string) {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const store = context.firestore();
+    for (let index = 0; index < count; index += 1) {
+      const id = `P${index}`;
+      await setDoc(doc(store, 'products', id), productFor(id, 10000 + index * 1500));
+    }
+    await setDoc(doc(store, 'users', uid), profile(uid, email, role));
+  });
+}
+
+test('six and eight line carts check out for both tiers, and a ninth line is rejected', async () => {
+  for (const role of ['grosir', 'end_user'] as const) {
+    for (const count of [6, 8]) {
+      await testEnv.clearFirestore();
+      const uid = 'buyer-1';
+      const email = 'buyer@example.com';
+      await seedCatalog(count, role, email, uid);
+      const buyer = dbFor(uid, email, true);
+      await assertSucceeds(setDoc(doc(buyer, 'orders', `ORD-${role}-${count}`), orderOfSize(uid, email, count, role)));
+    }
+  }
+
+  await testEnv.clearFirestore();
+  await seedCatalog(9, 'end_user', 'buyer@example.com', 'buyer-1');
+  const buyer = dbFor('buyer-1', 'buyer@example.com', true);
+  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-9'), orderOfSize('buyer-1', 'buyer@example.com', 9, 'end_user')));
+
+  const wrong = orderOfSize('buyer-1', 'buyer@example.com', 6, 'grosir');
+  wrong.items[3].unitPrice = 1;
+  wrong.items[3].lineTotal = 1;
+  wrong.subtotal = wrong.items.reduce((sum, item) => sum + item.lineTotal, 0);
+  wrong.total = wrong.subtotal;
+  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-CHEAP'), wrong));
+});
+
+test('end user prices that are not multiples of 1000 match the client formula', async () => {
+  await seedBuyer('end-1', 'end@example.com', 'end_user');
+  const awkward = [1, 50, 10500, 10001, 150050, 199000, 626000, 999999];
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const store = context.firestore();
+    for (const price of awkward) {
+      await setDoc(doc(store, 'products', `N${price}`), productFor(`N${price}`, price));
+    }
+  });
+  const endUser = dbFor('end-1', 'end@example.com', true);
+  for (const price of awkward) {
+    const unitPrice = endUserPrice(price);
+    await assertSucceeds(setDoc(doc(endUser, 'orders', `ORD-N-${price}`), orderPayload('end-1', 'end@example.com', {
+      items: [{
+        productId: `N${price}`,
+        sku: `N${price}`,
+        name: `Produk N${price}`,
+        unitPrice,
+        quantity: 1,
+        lineTotal: unitPrice,
+      }],
+      itemCount: 1,
+      subtotal: unitPrice,
+      total: unitPrice,
+    })));
+  }
+  await assertFails(setDoc(doc(endUser, 'orders', 'ORD-BASE'), orderPayload('end-1', 'end@example.com', {
+    items: [{
+      productId: 'N199000',
+      sku: 'N199000',
+      name: 'Produk N199000',
+      unitPrice: 199000,
+      quantity: 1,
+      lineTotal: 199000,
+    }],
+    itemCount: 1,
+    subtotal: 199000,
+    total: 199000,
+  })));
 });

@@ -44,7 +44,9 @@ export const HIDDEN_STOREFRONT_CATEGORIES = [
   'Engine & Electrical',
 ] as const;
 
-export const MAX_ORDER_LINES = 10;
+// Eight kinds of product. Rules re-check every line's price, and Firestore stops
+// evaluating a request after 1000 expressions. Eight lines still fit for both tiers.
+export const MAX_ORDER_LINES = 8;
 export const MAX_QTY_PER_LINE = 99;
 
 export function isMasterAdminEmail(email: string | null | undefined): boolean {

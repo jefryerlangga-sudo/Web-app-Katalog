@@ -5,10 +5,12 @@ import { ProductImage } from '../components/ProductImage';
 import { listMyOrders } from '../firebase/ordersService';
 import { Order } from '../types/product';
 
-function checkoutErrorMessage(err: unknown): string {
+function checkoutErrorMessage(err: unknown, names: string[]): string {
   const raw = err instanceof Error ? err.message : String(err);
   if (raw.includes('permission-denied') || raw.includes('PERMISSION_DENIED') || raw.includes('Missing or insufficient permissions')) {
-    return 'Pesanan ditolak. Harga atau stok tidak lagi sesuai katalog, atau rules Firestore belum mengizinkan pesanan ini.';
+    const listed = names.filter(Boolean).slice(0, 4).join(', ');
+    const which = listed ? ` Barang: ${listed}.` : '';
+    return `Pesanan ditolak.${which} Harga tidak sama dengan katalog. Muat ulang halaman, lalu coba lagi.`;
   }
   return raw;
 }
@@ -70,7 +72,7 @@ export const CartPage: React.FC = () => {
       setWhatsAppOpened(Boolean(result.whatsAppLink));
       setNote('');
     } catch (err: unknown) {
-      setError(checkoutErrorMessage(err));
+      setError(checkoutErrorMessage(err, cart.map((item) => item.name)));
     } finally {
       setBusy(false);
     }

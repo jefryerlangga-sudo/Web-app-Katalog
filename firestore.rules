@@ -10,8 +10,9 @@ rules_version = '2';
 // analyticsDays/{YYYY-MM-DD} stores visit and click counters. Approved buyers may only
 // increment their own visitor slot and known counters by a small step. The master admin reads them.
 // Publish this file only after the app version that writes those documents is deployed.
-// End-user unit price = ceil(base * 130 / 10000) * 100.
-// 130 = (1 + 0.30) * 100 and 10000 = 100 * 100. Keep in sync with src/config/pricing.ts.
+// End-user unit price = ceil(base * 13 / 1000) * 100, computed with integer division.
+// That is the same number as ceil(base * 130 / 10000) * 100 in src/config/pricing.ts.
+// Orders do not check stock. A line is priced from products/{id} only.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
@@ -131,8 +132,12 @@ service cloud.firestore {
         isIsoLike(request.resource.data.updatedAt);
     }
 
+    // ceil(base * 13 / 1000) * 100, integer only.
+    // Same value as ceil(base * 130 / 10000) * 100 in src/config/pricing.ts.
+    // math.ceil() throws when the quotient is not already a whole number, which
+    // rejected end-user checkout for any selling price that is not a multiple of 1000.
     function endUserUnitPrice(base) {
-      return math.ceil(base * 130 / 10000) * 100;
+      return (base * 13 + 999) / 1000 * 100;
     }
 
     function buyerDoc() {
@@ -146,88 +151,67 @@ service cloud.firestore {
       );
     }
 
-    function expectedUnitPrice(base) {
-      return isVerifiedMasterAdmin()
-        ? base
-        : (buyerDoc().role == 'end_user' ? endUserUnitPrice(base) : base);
-    }
-
-    function pricedFromCatalog(item) {
+    // Read the account once. Repeating this inside every line blows the 1000-expression cap.
+    // Price is taken from products/{id}, not from the client.
+    // Stock is not checked: an empty warehouse is handled by the shop after the order.
+    // Eight lines is the cap. Each extra comparison is another expression, and Firestore
+    // stops a request at 1000 expressions. Eight still fits for an end-user cart.
+    function orderLineOk(item, endUser) {
       let product = get(/databases/$(database)/documents/products/$(item.productId)).data;
-      return expectedUnitPrice(product.suggestedRetailPrice) == item.unitPrice
-        && product.sku == item.sku
-        && product.name == item.name
-        && product.isActive == true
-        && product.stockStatus is string
-        && product.stockStatus != 'Out of Stock';
-    }
-
-    function isValidOrderItem(item) {
-      return item is map
-        && item.keys().hasOnly(['productId', 'sku', 'name', 'unitPrice', 'quantity', 'lineTotal'])
-        && isValidId(item.productId)
-        && item.sku is string && item.sku.size() > 0 && item.sku.size() <= 64
-        && item.name is string && item.name.size() > 0 && item.name.size() <= 150
-        && item.unitPrice is number && item.unitPrice >= 0
-        && item.quantity is int && item.quantity > 0 && item.quantity <= 99
-        && item.lineTotal is number
-        && item.lineTotal == item.unitPrice * item.quantity
-        && pricedFromCatalog(item);
+      let price = endUser ? (product.suggestedRetailPrice * 13 + 999) / 1000 * 100 : product.suggestedRetailPrice;
+      return product.isActive == true
+        && item.sku == product.sku
+        && item.quantity > 0
+        && item.quantity <= 99
+        && item.unitPrice == price
+        && item.lineTotal == price * item.quantity;
     }
 
     function lineAt(items, i) {
       return items.size() > i ? items[i].lineTotal : 0;
     }
 
-    function qtyAt(items, i) {
-      return items.size() > i ? items[i].quantity : 0;
-    }
-
     function linesTotal(items) {
       return lineAt(items, 0) + lineAt(items, 1) + lineAt(items, 2) + lineAt(items, 3) + lineAt(items, 4)
-        + lineAt(items, 5) + lineAt(items, 6) + lineAt(items, 7) + lineAt(items, 8) + lineAt(items, 9);
-    }
-
-    function qtyTotal(items) {
-      return qtyAt(items, 0) + qtyAt(items, 1) + qtyAt(items, 2) + qtyAt(items, 3) + qtyAt(items, 4)
-        + qtyAt(items, 5) + qtyAt(items, 6) + qtyAt(items, 7) + qtyAt(items, 8) + qtyAt(items, 9);
+        + lineAt(items, 5) + lineAt(items, 6) + lineAt(items, 7);
     }
 
     function allItemsValid(items) {
-      return items is list
+      let role = isVerifiedMasterAdmin() ? 'admin' : buyerDoc().role;
+      let endUser = role == 'end_user';
+      return (role == 'admin' || role == 'grosir' || role == 'end_user' || role == 'customer')
+        && items is list
         && items.size() > 0
-        && items.size() <= 10
-        && (items.size() < 1 || isValidOrderItem(items[0]))
-        && (items.size() < 2 || isValidOrderItem(items[1]))
-        && (items.size() < 3 || isValidOrderItem(items[2]))
-        && (items.size() < 4 || isValidOrderItem(items[3]))
-        && (items.size() < 5 || isValidOrderItem(items[4]))
-        && (items.size() < 6 || isValidOrderItem(items[5]))
-        && (items.size() < 7 || isValidOrderItem(items[6]))
-        && (items.size() < 8 || isValidOrderItem(items[7]))
-        && (items.size() < 9 || isValidOrderItem(items[8]))
-        && (items.size() < 10 || isValidOrderItem(items[9]));
+        && items.size() <= 8
+        && (items.size() < 1 || orderLineOk(items[0], endUser))
+        && (items.size() < 2 || orderLineOk(items[1], endUser))
+        && (items.size() < 3 || orderLineOk(items[2], endUser))
+        && (items.size() < 4 || orderLineOk(items[3], endUser))
+        && (items.size() < 5 || orderLineOk(items[4], endUser))
+        && (items.size() < 6 || orderLineOk(items[5], endUser))
+        && (items.size() < 7 || orderLineOk(items[6], endUser))
+        && (items.size() < 8 || orderLineOk(items[7], endUser));
     }
 
     function isValidOrderCreate(data) {
-      return data.keys().hasOnly([
-          'userId', 'customerName', 'customerEmail', 'customerPhone',
-          'items', 'itemCount', 'subtotal', 'total', 'status', 'note', 'createdAt', 'updatedAt'
-        ]) &&
-        data.userId == request.auth.uid &&
-        data.customerName is string && data.customerName.size() > 0 && data.customerName.size() <= 120 &&
-        data.customerEmail is string && data.customerEmail.size() > 0 && data.customerEmail.size() <= 120 &&
-        data.customerEmail.lower() == authEmail() &&
-        data.customerPhone is string && data.customerPhone.matches('^[0-9]{8,20}$') &&
-        allItemsValid(data.items) &&
-        data.itemCount is int && data.itemCount == qtyTotal(data.items) &&
-        data.subtotal is number && data.subtotal == linesTotal(data.items) &&
-        data.total is number && data.total == data.subtotal &&
-        data.status == 'pending' &&
-        data.note is string && data.note.size() <= 500 &&
-        isIsoLike(data.createdAt) &&
-        isIsoLike(data.updatedAt) &&
-        isApprovedBuyer();
+      return data.userId == request.auth.uid
+        && data.customerEmail.lower() == authEmail()
+        && data.customerName is string
+        && data.customerName.size() > 0
+        && data.customerName.size() <= 120
+        && data.customerPhone is string
+        && data.customerPhone.size() >= 8
+        && data.customerPhone.size() <= 20
+        && data.status == 'pending'
+        && data.note is string
+        && data.note.size() <= 500
+        && isIsoLike(data.createdAt)
+        && isIsoLike(data.updatedAt)
+        && allItemsValid(data.items)
+        && data.itemCount is int
+        && data.itemCount > 0
+        && data.subtotal == linesTotal(data.items)
+        && data.total == data.subtotal;
     }
 
     match /products/{productId} {

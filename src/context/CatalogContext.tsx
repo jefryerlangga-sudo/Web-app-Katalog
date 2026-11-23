@@ -617,7 +617,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const addToCart = (product: Product, qty = 1) => {
-    if (product.isActive === false || product.stockStatus === 'Out of Stock') return;
+    if (product.isActive === false) return;
     const productId = product.id || product.sku;
     const quantity = Math.max(1, Math.min(99, Math.floor(qty)));
     setCart((prev) => {
