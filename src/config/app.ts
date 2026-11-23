@@ -44,9 +44,11 @@ export const HIDDEN_STOREFRONT_CATEGORIES = [
   'Engine & Electrical',
 ] as const;
 
-// Eight kinds of product. Rules re-check every line's price, and Firestore stops
-// evaluating a request after 1000 expressions. Eight lines still fit for both tiers.
-export const MAX_ORDER_LINES = 8;
+// Twenty kinds of product. The order header lists them; each item document checks
+// its own catalog price. Checkout writes item docs in batches of ORDER_ITEM_BATCH
+// so one request stays under 20 document reads and 1,000 expressions.
+export const MAX_ORDER_LINES = 20;
+export const ORDER_ITEM_BATCH = 5;
 export const MAX_QTY_PER_LINE = 99;
 
 export function isMasterAdminEmail(email: string | null | undefined): boolean {

@@ -33,7 +33,7 @@ test('rules do not grant catalog writes from a profile role or admins collection
   assert.match(rules, /isAdminRoleUpdate\(\)/);
   assert.equal(rules.includes('allow list: if true'), false);
   assert.equal(rules.includes('documents/admins/'), false);
-  assert.match(rules, /product\.suggestedRetailPrice \* 13 \+ 999/);
+  assert.match(rules, /endUserUnitPrice\(product\.suggestedRetailPrice\)/);
   assert.match(rules, /base \* 13 \+ 999/);
   assert.equal(rules.includes("stockStatus != 'Out of Stock'"), false);
   assert.match(pricing, /END_USER_MARKUP = 0\.3/);

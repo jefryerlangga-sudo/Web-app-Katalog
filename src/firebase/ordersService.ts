@@ -1,11 +1,13 @@
-import { collection, doc, getDocs, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDocs, limit, orderBy, query, setDoc, updateDoc, where, writeBatch } from 'firebase/firestore';
+import { ORDER_ITEM_BATCH } from '../config/app';
 import { db, handleFirestoreError, OperationType } from './config';
-import { CartItem, Order, OrderStatus, Product } from '../types/product';
+import { CartItem, Order, OrderItem, OrderStatus, Product } from '../types/product';
 import {
   normalizeCustomerEmail,
   normalizeCustomerName,
   normalizeNote,
   normalizePhone,
+  presentOrder,
   priceCart,
 } from './orderPricing';
 
@@ -23,38 +25,89 @@ export async function createOrder(input: {
   const priced = priceCart(input.cart, input.catalog);
   const now = new Date().toISOString();
   const id = `ORD-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
-  const order: Order = {
-    id,
+  const items = priced.items;
+  const header = {
     userId: input.userId,
     customerName: normalizeCustomerName(input.customerName),
     customerEmail: normalizeCustomerEmail(input.customerEmail),
     customerPhone: normalizePhone(input.customerPhone),
-    items: priced.items,
+    lineCount: items.length,
+    productIds: items.map((item) => item.productId),
     itemCount: priced.itemCount,
     subtotal: priced.subtotal,
     total: priced.total,
-    status: 'pending',
+    status: 'pending' as const,
     note: normalizeNote(input.note),
     createdAt: now,
     updatedAt: now,
   };
+  const order: Order = { id, ...header, items };
 
-  const { id: _omit, ...payload } = order;
   try {
-    await setDoc(doc(db, COLLECTION, id), payload);
+    await setDoc(doc(db, COLLECTION, id), header);
+    for (let index = 0; index < items.length; index += ORDER_ITEM_BATCH) {
+      const batch = writeBatch(db);
+      items.slice(index, index + ORDER_ITEM_BATCH).forEach((item, offset) => {
+        batch.set(doc(db, COLLECTION, id, 'items', String(index + offset)), linePayload(input.userId, item));
+      });
+      await batch.commit();
+    }
     return order;
   } catch (error) {
     handleFirestoreError(error, OperationType.CREATE, `${COLLECTION}/${id}`);
   }
 }
 
+function linePayload(userId: string, item: OrderItem) {
+  return {
+    userId,
+    productId: item.productId,
+    sku: item.sku,
+    name: item.name,
+    unitPrice: item.unitPrice,
+    quantity: item.quantity,
+    lineTotal: item.lineTotal,
+  };
+}
+
+function orderFromDoc(id: string, data: Omit<Order, 'id'>): Order {
+  return {
+    id,
+    ...data,
+    items: Array.isArray(data.items) ? data.items : [],
+  };
+}
+
+async function withOrderLines(order: Order, reader: 'owner' | 'admin'): Promise<Order> {
+  if (order.items.length > 0) return order;
+  const items = collection(db, COLLECTION, order.id || '', 'items');
+  // A customer query has to filter by userId. Rules are not a filter.
+  const snap = await getDocs(reader === 'owner' ? query(items, where('userId', '==', order.userId)) : items);
+  const lines = snap.docs
+    .slice()
+    .sort((a, b) => Number(a.id) - Number(b.id))
+    .map((entry) => {
+      const data = entry.data();
+      return {
+        productId: String(data.productId || entry.id),
+        sku: String(data.sku ?? ''),
+        name: String(data.name ?? ''),
+        unitPrice: Number(data.unitPrice ?? 0),
+        quantity: Number(data.quantity ?? 0),
+        lineTotal: Number(data.lineTotal ?? 0),
+      };
+    });
+  return presentOrder(order, lines);
+}
+
 export async function listMyOrders(userId: string): Promise<Order[]> {
   try {
     const q = query(collection(db, COLLECTION), where('userId', '==', userId), limit(50));
     const snap = await getDocs(q);
-    return snap.docs
-      .map((entry) => ({ id: entry.id, ...(entry.data() as Omit<Order, 'id'>) }))
+    const orders = snap.docs
+      .map((entry) => orderFromDoc(entry.id, entry.data() as Omit<Order, 'id'>))
       .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    return Promise.all(orders.map((order) => withOrderLines(order, 'owner')));
   } catch (error) {
     handleFirestoreError(error, OperationType.LIST, COLLECTION);
   }
@@ -75,9 +128,9 @@ export async function listOrdersBetween(
       limit(max)
     );
     const snap = await getDocs(rows);
-    const orders = snap.docs.map((entry) => ({ id: entry.id, ...(entry.data() as Omit<Order, 'id'>) }));
-    const truncated = orders.length > 200;
-    return { orders: truncated ? orders.slice(0, 200) : orders, truncated };
+    const orders = snap.docs.map((entry) => orderFromDoc(entry.id, entry.data() as Omit<Order, 'id'>));
+    const page = orders.length > 200 ? orders.slice(0, 200) : orders;
+    return { orders: await Promise.all(page.map((order) => withOrderLines(order, 'admin'))), truncated: orders.length > 200 };
   } catch (error) {
     handleFirestoreError(error, OperationType.LIST, COLLECTION);
   }

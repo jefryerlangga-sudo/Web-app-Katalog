@@ -22,10 +22,12 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
   arrayUnion,
 } from 'firebase/firestore';
 import { buildHitWrites, type AnalyticsEvent } from '../src/lib/analyticsAggregate.ts';
 import type { RulesTestContext } from '@firebase/rules-unit-testing';
+import { ORDER_ITEM_BATCH } from '../src/config/app.ts';
 import { endUserPrice } from '../src/config/pricing.ts';
 
 function productFor(id: string, price: number, overrides: Record<string, unknown> = {}) {
@@ -98,6 +100,37 @@ function orderPayload(uid: string, email: string, overrides: Record<string, unkn
     updatedAt: now,
     ...overrides,
   };
+}
+
+type OrderWrite = ReturnType<typeof orderPayload>;
+
+function headerFrom(payload: OrderWrite) {
+  const { items, ...rest } = payload;
+  return {
+    ...rest,
+    lineCount: items.length,
+    productIds: items.map((item) => item.productId),
+  };
+}
+
+async function saveOrder(db: TestDb, id: string, payload: OrderWrite) {
+  const { items } = payload;
+  await setDoc(doc(db, 'orders', id), headerFrom(payload));
+  for (let index = 0; index < items.length; index += ORDER_ITEM_BATCH) {
+    const batch = writeBatch(db);
+    items.slice(index, index + ORDER_ITEM_BATCH).forEach((item, offset) => {
+      batch.set(doc(db, 'orders', id, 'items', String(index + offset)), {
+        userId: payload.userId,
+        productId: item.productId,
+        sku: item.sku,
+        name: item.name,
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        lineTotal: item.lineTotal,
+      });
+    });
+    await batch.commit();
+  }
 }
 
 function profile(uid: string, email: string, role = 'customer') {
@@ -345,8 +378,8 @@ test('order create requires ownership, pending status, and the buyer tier price'
   const other = dbFor('cust-2', 'other@example.com', true);
   const guest = testEnv.unauthenticatedContext().firestore();
 
-  await assertSucceeds(setDoc(doc(customer, 'orders', 'ORD-1'), orderPayload('cust-1', 'cust@example.com')));
-  await assertFails(setDoc(doc(customer, 'orders', 'ORD-FAKE'), orderPayload('cust-1', 'cust@example.com', {
+  await assertSucceeds(saveOrder(customer, 'ORD-1', orderPayload('cust-1', 'cust@example.com')));
+  await assertFails(saveOrder(customer, 'ORD-FAKE', orderPayload('cust-1', 'cust@example.com', {
     items: [
       {
         productId: PRODUCT_ID,
@@ -361,16 +394,23 @@ test('order create requires ownership, pending status, and the buyer tier price'
     subtotal: 1,
     total: 1,
   })));
-  await assertFails(setDoc(doc(customer, 'orders', 'ORD-TOTAL'), orderPayload('cust-1', 'cust@example.com', {
+  await assertFails(setDoc(doc(customer, 'orders', 'ORD-TOTAL'), headerFrom(orderPayload('cust-1', 'cust@example.com', {
     total: 1,
-  })));
-  await assertFails(setDoc(doc(customer, 'orders', 'ORD-OWNER'), orderPayload('cust-2', 'cust@example.com')));
-  await assertFails(setDoc(doc(customer, 'orders', 'ORD-STATUS'), orderPayload('cust-1', 'cust@example.com', {
+  }))));
+  await assertFails(setDoc(doc(customer, 'orders', 'ORD-OWNER'), headerFrom(orderPayload('cust-2', 'cust@example.com'))));
+  await assertFails(setDoc(doc(customer, 'orders', 'ORD-STATUS'), headerFrom(orderPayload('cust-1', 'cust@example.com', {
     status: 'confirmed',
-  })));
+  }))));
   await assertFails(setDoc(doc(guest, 'orders', 'ORD-GUEST'), orderPayload('guest', 'cust@example.com')));
 
   await assertSucceeds(getDoc(doc(customer, 'orders', 'ORD-1')));
+  const lines = await assertSucceeds(getDocs(query(
+    collection(customer, 'orders', 'ORD-1', 'items'),
+    where('userId', '==', 'cust-1'),
+  )));
+  assert.equal(lines.size, 1);
+  await assertFails(getDocs(collection(customer, 'orders', 'ORD-1', 'items')));
+  await assertFails(getDocs(collection(other, 'orders', 'ORD-1', 'items')));
   await assertFails(getDoc(doc(other, 'orders', 'ORD-1')));
   await assertSucceeds(getDocs(query(collection(customer, 'orders'), where('userId', '==', 'cust-1'))));
   await assertFails(getDocs(collection(customer, 'orders')));
@@ -382,17 +422,17 @@ test('inactive or missing products and master price edits are rejected', async (
   await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct(validProduct({ isActive: false }));
   const customer = dbFor('cust-1', 'cust@example.com', true);
-  await assertFails(setDoc(doc(customer, 'orders', 'ORD-OFF'), orderPayload('cust-1', 'cust@example.com')));
+  await assertFails(saveOrder(customer, 'ORD-OFF', orderPayload('cust-1', 'cust@example.com')));
 
   await testEnv.clearFirestore();
   await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct(validProduct({ stockStatus: 'Out of Stock' }));
-  await assertSucceeds(setDoc(doc(customer, 'orders', 'ORD-STOCK'), orderPayload('cust-1', 'cust@example.com')));
+  await assertSucceeds(saveOrder(customer, 'ORD-STOCK', orderPayload('cust-1', 'cust@example.com')));
 
   await testEnv.clearFirestore();
   await seedBuyer('cust-1', 'cust@example.com', 'grosir');
   await seedProduct();
-  await assertSucceeds(setDoc(doc(customer, 'orders', 'ORD-OK'), orderPayload('cust-1', 'cust@example.com')));
+  await assertSucceeds(saveOrder(customer, 'ORD-OK', orderPayload('cust-1', 'cust@example.com')));
 
   const master = dbFor('master-1', MASTER_EMAIL, true);
   await assertSucceeds(updateDoc(doc(master, 'orders', 'ORD-OK'), {
@@ -402,6 +442,8 @@ test('inactive or missing products and master price edits are rejected', async (
   await assertFails(updateDoc(doc(master, 'orders', 'ORD-OK'), { total: 1 }));
   await assertFails(updateDoc(doc(master, 'orders', 'ORD-OK'), { userId: 'master-1' }));
   await assertSucceeds(getDoc(doc(master, 'orders', 'ORD-OK')));
+  const masterLines = await assertSucceeds(getDocs(collection(master, 'orders', 'ORD-OK', 'items')));
+  assert.equal(masterLines.size, 1);
 
   let stored: Record<string, unknown> | undefined;
   await testEnv.withSecurityRulesDisabled(async (context) => {
@@ -435,9 +477,9 @@ test('end users pay the marked-up price and pending accounts cannot order', asyn
     subtotal: unitPrice * 2,
     total: unitPrice * 2,
   });
-  await assertSucceeds(setDoc(doc(endUser, 'orders', 'ORD-END'), priced));
-  await assertFails(setDoc(doc(endUser, 'orders', 'ORD-BASE'), orderPayload('end-1', 'end@example.com')));
-  await assertFails(setDoc(doc(pending, 'orders', 'ORD-WAIT'), orderPayload('wait-1', 'wait@example.com')));
+  await assertSucceeds(saveOrder(endUser, 'ORD-END', priced));
+  await assertFails(saveOrder(endUser, 'ORD-BASE', orderPayload('end-1', 'end@example.com')));
+  await assertFails(setDoc(doc(pending, 'orders', 'ORD-WAIT'), headerFrom(orderPayload('wait-1', 'wait@example.com'))));
 });
 
 const ANALYTICS_DAY = '2026-11-20';
@@ -547,29 +589,68 @@ async function seedCatalog(count: number, role: string, email: string, uid: stri
   });
 }
 
-test('six and eight line carts check out for both tiers, and a ninth line is rejected', async () => {
+test('one, eight, twelve, and twenty line carts check out, and twenty-one is rejected', async () => {
   for (const role of ['grosir', 'end_user'] as const) {
-    for (const count of [6, 8]) {
+    for (const count of [1, 8, 12, 20]) {
       await testEnv.clearFirestore();
       const uid = 'buyer-1';
       const email = 'buyer@example.com';
       await seedCatalog(count, role, email, uid);
       const buyer = dbFor(uid, email, true);
-      await assertSucceeds(setDoc(doc(buyer, 'orders', `ORD-${role}-${count}`), orderOfSize(uid, email, count, role)));
+      await assertSucceeds(saveOrder(buyer, `ORD-${role}-${count}`, orderOfSize(uid, email, count, role)));
+      const lines = await assertSucceeds(getDocs(query(
+        collection(buyer, 'orders', `ORD-${role}-${count}`, 'items'),
+        where('userId', '==', uid),
+      )));
+      assert.equal(lines.size, count);
     }
   }
 
   await testEnv.clearFirestore();
-  await seedCatalog(9, 'end_user', 'buyer@example.com', 'buyer-1');
-  const buyer = dbFor('buyer-1', 'buyer@example.com', true);
-  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-9'), orderOfSize('buyer-1', 'buyer@example.com', 9, 'end_user')));
+  await seedCatalog(21, 'end_user', 'buyer@example.com', 'buyer-1');
+  const endBuyer = dbFor('buyer-1', 'buyer@example.com', true);
+  await assertFails(saveOrder(endBuyer, 'ORD-21', orderOfSize('buyer-1', 'buyer@example.com', 21, 'end_user')));
 
-  const wrong = orderOfSize('buyer-1', 'buyer@example.com', 6, 'grosir');
+  await testEnv.clearFirestore();
+  await seedCatalog(8, 'grosir', 'buyer@example.com', 'buyer-1');
+  const buyer = dbFor('buyer-1', 'buyer@example.com', true);
+  const allowed = orderOfSize('buyer-1', 'buyer@example.com', 1, 'grosir');
+  await assertSucceeds(saveOrder(buyer, 'ORD-SLOT', allowed));
+  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-SLOT', 'items', '20'), {
+    userId: 'buyer-1',
+    productId: 'P0',
+    sku: 'P0',
+    name: 'Produk P0',
+    unitPrice: 10000,
+    quantity: 1,
+    lineTotal: 10000,
+  }));
+
+  const wrong = orderOfSize('buyer-1', 'buyer@example.com', 8, 'grosir');
   wrong.items[3].unitPrice = 1;
   wrong.items[3].lineTotal = 1;
   wrong.subtotal = wrong.items.reduce((sum, item) => sum + item.lineTotal, 0);
   wrong.total = wrong.subtotal;
-  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-CHEAP'), wrong));
+  await assertFails(saveOrder(buyer, 'ORD-CHEAP', wrong));
+});
+
+test('an older order that still stores its lines on the header can be read and updated', async () => {
+  const legacy = orderPayload('cust-1', 'cust@example.com');
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), 'orders', 'ORD-OLD'), legacy);
+  });
+  const customer = dbFor('cust-1', 'cust@example.com', true);
+  const snap = await assertSucceeds(getDoc(doc(customer, 'orders', 'ORD-OLD')));
+  assert.equal(Array.isArray(snap.data()?.items), true);
+  assert.equal(snap.data()?.items.length, 1);
+  const master = dbFor('master-1', MASTER_EMAIL, true);
+  await assertSucceeds(updateDoc(doc(master, 'orders', 'ORD-OLD'), {
+    status: 'completed',
+    updatedAt: '2026-11-08T13:00:00.000Z',
+  }));
+  const after = await assertSucceeds(getDoc(doc(customer, 'orders', 'ORD-OLD')));
+  assert.equal(after.data()?.status, 'completed');
+  assert.equal(after.data()?.items[0].name, 'Anker 511 Nano');
 });
 
 test('end user prices that are not multiples of 1000 match the client formula', async () => {
@@ -584,7 +665,7 @@ test('end user prices that are not multiples of 1000 match the client formula', 
   const endUser = dbFor('end-1', 'end@example.com', true);
   for (const price of awkward) {
     const unitPrice = endUserPrice(price);
-    await assertSucceeds(setDoc(doc(endUser, 'orders', `ORD-N-${price}`), orderPayload('end-1', 'end@example.com', {
+    await assertSucceeds(saveOrder(endUser, `ORD-N-${price}`, orderPayload('end-1', 'end@example.com', {
       items: [{
         productId: `N${price}`,
         sku: `N${price}`,
@@ -598,7 +679,7 @@ test('end user prices that are not multiples of 1000 match the client formula', 
       total: unitPrice,
     })));
   }
-  await assertFails(setDoc(doc(endUser, 'orders', 'ORD-BASE'), orderPayload('end-1', 'end@example.com', {
+  await assertFails(saveOrder(endUser, 'ORD-BASE', orderPayload('end-1', 'end@example.com', {
     items: [{
       productId: 'N199000',
       sku: 'N199000',
