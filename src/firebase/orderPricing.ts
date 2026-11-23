@@ -39,9 +39,6 @@ export function priceCart(cart: CartItem[], catalog: Product[]): PricedOrderDraf
     if (product.isActive === false) {
       throw new Error(`${product.name} sedang nonaktif`);
     }
-    if (product.stockStatus === 'Out of Stock') {
-      throw new Error(`${product.name} stok habis`);
-    }
 
     const quantity = line.quantity;
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QTY_PER_LINE) {

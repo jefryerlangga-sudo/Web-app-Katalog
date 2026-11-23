@@ -276,7 +276,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, promoView }) 
             event.stopPropagation();
             addToCart(product, 1);
           }}
-          disabled={product.stockStatus === 'Out of Stock' || product.isActive === false}
+          disabled={product.isActive === false}
           className="py-1.5 px-3 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white flex items-center gap-1"
         >
           <ShoppingCart className="w-3.5 h-3.5" />

@@ -58,10 +58,11 @@ test('checkout price comes from catalog retail, not the cart unit price', () => 
   assert.equal(priced.itemCount, 2);
 });
 
-test('missing, inactive, out-of-stock, and unbounded carts are rejected', () => {
+test('missing, inactive, and unbounded carts are rejected, and empty stock still prices', () => {
   assert.throws(() => priceCart([{ ...cartLine(), productId: 'missing' }], [product()]), /Firestore/);
   assert.throws(() => priceCart([cartLine()], [product({ isActive: false })]), /nonaktif/);
-  assert.throws(() => priceCart([cartLine()], [product({ stockStatus: 'Out of Stock' })]), /stok habis/);
+  const emptied = priceCart([cartLine()], [product({ stockStatus: 'Out of Stock' })]);
+  assert.equal(emptied.total, 199000);
   assert.throws(() => priceCart([cartLine(), { ...cartLine(), productId: 'ACC-ANK-001' }], [product()]), /duplikat/);
   assert.throws(() => priceCart([{ ...cartLine(), quantity: 1.5 }], [product()]), /Jumlah/);
   assert.throws(() => priceCart([{ ...cartLine(), quantity: 100 }], [product()]), /Jumlah/);
