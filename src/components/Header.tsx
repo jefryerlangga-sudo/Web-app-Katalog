@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BarChart3,
   Briefcase,
@@ -37,17 +37,16 @@ export const Header: React.FC = () => {
     promo,
   } = useCatalog();
 
-  const [query, setQuery] = useState(filters.searchQuery || '');
   const whatsApp = configuredWhatsAppNumber();
+
+  const applySearch = (value: string) => {
+    setFilters((prev) => ({ ...prev, searchQuery: value }));
+    if (currentTab !== 'search') setCurrentTab('search');
+  };
 
   const submitSearch = (event?: React.FormEvent) => {
     event?.preventDefault();
-    setFilters((prev) => ({
-      ...prev,
-      searchQuery: query.trim(),
-      category: prev.category,
-    }));
-    setCurrentTab('search');
+    applySearch(filters.searchQuery);
   };
 
   return (
@@ -66,11 +65,22 @@ export const Header: React.FC = () => {
             <label className="flex items-center gap-2 bg-white rounded-full px-3 h-9 text-slate-800">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                value={filters.searchQuery}
+                onChange={(event) => applySearch(event.target.value)}
                 placeholder="Cari aksesoris HP"
+                aria-label="Cari produk"
                 className="flex-1 min-w-0 bg-transparent text-sm outline-none placeholder:text-slate-400"
               />
+              {filters.searchQuery && (
+                <button
+                  type="button"
+                  aria-label="Hapus pencarian"
+                  onClick={() => applySearch('')}
+                  className="text-slate-400"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </label>
           </form>
           {promo?.active && (

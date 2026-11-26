@@ -127,7 +127,7 @@ const defaultFilters: ProductFilterState = {
 
 const CART_STORAGE_KEY = 'portaltech_cart_v1';
 
-const CatalogContext = createContext<CatalogContextType | undefined>(undefined);
+export const CatalogContext = createContext<CatalogContextType | undefined>(undefined);
 
 function loadCart(): CartItem[] {
   try {
