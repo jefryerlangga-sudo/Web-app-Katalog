@@ -12,8 +12,8 @@ rules_version = '2';
 // Publish this file only after the app version that writes those documents is deployed.
 // End-user unit price = ceil(base * 13 / 1000) * 100, computed with integer division.
 // That is the same number as ceil(base * 130 / 10000) * 100 in src/config/pricing.ts.
-// An order is a header plus one item document per product (orders/{id}/items/0..19).
-// Each item checks its own catalog price. Stock is not checked. At most 20 kinds.
+// An order is a header plus one item document per product (orders/{id}/items/0..49).
+// Each item checks its own catalog price. Stock is not checked. At most 50 kinds.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
@@ -177,12 +177,12 @@ service cloud.firestore {
         && data.customerPhone.size() <= 20
         && data.lineCount is int
         && data.lineCount > 0
-        && data.lineCount <= 20
+        && data.lineCount <= 50
         && data.productIds is list
         && data.productIds.size() == data.lineCount
         && data.itemCount is int
         && data.itemCount > 0
-        && data.itemCount <= 1980
+        && data.itemCount <= 4950
         && data.subtotal is number
         && data.subtotal >= 0
         && data.total == data.subtotal
@@ -194,9 +194,9 @@ service cloud.firestore {
         && isApprovedBuyer();
     }
 
-    // Slot id is 0..19, so a 21st item document has no legal id.
+    // Slot id is 0..49, so a 51st item document has no legal id.
     function isLineSlot(lineId) {
-      return lineId.matches('^([0-9]|1[0-9])$');
+      return lineId.matches('^([0-9]|[1-4][0-9])$');
     }
 
     function orderItemOk(orderId, lineId, data) {

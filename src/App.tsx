@@ -18,9 +18,11 @@ import { ExampleReportsPage, ReportsPage } from './pages/ReportsPage';
 import { RefreshCw } from 'lucide-react';
 import { AccessGate } from './components/AccessGate';
 import { AnalyticsBinder } from './components/AnalyticsBinder';
+import { ScrollTopButton } from './components/ScrollTopButton';
 
 const AppContent: React.FC = () => {
   const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate } = useCatalog();
+  const lightShell = !['admin', 'laporan', 'ai', 'compare'].includes(currentTab);
 
   if (gate !== 'ready') {
     return <AccessGate />;
@@ -56,7 +58,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className={`min-h-screen flex flex-col font-sans selection:bg-[#0B1B3A] selection:text-white ${lightShell ? 'bg-[#f5f5f5] text-slate-900' : 'bg-slate-950 text-slate-100'}`}>
       <AnalyticsBinder />
       {/* Fixed Header */}
       <Header />
@@ -91,6 +93,7 @@ const AppContent: React.FC = () => {
 
       {/* Fixed Bottom Navigation */}
       <BottomNav />
+      <ScrollTopButton />
 
       {/* Detail Modal / Sheet */}
       {selectedProduct && (

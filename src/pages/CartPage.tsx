@@ -111,8 +111,8 @@ export const CartPage: React.FC = () => {
             <ShoppingCart className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-base font-black text-white">Keranjang Belanja</h1>
-            <p className="text-xs text-slate-400">{cart.length} jenis item</p>
+            <h1 className="text-base font-black text-slate-900">Keranjang Belanja</h1>
+            <p className="text-xs text-slate-500">{cart.length} jenis item</p>
           </div>
         </div>
         {cart.length > 0 && (

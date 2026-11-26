@@ -35,6 +35,8 @@ test('rules do not grant catalog writes from a profile role or admins collection
   assert.equal(rules.includes('documents/admins/'), false);
   assert.match(rules, /endUserUnitPrice\(product\.suggestedRetailPrice\)/);
   assert.match(rules, /base \* 13 \+ 999/);
+  assert.match(rules, /data\.lineCount <= 50/);
+  assert.match(rules, /\[1-4\]\[0-9\]/);
   assert.equal(rules.includes("stockStatus != 'Out of Stock'"), false);
   assert.match(pricing, /END_USER_MARKUP = 0\.3/);
   assert.match(accountRole, /'customer'/);

@@ -1,8 +1,8 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { accountRoleLabel, isApprovedAccountRole, isStoredAccountRole, type AssignableAccountRole } from '../config/accountRole';
-import { APP_NAME, isStorefrontProduct } from '../config/app';
+import { APP_NAME, MAX_ORDER_LINES, isStorefrontProduct } from '../config/app';
 import type { CatalogTier } from '../config/pricing';
 import { BatchSaveProgress } from '../firebase/catalogBatch';
 import {
@@ -81,6 +81,8 @@ interface CatalogContextType {
   canvasserProfile: CanvasserProfile;
   showAuthModal: boolean;
   setShowAuthModal: (open: boolean) => void;
+  accountOpen: boolean;
+  setAccountOpen: (open: boolean) => void;
   login: () => Promise<void>;
   loginEmail: (email: string, password: string) => Promise<void>;
   registerEmail: (email: string, password: string, displayName: string) => Promise<void>;
@@ -149,7 +151,7 @@ function loadCart(): CartItem[] {
           item.quantity <= 99
         );
       })
-      .slice(0, 10)
+      .slice(0, MAX_ORDER_LINES)
       .map((item) => ({
         ...item,
         unitPrice: Number.isFinite(item.unitPrice) ? item.unitPrice : 0,
@@ -174,7 +176,6 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [viewMode, setViewModeState] = useState<ViewMode>('customer');
   const [compareList, setCompareList] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProductState] = useState<Product | null>(null);
-  const [filters, setFilters] = useState<ProductFilterState>(defaultFilters);
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -182,8 +183,10 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [promo, setPromo] = useState<StorePromo | null>(null);
   const [accountDirectory, setAccountDirectory] = useState<UserProfile[]>([]);
   const [currentTab, setCurrentTabState] = useState<string>('home');
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAuthModal, setAuthOpen] = useState(false);
+  const [accountOpen, setAccountOpenState] = useState(false);
   const [cart, setCart] = useState<CartItem[]>(() => loadCart());
+  const [filters, setFiltersState] = useState<ProductFilterState>(defaultFilters);
 
   const isAdmin = useMemo<boolean>(() => resolveIsAdmin(user), [user]);
   const priceTier = useMemo<CatalogTier | null>(() => {
@@ -230,16 +233,141 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setViewModeState(viewMode === 'sales' ? 'customer' : 'sales');
   };
 
+  type NavFrame = {
+    tab: string;
+    productId: string | null;
+    auth: boolean;
+    account: boolean;
+    category: string;
+  };
+  const NAV = 'partshopNav';
+  const applyingNav = useRef(false);
+  const productsRef = useRef(products);
+  productsRef.current = products;
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
+  const navRef = useRef<NavFrame>({
+    tab: 'home',
+    productId: null,
+    auth: false,
+    account: false,
+    category: 'All',
+  });
+  const isAdminRef = useRef(isAdmin);
+  isAdminRef.current = isAdmin;
+  const userRef = useRef(user);
+  userRef.current = user;
+
+  const pushNav = useCallback((patch: Partial<NavFrame>) => {
+    const next: NavFrame = { ...navRef.current, ...patch };
+    navRef.current = next;
+    if (applyingNav.current || typeof window === 'undefined') return;
+    const current = (window.history.state || {})[NAV] as NavFrame | undefined;
+    const same = current
+      && current.tab === next.tab
+      && current.productId === next.productId
+      && current.auth === next.auth
+      && current.account === next.account
+      && current.category === next.category;
+    if (same) return;
+    const state = { ...(window.history.state || {}), [NAV]: next };
+    if (!current) window.history.replaceState(state, '');
+    else window.history.pushState(state, '');
+  }, []);
+
+  const setFilters = useCallback((action: React.SetStateAction<ProductFilterState>) => {
+    setFiltersState((prev) => {
+      const next = typeof action === 'function' ? action(prev) : action;
+      filtersRef.current = next;
+      if (!applyingNav.current && next.category !== prev.category) {
+        queueMicrotask(() => {
+          if (!applyingNav.current && next.category !== navRef.current.category) {
+            pushNav({ category: next.category });
+          }
+        });
+      }
+      return next;
+    });
+  }, [pushNav]);
+
   const setCurrentTab = useCallback(
     (tab: string) => {
-      if ((tab === 'admin' || tab === 'laporan') && !isAdmin) {
-        if (!user) setShowAuthModal(true);
+      if ((tab === 'admin' || tab === 'laporan') && !isAdminRef.current) {
+        if (!userRef.current) {
+          setAuthOpen(true);
+          pushNav({ auth: true, account: false });
+        }
         return;
       }
       setCurrentTabState(tab);
+      setAccountOpenState(false);
+      setAuthOpen(false);
+      setSelectedProductState(null);
+      pushNav({
+        tab,
+        productId: null,
+        auth: false,
+        account: false,
+        category: filtersRef.current.category,
+      });
     },
-    [isAdmin, user]
+    [pushNav]
   );
+
+  const setShowAuthModal = useCallback((open: boolean) => {
+    if (!open) {
+      const frame = (typeof window !== 'undefined' ? window.history.state?.[NAV] : undefined) as NavFrame | undefined;
+      if (frame?.auth && !applyingNav.current) {
+        window.history.back();
+        return;
+      }
+    }
+    setAuthOpen(open);
+    if (open) setAccountOpenState(false);
+    pushNav(open ? { auth: true, account: false } : { auth: false });
+  }, [pushNav]);
+
+  const setAccountOpen = useCallback((open: boolean) => {
+    if (!open) {
+      const frame = (typeof window !== 'undefined' ? window.history.state?.[NAV] : undefined) as NavFrame | undefined;
+      if (frame?.account && !applyingNav.current) {
+        window.history.back();
+        return;
+      }
+    }
+    setAccountOpenState(open);
+    pushNav(open ? { account: true, auth: false } : { account: false });
+  }, [pushNav]);
+
+  useEffect(() => {
+    pushNav({});
+    const onPop = (event: PopStateEvent) => {
+      const frame = (event.state as { partshopNav?: NavFrame } | null)?.partshopNav;
+      if (!frame || (event.state as { overlay?: string } | null)?.overlay) return;
+      applyingNav.current = true;
+      navRef.current = frame;
+      const tab = frame.tab === 'admin' || frame.tab === 'laporan'
+        ? (isAdminRef.current ? frame.tab : 'home')
+        : frame.tab;
+      setCurrentTabState(tab);
+      setAuthOpen(frame.auth);
+      setAccountOpenState(frame.account);
+      setFiltersState((prev) => {
+        const next = { ...prev, category: frame.category || 'All' };
+        filtersRef.current = next;
+        return next;
+      });
+      if (frame.productId) {
+        const found = productsRef.current.find((item) => (item.id || item.sku) === frame.productId) || null;
+        setSelectedProductState(found);
+      } else {
+        setSelectedProductState(null);
+      }
+      applyingNav.current = false;
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [pushNav]);
 
   useEffect(() => {
     if (!isAdmin && viewMode === 'sales') {
@@ -629,7 +757,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
             : item
         );
       }
-      if (prev.length >= 10) return prev;
+      if (prev.length >= MAX_ORDER_LINES) return prev;
       return [
         ...prev,
         {
@@ -651,12 +779,22 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const setSelectedProduct = useCallback((product: Product | null) => {
+    if (!product) {
+      const frame = (typeof window !== 'undefined' ? window.history.state?.[NAV] : undefined) as NavFrame | undefined;
+      if (frame?.productId && !applyingNav.current) {
+        window.history.back();
+        return;
+      }
+      setSelectedProductState(null);
+      pushNav({ productId: null });
+      return;
+    }
     setSelectedProductState(product);
-    if (!product) return;
     const id = product.id || product.sku;
+    pushNav({ productId: id || null, auth: false, account: false });
     if (!id) return;
     trackProductOpen({ id, sku: product.sku, name: product.name });
-  }, []);
+  }, [pushNav]);
 
   const updateCartQty = (productId: string, quantity: number) => {
     setCart((prev) =>
@@ -750,6 +888,8 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
         canvasserProfile,
         showAuthModal,
         setShowAuthModal,
+        accountOpen,
+        setAccountOpen,
         login,
         loginEmail: loginEmailFn,
         registerEmail: registerEmailFn,

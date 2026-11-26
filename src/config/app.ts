@@ -44,10 +44,10 @@ export const HIDDEN_STOREFRONT_CATEGORIES = [
   'Engine & Electrical',
 ] as const;
 
-// Twenty kinds of product. The order header lists them; each item document checks
-// its own catalog price. Checkout writes item docs in batches of ORDER_ITEM_BATCH
-// so one request stays under 20 document reads and 1,000 expressions.
-export const MAX_ORDER_LINES = 20;
+// Fifty kinds of product. The order header only lists their ids. Each item document
+// checks its own catalog price. Checkout writes item docs in batches of ORDER_ITEM_BATCH
+// (3 reads each) so one request stays under 20 document reads and 1,000 expressions.
+export const MAX_ORDER_LINES = 50;
 export const ORDER_ITEM_BATCH = 5;
 export const MAX_QTY_PER_LINE = 99;
 

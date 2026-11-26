@@ -35,7 +35,7 @@ export function LoadMoreList<T>({
         <button
           type="button"
           onClick={() => setCount((current) => Math.min(items.length, current + PRODUCT_PAGE_SIZE))}
-          className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs active:scale-95"
+          className="col-span-full w-full py-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0B1B3A] font-bold text-xs active:scale-95"
         >
           Muat lagi ({Math.min(PRODUCT_PAGE_SIZE, remaining)} dari {remaining} tersisa)
         </button>
