@@ -14,6 +14,7 @@ import { ComparePage } from './pages/ComparePage';
 import { AiAssistantPage } from './pages/AiAssistantPage';
 import { AdminPage } from './pages/AdminPage';
 import { CartPage } from './pages/CartPage';
+import { BatteryPage } from './pages/BatteryPage';
 import { ExampleReportsPage, ReportsPage } from './pages/ReportsPage';
 import { RefreshCw } from 'lucide-react';
 import { AccessGate } from './components/AccessGate';
@@ -21,7 +22,7 @@ import { AnalyticsBinder } from './components/AnalyticsBinder';
 import { ScrollTopButton } from './components/ScrollTopButton';
 
 const AppContent: React.FC = () => {
-  const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate } = useCatalog();
+  const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate, catalogMode } = useCatalog();
   const lightShell = !['admin', 'laporan', 'ai', 'compare'].includes(currentTab);
 
   if (gate !== 'ready') {
@@ -31,15 +32,15 @@ const AppContent: React.FC = () => {
   const renderCurrentView = () => {
     switch (currentTab) {
       case 'home':
-        return <HomePage />;
+        return catalogMode === 'baterai' ? <BatteryPage /> : <HomePage />;
       case 'search':
-        return <SearchCatalogPage />;
+        return catalogMode === 'baterai' ? <BatteryPage /> : <SearchCatalogPage />;
       case 'categories':
-        return <CategoriesPage />;
+        return catalogMode === 'baterai' ? <BatteryPage /> : <CategoriesPage />;
       case 'focus':
-        return <ProductFocusPage />;
+        return catalogMode === 'baterai' ? <BatteryPage /> : <ProductFocusPage />;
       case 'bestseller':
-        return <BestSellerPage />;
+        return catalogMode === 'baterai' ? <BatteryPage /> : <BestSellerPage />;
       case 'promo':
         return <PromoPage />;
       case 'compare':

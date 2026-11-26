@@ -4,6 +4,8 @@ import { CatalogContext } from '../context/CatalogContext';
 import { Header } from '../components/Header';
 import { BottomNav } from '../components/BottomNav';
 import { SearchCatalogPage } from '../pages/SearchCatalogPage';
+import { BatteryPage } from '../pages/BatteryPage';
+import { catalogModeFromPath, type CatalogMode } from '../lib/catalogKind';
 import { Product, ProductFilterState } from '../types/product';
 
 const filters0: ProductFilterState = {
@@ -49,6 +51,9 @@ const products: Product[] = [
   sample({ sku: 'HOLD-1', name: 'Holder Dashboard', brand: 'Baseus', compatibility: 'Speaker mini di mobil', category: 'Holder & Mount HP' }),
   sample({ sku: 'LED-1', name: 'Advance LED Sensor Lighting P300E', brand: 'Advance', compatibility: 'Rumah', category: 'Lainnya', suggestedRetailPrice: 265000 }),
   sample({ sku: 'STB-1', name: 'Advance SET TOP BOX STP-A01 V.3 Black', brand: 'Advance', compatibility: 'TV', category: 'Lainnya', suggestedRetailPrice: 165000 }),
+  sample({ sku: 'PS-BOG-0001', name: 'Baterai OG BL-49FX Infinix Smart 5/6/Hot 9', brand: 'OG', compatibility: 'Infinix Smart 5/6/Hot 9', category: 'Baterai', subcategory: 'Infinix', specification: 'BL-49FX', suggestedRetailPrice: 110000 }),
+  sample({ sku: 'PS-BHX-0001', name: 'Baterai HX BN-5V Vivo', brand: 'HX', compatibility: 'Vivo', category: 'Baterai', subcategory: 'Vivo', specification: 'BN-5V', suggestedRetailPrice: 90000 }),
+  sample({ sku: 'PS-BLF-0001', name: 'Baterai LF iPhone 11', brand: 'LF', compatibility: 'iPhone 11', category: 'Baterai', subcategory: 'iPhone', specification: '-', suggestedRetailPrice: 180000 }),
   ...Array.from({ length: 8 }, (_, index) => sample({
     sku: `FILL-${index}`,
     name: `Produk pengisi ${index}`,
@@ -61,9 +66,21 @@ const products: Product[] = [
 function Harness() {
   const [filters, setFilters] = useState(filters0);
   const [currentTab, setCurrentTab] = useState('home');
+  const [catalogMode, setCatalogModeState] = useState<CatalogMode>(() => catalogModeFromPath(window.location.pathname));
+  const setCatalogMode = (mode: CatalogMode) => {
+    setCatalogModeState(mode);
+    setFilters((prev) => ({ ...prev, searchQuery: '' }));
+    setCurrentTab('home');
+    const path = mode === 'baterai' ? '/baterai' : '/';
+    const search = window.location.search || '?contoh-cari=1';
+    if (window.location.pathname !== path) window.history.pushState({}, '', `${path}${search}`);
+  };
   const value = {
     products,
-    activeProducts: products,
+    activeProducts: products.filter((item) => item.category !== 'Baterai'),
+    batteryProducts: products.filter((item) => item.category === 'Baterai'),
+    catalogMode,
+    setCatalogMode,
     usingPreviewCatalog: false,
     loading: false,
     error: null,
@@ -124,7 +141,11 @@ function Harness() {
       <div className="min-h-screen bg-[#f5f5f5] text-slate-900">
         <Header />
         <main className="max-w-md mx-auto p-3">
-          {currentTab === 'search' ? <SearchCatalogPage /> : (
+          {catalogMode === 'baterai' ? (
+            <BatteryPage />
+          ) : currentTab === 'search' ? (
+            <SearchCatalogPage />
+          ) : (
             <div className="h-[1400px] bg-white rounded-2xl border border-slate-200 p-4">Beranda contoh</div>
           )}
         </main>

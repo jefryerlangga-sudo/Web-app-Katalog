@@ -3,6 +3,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { accountRoleLabel, isApprovedAccountRole, isStoredAccountRole, type AssignableAccountRole } from '../config/accountRole';
 import { APP_NAME, MAX_ORDER_LINES, isStorefrontProduct } from '../config/app';
+import { catalogModeFromPath, isBatteryProduct, type CatalogMode } from '../lib/catalogKind';
 import type { CatalogTier } from '../config/pricing';
 import { BatchSaveProgress } from '../firebase/catalogBatch';
 import {
@@ -49,6 +50,9 @@ import {
 interface CatalogContextType {
   products: Product[];
   activeProducts: Product[];
+  batteryProducts: Product[];
+  catalogMode: CatalogMode;
+  setCatalogMode: (mode: CatalogMode) => void;
   usingPreviewCatalog: boolean;
   loading: boolean;
   error: string | null;
@@ -183,6 +187,9 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [promo, setPromo] = useState<StorePromo | null>(null);
   const [accountDirectory, setAccountDirectory] = useState<UserProfile[]>([]);
   const [currentTab, setCurrentTabState] = useState<string>('home');
+  const [catalogMode, setCatalogModeState] = useState<CatalogMode>(() =>
+    typeof window === 'undefined' ? 'aksesoris' : catalogModeFromPath(window.location.pathname)
+  );
   const [showAuthModal, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpenState] = useState(false);
   const [cart, setCart] = useState<CartItem[]>(() => loadCart());
@@ -290,6 +297,24 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   }, [pushNav]);
 
+  const setCatalogMode = useCallback((mode: CatalogMode) => {
+    setCatalogModeState(mode);
+    setFiltersState((prev) => {
+      const next = { ...prev, searchQuery: '' };
+      filtersRef.current = next;
+      return next;
+    });
+    setCurrentTabState('home');
+    const path = mode === 'baterai' ? '/baterai' : '/';
+    if (typeof window !== 'undefined' && window.location.pathname !== path) {
+      window.history.pushState(
+        { ...(window.history.state || {}), partshopMode: mode, [NAV]: { ...navRef.current, tab: 'home' } },
+        '',
+        path
+      );
+    }
+  }, []);
+
   const setCurrentTab = useCallback(
     (tab: string) => {
       if ((tab === 'admin' || tab === 'laporan') && !isAdminRef.current) {
@@ -345,6 +370,7 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const frame = (event.state as { partshopNav?: NavFrame } | null)?.partshopNav;
       if (!frame || (event.state as { overlay?: string } | null)?.overlay) return;
       applyingNav.current = true;
+      setCatalogModeState(catalogModeFromPath(window.location.pathname));
       navRef.current = frame;
       const tab = frame.tab === 'admin' || frame.tab === 'laporan'
         ? (isAdminRef.current ? frame.tab : 'home')
@@ -603,8 +629,15 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const activeProducts = useMemo(() => {
     return catalogProducts.filter(
-      (product) => product.isActive !== false && isStorefrontProduct(product.category)
+      (product) =>
+        product.isActive !== false &&
+        !isBatteryProduct(product) &&
+        isStorefrontProduct(product.category)
     );
+  }, [catalogProducts]);
+
+  const batteryProducts = useMemo(() => {
+    return catalogProducts.filter((product) => product.isActive !== false && isBatteryProduct(product));
   }, [catalogProducts]);
 
   useEffect(() => {
@@ -856,6 +889,9 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
       value={{
         products: catalogProducts,
         activeProducts,
+        batteryProducts,
+        catalogMode,
+        setCatalogMode,
         usingPreviewCatalog,
         loading,
         error,
