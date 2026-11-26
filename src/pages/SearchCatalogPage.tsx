@@ -14,10 +14,12 @@ import { isPromoSku } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
+import { useOverlayHistory } from '../lib/overlayHistory';
 
 export const SearchCatalogPage: React.FC = () => {
   const { activeProducts, filters, setFilters, resetFilters, viewMode, promo } = useCatalog();
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  useOverlayHistory(showFilterDrawer, () => setShowFilterDrawer(false));
 
   // Extract unique categories & brands from active products
   const categories = useMemo(() => {
@@ -309,7 +311,7 @@ export const SearchCatalogPage: React.FC = () => {
       {/* Results Header with Sorting */}
       <div className="flex items-center justify-between px-1 text-xs text-slate-400">
         <span className="font-semibold">
-          Menampilkan <strong className="text-white font-mono">{filteredProducts.length}</strong> produk
+          Menampilkan <strong className="text-slate-900 font-mono">{filteredProducts.length}</strong> produk
         </span>
 
         {/* Sort selector */}
@@ -338,9 +340,9 @@ export const SearchCatalogPage: React.FC = () => {
         <LoadMoreList
           items={filteredProducts}
           resetKey={`${filters.searchQuery}|${filters.category}|${filters.brand}|${filters.sortBy}|${filters.compatibilityVehicle}|${filters.promoOnly}|${filteredProducts.length}`}
-          className="space-y-3"
+          className="grid grid-cols-2 gap-2"
           getKey={(product) => product.id || product.sku}
-          renderItem={(product) => <ProductCard product={product} />}
+          renderItem={(product) => <ProductCard product={product} variant="tile" />}
         />
       ) : (
         /* Empty State */

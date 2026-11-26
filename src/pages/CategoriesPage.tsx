@@ -163,7 +163,7 @@ export const CategoriesPage: React.FC = () => {
   return (
     <div className="space-y-4 pb-20">
       <div className="px-1">
-        <h1 className="text-lg font-black text-white tracking-tight">
+        <h1 className="text-lg font-black text-slate-900 tracking-tight">
           Kategori Aksesoris Handphone
         </h1>
         <p className="text-xs text-slate-400 mt-0.5">

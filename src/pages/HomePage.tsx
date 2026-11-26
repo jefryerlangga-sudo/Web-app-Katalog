@@ -7,8 +7,6 @@ import {
   Smartphone,
   Briefcase,
   ChevronRight,
-  Percent,
-  CheckCircle2,
   Tag,
 } from 'lucide-react';
 import { APP_NAME, listStorefrontCategories } from '../config/app';
@@ -16,6 +14,7 @@ import { dealerQuote } from '../lib/money';
 import { listPromoProducts } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
+import { LoadMoreList } from '../components/LoadMoreList';
 
 export const HomePage: React.FC = () => {
   const {
@@ -86,286 +85,109 @@ export const HomePage: React.FC = () => {
     setCurrentTab('search');
   };
 
+  const categories = listStorefrontCategories(activeProducts.map((item) => item.category));
+
   return (
-    <div className="space-y-4 pb-20">
-      {/* Route & Canvasser Welcome Banner */}
-      <div className="bg-gradient-to-br from-slate-800 via-slate-800/90 to-blue-950/60 p-4 rounded-3xl border border-slate-700/80 shadow-lg text-white">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <span className="text-[11px] font-bold tracking-wide text-blue-400 flex items-center gap-1">
-              <Briefcase className="w-3.5 h-3.5" />
-              <span>{APP_NAME}</span>
+    <div className="space-y-3 pb-24">
+      <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+        {categories.slice(0, 12).map((name) => (
+          <button
+            key={name}
+            type="button"
+            onClick={() => handleCategoryClick(name)}
+            className="shrink-0 w-16 text-center"
+          >
+            <span className="mx-auto w-12 h-12 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-[#0B1B3A]">
+              <Smartphone className="w-5 h-5" />
             </span>
-            <h1 className="text-xl font-black mt-0.5 tracking-tight">
-              {user?.displayName ? `Halo, ${user.displayName.split(' ')[0]}` : 'Katalog Aksesoris HP'}
-            </h1>
-            <p className="text-xs text-slate-300 mt-0.5">
-              Charger, kabel, audio, powerbank, dan proteksi handphone.
-            </p>
-          </div>
-
-          <div className="text-right bg-slate-900/60 p-2 rounded-2xl border border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-semibold">SKU Aktif</span>
-            <span className="text-base font-extrabold text-blue-400 font-mono">
-              {activeProducts.length}
-            </span>
-          </div>
-        </div>
-
-        {/* Quick Route KPI Metrics */}
-        <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-700/60">
-          <div className="bg-slate-900/40 p-2 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400 block font-medium">SKU Fokus</span>
-            <span className="text-sm font-bold text-rose-400 flex items-center gap-1 font-mono">
-              <Flame className="w-3.5 h-3.5" /> {focusProducts.length} Item
-            </span>
-          </div>
-
-          <div className="bg-slate-900/40 p-2 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400 block font-medium">Terlaris</span>
-            <span className="text-sm font-bold text-amber-400 flex items-center gap-1 font-mono">
-              <Trophy className="w-3.5 h-3.5" /> {bestSellerProducts.length} Item
-            </span>
-          </div>
-
-          <div className="bg-slate-900/40 p-2 rounded-xl border border-slate-800">
-            <span className="text-[10px] text-slate-400 block font-medium">
-              {viewMode === 'sales' ? 'Rata Margin Toko' : 'Kualitas Terjamin'}
-            </span>
-            <span className="text-sm font-bold text-emerald-400 flex items-center gap-1 font-mono">
-              {viewMode === 'sales' ? (
-                <>
-                  <Percent className="w-3.5 h-3.5" /> {avgMargin == null ? '—' : `+${avgMargin}%`}
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-3.5 h-3.5" /> 100% Asli
-                </>
-              )}
-            </span>
-          </div>
-        </div>
+            <span className="mt-1 block text-[10px] leading-tight text-slate-700 line-clamp-2">{name.split(' ')[0]}</span>
+          </button>
+        ))}
       </div>
 
-      {promo?.active && (
+      <button
+        type="button"
+        onClick={() => setCurrentTab(promo?.active ? 'promo' : 'focus')}
+        className="w-full text-left rounded-2xl overflow-hidden bg-[#0B1B3A] text-white p-4 shadow-sm"
+      >
+        <p className="text-[11px] font-bold text-blue-200">{promo?.active ? promo.title : APP_NAME}</p>
+        {promo ? <span className="sr-only">{promo.title}</span> : null}
+        <p className="text-base font-black mt-0.5">
+          {user?.displayName ? `Halo, ${user.displayName.split(' ')[0]}` : 'Aksesoris HP pilihan'}
+        </p>
+        <p className="text-xs text-blue-100 mt-1">
+          {promo?.active ? `${promoListings.length} SKU promo` : `${activeProducts.length} SKU siap dipesan`}
+        </p>
+      </button>
+
+      <div className="grid grid-cols-4 gap-2">
+        {[
+          { id: 'focus', label: 'Fokus', icon: Flame, count: focusProducts.length },
+          { id: 'bestseller', label: 'Terlaris', icon: Trophy, count: bestSellerProducts.length },
+          { id: 'promo', label: 'Promo', icon: Tag, count: promoListings.length },
+          { id: 'ai', label: 'Asisten', icon: Sparkles, count: null },
+        ].map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setCurrentTab(item.id)}
+            className="bg-white rounded-xl border border-slate-200 py-2 text-center shadow-sm"
+          >
+            <item.icon className="w-4 h-4 mx-auto text-[#0B1B3A]" />
+            <span className="block text-[11px] font-bold text-slate-800 mt-1">{item.label}</span>
+            {item.count != null && <span className="text-[10px] text-slate-500">{item.count}</span>}
+          </button>
+        ))}
+      </div>
+
+      {viewMode === 'sales' && isAdmin && (
+        <p className="text-xs font-bold text-emerald-700 bg-white border border-emerald-200 rounded-xl px-3 py-2">
+          Rata-rata margin toko {avgMargin == null ? '—' : `+${avgMargin}%`}
+        </p>
+      )}
+
+      <div className="flex gap-2 overflow-x-auto">
+        {popularDevices.map((device) => (
+          <button
+            key={device}
+            type="button"
+            onClick={() => handleSelectDevice(device)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold ${
+              selectedDevice === device ? 'bg-[#0B1B3A] text-white' : 'bg-white text-slate-700 border border-slate-200'
+            }`}
+          >
+            {device}
+          </button>
+        ))}
+      </div>
+
+      {isAdmin && (
         <button
           type="button"
-          onClick={() => setCurrentTab('promo')}
-          className="w-full text-left p-3.5 rounded-3xl bg-gradient-to-r from-orange-950/90 via-slate-900 to-slate-900 border border-orange-500/40 shadow-lg"
+          onClick={() => setCurrentTab('admin')}
+          className="w-full flex items-center justify-between bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0B1B3A]"
         >
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="w-8 h-8 rounded-xl bg-orange-500/20 text-orange-300 flex items-center justify-center border border-orange-500/30 shrink-0">
-                <Tag className="w-5 h-5" />
-              </span>
-              <div className="min-w-0">
-                <span className="text-[10px] font-bold text-orange-300 tracking-wide">{promo.title}</span>
-                <h3 className="text-sm font-bold text-white leading-tight">
-                  {promoListings.length} SKU · Foomee, Olike, Rexi, Mcdodo, Baseus
-                </h3>
-              </div>
-            </div>
-            <span className="px-2.5 py-1 rounded-xl bg-orange-500 text-slate-950 font-bold text-xs shrink-0">
-              Lihat Promo
-            </span>
-          </div>
-          <p className="text-[11px] text-orange-50/90 mt-2 leading-relaxed">{promo.terms[0]}</p>
+          <span className="flex items-center gap-2"><Briefcase className="w-4 h-4" /> Kelola katalog / Excel</span>
+          <ArrowRight className="w-4 h-4" />
         </button>
       )}
 
-      {isAdmin && (
-      <div className="bg-gradient-to-r from-blue-900/50 via-slate-800 to-emerald-950/50 p-3 rounded-2xl border border-blue-500/30 flex items-center justify-between gap-2 shadow-sm">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30 flex-shrink-0">
-            <Smartphone className="w-4 h-4" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white leading-tight">
-              Ingin Menambah Produk?
-            </h4>
-            <p className="text-[10px] text-slate-300 mt-0.5">
-              Input manual atau upload massal Excel / CSV
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5 shrink-0">
-          <button
-            onClick={() => setCurrentTab('admin')}
-            className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] whitespace-nowrap shadow-md active:scale-95 transition-all flex items-center gap-1"
-          >
-            <span>Input Produk</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => setCurrentTab('laporan')}
-            className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-[11px] whitespace-nowrap shadow-md active:scale-95 transition-all"
-          >
-            Laporan
-          </button>
-        </div>
-      </div>
-      )}
-
-      {/* Filter cepat tipe HP */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Smartphone className="w-4 h-4 text-emerald-400" />
-            <span>Filter Cepat Tipe HP / Perangkat</span>
-          </h2>
-          {selectedDevice !== 'Semua' && (
-            <button
-              onClick={() => handleSelectDevice('Semua')}
-              className="text-[11px] text-blue-400 hover:text-white"
-            >
-              Reset
-            </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {popularDevices.map((device) => (
-            <button
-              key={device}
-              onClick={() => handleSelectDevice(device)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all active:scale-95 flex-shrink-0 ${
-                selectedDevice === device
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                  : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
-              }`}
-            >
-              {device === 'Semua' ? 'Semua Perangkat' : device}
-            </button>
-          ))}
-        </div>
+      <div className="flex items-center justify-between px-0.5">
+        <h2 className="text-sm font-black text-slate-900">
+          {selectedDevice === 'Semua' ? 'Rekomendasi' : selectedDevice}
+        </h2>
+        <button type="button" onClick={() => setCurrentTab('search')} className="text-xs font-bold text-[#0B1B3A] flex items-center gap-1">
+          Lihat semua <ChevronRight className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      {/* Priority Focus Drive Banner */}
-      {focusProducts.length > 0 && (
-        <div className="p-3.5 rounded-3xl bg-gradient-to-r from-rose-950/80 via-slate-900 to-slate-900 border border-rose-500/40 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
-                <Flame className="w-5 h-5" />
-              </span>
-              <div>
-                <span className="text-[10px] font-bold text-rose-400 tracking-wide">
-                  Pilihan {APP_NAME}
-                </span>
-                <h3 className="text-sm font-bold text-white leading-tight">
-                  Produk fokus minggu ini
-                </h3>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setCurrentTab('focus')}
-              className="px-2.5 py-1 rounded-xl bg-rose-500 text-white font-bold text-xs flex items-center gap-1 shadow hover:bg-rose-600 active:scale-95"
-            >
-              <span>Lihat Semua</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {viewMode === 'sales' && (
-            <p className="text-[11px] text-rose-200/90 mt-2 bg-rose-950/50 p-2 rounded-xl border border-rose-500/20">
-              💡 <strong>Tips:</strong> Produk Fokus adalah rekomendasi {APP_NAME} minggu ini untuk bundling dan repeat order.
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* AI Assistant Quick Callout */}
-      <div
-        onClick={() => setCurrentTab('ai')}
-        className="p-3 rounded-2xl bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 flex items-center justify-between cursor-pointer hover:border-indigo-400 transition-all active:scale-[0.99]"
-      >
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-400 flex items-center justify-center border border-amber-400/30">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white flex items-center gap-1">
-              <span>Asisten AI Produk</span>
-              <span className="text-[9px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded border border-amber-400/30 font-semibold">
-                Terverifikasi
-              </span>
-            </h4>
-            <p className="text-[11px] text-slate-300">
-              Tanya Grok soal charger, kabel, atau tier Good / Better / Best.
-            </p>
-          </div>
-        </div>
-        <ChevronRight className="w-5 h-5 text-indigo-300 flex-shrink-0" />
-      </div>
-
-      {/* Category Quick Selector */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Kategori Aksesoris Handphone
-          </h2>
-          <button
-            onClick={() => setCurrentTab('categories')}
-            className="text-[11px] text-blue-400 hover:text-white flex items-center gap-0.5"
-          >
-            <span>Semua Kategori</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          {listStorefrontCategories(activeProducts.map((product) => product.category))
-            .map((name) => ({
-              name,
-              count: activeProducts.filter(
-                (product) => product.category.toLowerCase() === name.toLowerCase()
-              ).length,
-            }))
-            .filter((category) => category.count > 0)
-            .map(({ name, count }) => {
-            return (
-              <button
-                key={name}
-                onClick={() => handleCategoryClick(name)}
-                className="p-3 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-800/80 border border-slate-700/80 text-left hover:border-slate-600 transition-all active:scale-95"
-              >
-                <h3 className="text-xs font-bold text-white line-clamp-1">{name}</h3>
-                <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{count} SKU</p>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Showcase Product Cards */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            {selectedDevice === 'Semua' ? 'Produk Unggulan Katalog' : `Aksesoris untuk ${selectedDevice}`}
-          </h2>
-          <span className="text-[11px] text-slate-400 font-mono">
-            {displayedProducts.length} item
-          </span>
-        </div>
-
-        <div className="space-y-2.5">
-          {displayedProducts.slice(0, 8).map((product) => (
-            <ProductCard key={product.id || product.sku} product={product} />
-          ))}
-        </div>
-
-        {displayedProducts.length > 8 && (
-          <button
-            onClick={() => setCurrentTab('search')}
-            className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-95"
-          >
-            <span>Lihat Semua {displayedProducts.length} Produk</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        )}
-      </div>
+      <LoadMoreList
+        items={displayedProducts}
+        resetKey={`${selectedDevice}:${displayedProducts.length}`}
+        className="grid grid-cols-2 gap-2"
+        getKey={(product) => product.id || product.sku}
+        renderItem={(product) => <ProductCard product={product} variant="tile" />}
+      />
     </div>
   );
 };

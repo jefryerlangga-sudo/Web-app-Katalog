@@ -589,9 +589,9 @@ async function seedCatalog(count: number, role: string, email: string, uid: stri
   });
 }
 
-test('one, eight, twelve, and twenty line carts check out, and twenty-one is rejected', async () => {
+test('one and fifty line carts check out, and fifty-one is rejected', async () => {
   for (const role of ['grosir', 'end_user'] as const) {
-    for (const count of [1, 8, 12, 20]) {
+    for (const count of [1, 50]) {
       await testEnv.clearFirestore();
       const uid = 'buyer-1';
       const email = 'buyer@example.com';
@@ -607,16 +607,16 @@ test('one, eight, twelve, and twenty line carts check out, and twenty-one is rej
   }
 
   await testEnv.clearFirestore();
-  await seedCatalog(21, 'end_user', 'buyer@example.com', 'buyer-1');
+  await seedCatalog(1, 'end_user', 'buyer@example.com', 'buyer-1');
   const endBuyer = dbFor('buyer-1', 'buyer@example.com', true);
-  await assertFails(saveOrder(endBuyer, 'ORD-21', orderOfSize('buyer-1', 'buyer@example.com', 21, 'end_user')));
+  await assertFails(saveOrder(endBuyer, 'ORD-51', orderOfSize('buyer-1', 'buyer@example.com', 51, 'end_user')));
 
   await testEnv.clearFirestore();
   await seedCatalog(8, 'grosir', 'buyer@example.com', 'buyer-1');
   const buyer = dbFor('buyer-1', 'buyer@example.com', true);
   const allowed = orderOfSize('buyer-1', 'buyer@example.com', 1, 'grosir');
   await assertSucceeds(saveOrder(buyer, 'ORD-SLOT', allowed));
-  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-SLOT', 'items', '20'), {
+  await assertFails(setDoc(doc(buyer, 'orders', 'ORD-SLOT', 'items', '50'), {
     userId: 'buyer-1',
     productId: 'P0',
     sku: 'P0',

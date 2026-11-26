@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import {
+  BarChart3,
   Briefcase,
   Eye,
   LogOut,
+  MessageCircle,
+  Search,
   ShieldCheck,
   ShoppingCart,
-  BarChart3,
   SlidersHorizontal,
   Sparkles,
   User,
+  X,
 } from 'lucide-react';
-import { APP_NAME } from '../config/app';
+import { APP_NAME, configuredWhatsAppNumber } from '../config/app';
 import { useCatalog } from '../context/CatalogContext';
 import { BrandMark } from './BrandMark';
 
@@ -21,244 +24,181 @@ export const Header: React.FC = () => {
     user,
     logout,
     isAdmin,
-    canvasserProfile,
     setCurrentTab,
     currentTab,
     setShowAuthModal,
     cartCount,
-    promo,
     pendingCount,
     accountLabel,
+    filters,
+    setFilters,
+    accountOpen,
+    setAccountOpen,
+    promo,
   } = useCatalog();
 
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [query, setQuery] = useState(filters.searchQuery || '');
+  const whatsApp = configuredWhatsAppNumber();
+
+  const submitSearch = (event?: React.FormEvent) => {
+    event?.preventDefault();
+    setFilters((prev) => ({
+      ...prev,
+      searchQuery: query.trim(),
+      category: prev.category,
+    }));
+    setCurrentTab('search');
+  };
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white px-3 py-2.5">
-      <div className="max-w-md mx-auto flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
+    <header className="sticky top-0 z-40 text-white" style={{ backgroundColor: '#0B1B3A' }}>
+      <div className="max-w-md mx-auto px-3 pt-2.5 pb-2 space-y-2">
+        <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => setCurrentTab('home')}
-            className="flex items-center gap-2 min-w-0 text-left active:opacity-80 transition-opacity"
+            className="shrink-0 active:opacity-80"
+            aria-label={APP_NAME}
           >
-            <BrandMark />
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="font-extrabold text-sm tracking-tight text-white leading-none truncate">
-                  {APP_NAME}
-                </span>
-                <span className="hidden sm:inline-flex shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  SHOP
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 font-medium truncate leading-tight mt-0.5">
-                {canvasserProfile.territory}
-              </p>
-            </div>
+            <BrandMark className="w-9 h-9" />
           </button>
+          <form onSubmit={submitSearch} className="flex-1 min-w-0">
+            <label className="flex items-center gap-2 bg-white rounded-full px-3 h-9 text-slate-800">
+              <Search className="w-4 h-4 text-slate-400 shrink-0" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Cari aksesoris HP"
+                className="flex-1 min-w-0 bg-transparent text-sm outline-none placeholder:text-slate-400"
+              />
+            </label>
+          </form>
           {promo?.active && (
             <button
               type="button"
               onClick={() => setCurrentTab('promo')}
-              className={`shrink-0 text-[10px] font-black px-1.5 py-0.5 rounded border ${
-                currentTab === 'promo'
-                  ? 'bg-orange-500 text-slate-950 border-orange-300'
-                  : 'bg-orange-500/20 text-orange-300 border-orange-500/40'
-              }`}
+              className="shrink-0 text-[10px] font-black px-2 h-9 rounded-full bg-white text-[#0B1B3A]"
             >
               PROMO
             </button>
           )}
-        </div>
-
-        <div className="flex items-center gap-1.5">
+          {whatsApp && (
+            <a
+              href={`https://wa.me/${whatsApp}`}
+              target="_blank"
+              rel="noreferrer"
+              className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center active:scale-95"
+              aria-label="WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </a>
+          )}
           <button
+            type="button"
             onClick={() => setCurrentTab('cart')}
-            className="relative w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 active:scale-95"
-            title="Keranjang"
+            className="relative w-9 h-9 rounded-full bg-white/10 flex items-center justify-center active:scale-95"
+            aria-label="Keranjang"
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-rose-500 text-[9px] font-black flex items-center justify-center">
                 {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
           </button>
-
-          {isAdmin && (
-            <button
-              onClick={toggleViewMode}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm active:scale-95 ${
-                viewMode === 'sales'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30'
-                  : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30'
-              }`}
-              title="Mode harga grosir hanya untuk master admin"
-            >
-              {viewMode === 'sales' ? (
-                <>
-                  <Briefcase className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Sales</span>
-                </>
-              ) : (
-                <>
-                  <Eye className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Toko</span>
-                </>
-              )}
-            </button>
-          )}
-
-          <div className="relative">
-            <button
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="relative w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 active:scale-95 hover:border-slate-600"
-            >
-              {user?.photoURL ? (
-                <img
-                  src={user.photoURL}
-                  alt={user.displayName || 'Pengguna'}
-                  className="w-full h-full rounded-full object-cover"
-                />
-              ) : (
-                <User className="w-4 h-4" />
-              )}
-              {isAdmin && pendingCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-amber-400 text-slate-950 text-[9px] font-black flex items-center justify-center">
-                  {pendingCount > 99 ? '99+' : pendingCount}
-                </span>
-              )}
-            </button>
-
-            {showProfileMenu && (
-              <div
-                className="absolute right-0 mt-2 w-64 rounded-2xl bg-slate-800 border border-slate-700 shadow-2xl p-3 z-50 text-xs"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className="pb-2.5 mb-2.5 border-b border-slate-700">
-                  <p className="font-bold text-white text-sm truncate">
-                    {user?.displayName || (user ? 'Pelanggan' : 'Tamu')}
-                  </p>
-                  <p className="text-slate-400 truncate text-[11px] mt-0.5">
-                    {user?.email || 'Belum masuk'}
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded font-semibold text-[10px]">
-                      {accountLabel}
-                    </span>
-                    {isAdmin && (
-                      <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded font-semibold text-[10px] flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3" /> Admin
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <button
-                    onClick={() => {
-                      setCurrentTab('cart');
-                      setShowProfileMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2 p-2 rounded-xl text-slate-200 hover:bg-slate-700/60 font-medium"
-                  >
-                    <ShoppingCart className="w-4 h-4 text-blue-400" />
-                    <span>Keranjang ({cartCount})</span>
-                  </button>
-
-                  {isAdmin && (
-                    <button
-                      onClick={() => {
-                        setCurrentTab('admin');
-                        setShowProfileMenu(false);
-                      }}
-                      className={`w-full flex items-center gap-2 p-2 rounded-xl font-medium ${
-                        currentTab === 'admin'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-slate-200 hover:bg-slate-700/60'
-                      }`}
-                    >
-                      <SlidersHorizontal className="w-4 h-4 text-purple-400" />
-                      <span>Kelola Katalog (Admin)</span>
-                      {pendingCount > 0 && (
-                        <span className="ml-auto min-w-5 h-5 px-1 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black flex items-center justify-center">
-                          {pendingCount}
-                        </span>
-                      )}
-                    </button>
-                  )}
-
-                  {isAdmin && (
-                    <button
-                      onClick={() => {
-                        setCurrentTab('laporan');
-                        setShowProfileMenu(false);
-                      }}
-                      className={`w-full flex items-center gap-2 p-2 rounded-xl font-medium ${
-                        currentTab === 'laporan'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-slate-200 hover:bg-slate-700/60'
-                      }`}
-                    >
-                      <BarChart3 className="w-4 h-4 text-purple-300" />
-                      <span>Laporan</span>
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      setCurrentTab('ai');
-                      setShowProfileMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2 p-2 rounded-xl text-slate-200 hover:bg-slate-700/60 font-medium"
-                  >
-                    <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span>Asisten AI Produk</span>
-                  </button>
-                </div>
-
-                <div className="pt-2 mt-2 border-t border-slate-700">
-                  {user ? (
-                    <button
-                      onClick={() => {
-                        logout();
-                        setShowProfileMenu(false);
-                      }}
-                      className="w-full flex items-center gap-2 p-2 rounded-xl text-rose-400 hover:bg-rose-500/10 font-medium"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span>Keluar</span>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setShowAuthModal(true);
-                        setShowProfileMenu(false);
-                      }}
-                      className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-md active:scale-95"
-                    >
-                      <User className="w-4 h-4" />
-                      <span>Masuk / Daftar</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
+        {isAdmin && (
+          <div className="flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={toggleViewMode}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${
+                viewMode === 'sales' ? 'bg-amber-400 text-slate-950' : 'bg-white/15 text-white'
+              }`}
+            >
+              {viewMode === 'sales' ? <Briefcase className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {viewMode === 'sales' ? 'Mode Sales' : 'Mode Toko'}
+            </button>
+            <p className="text-[10px] text-white/70 truncate">{APP_NAME}</p>
+          </div>
+        )}
       </div>
 
-      {viewMode === 'sales' && isAdmin && (
-        <div className="mt-1 py-1 px-2.5 rounded-lg bg-amber-950/80 border border-amber-500/30 text-amber-300 text-[11px] font-semibold flex items-center justify-between max-w-md mx-auto">
-          <div className="flex items-center gap-1.5">
-            <Briefcase className="w-3.5 h-3.5 flex-shrink-0 text-amber-400" />
-            <span>Mode Sales Admin — harga grosir terlihat di aplikasi ini</span>
+      {accountOpen && (
+        <div className="fixed inset-0 z-50">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            aria-label="Tutup akun"
+            onClick={() => setAccountOpen(false)}
+          />
+          <div className="absolute left-0 right-0 bottom-0 max-w-md mx-auto bg-white text-slate-900 rounded-t-3xl p-4 pb-8 shadow-2xl">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-black text-base truncate">{user?.displayName || (user ? 'Pelanggan' : 'Tamu')}</p>
+                <p className="text-xs text-slate-500 truncate">{user?.email || 'Belum masuk'}</p>
+                <p className="mt-1 text-[11px] font-bold text-[#0B1B3A]">{accountLabel}</p>
+              </div>
+              <button type="button" onClick={() => setAccountOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center" aria-label="Tutup">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="mt-3 space-y-1 text-sm">
+              <AccountLink icon={<ShoppingCart className="w-4 h-4" />} label={`Keranjang (${cartCount})`} onClick={() => setCurrentTab('cart')} />
+              <AccountLink icon={<Search className="w-4 h-4" />} label="Cari produk" onClick={() => setCurrentTab('search')} />
+              <AccountLink icon={<Sparkles className="w-4 h-4" />} label="Asisten AI" onClick={() => setCurrentTab('ai')} active={currentTab === 'ai'} />
+              {isAdmin && (
+                <AccountLink icon={<SlidersHorizontal className="w-4 h-4" />} label="Kelola Katalog" badge={pendingCount} onClick={() => setCurrentTab('admin')} active={currentTab === 'admin'} />
+              )}
+              {isAdmin && (
+                <AccountLink icon={<BarChart3 className="w-4 h-4" />} label="Laporan" onClick={() => setCurrentTab('laporan')} active={currentTab === 'laporan'} />
+              )}
+              {isAdmin && (
+                <p className="px-2 pt-1 text-[11px] text-slate-500 flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Master admin
+                </p>
+              )}
+            </div>
+            <div className="mt-3">
+              {user ? (
+                <button type="button" onClick={() => { logout(); setAccountOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-rose-600 font-bold bg-rose-50">
+                  <LogOut className="w-4 h-4" /> Keluar
+                </button>
+              ) : (
+                <button type="button" onClick={() => setShowAuthModal(true)} className="w-full py-2.5 rounded-xl bg-[#0B1B3A] text-white font-bold">
+                  Masuk / Daftar
+                </button>
+              )}
+            </div>
           </div>
-          <button onClick={toggleViewMode} className="text-[10px] underline underline-offset-2 hover:text-white">
-            Mode Toko
-          </button>
         </div>
       )}
     </header>
   );
 };
+
+function AccountLink({
+  icon,
+  label,
+  onClick,
+  active,
+  badge,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  active?: boolean;
+  badge?: number;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full flex items-center gap-2 px-2 py-2.5 rounded-xl font-semibold ${active ? 'bg-[#0B1B3A] text-white' : 'hover:bg-slate-100'}`}
+    >
+      {icon}
+      <span className="flex-1 text-left">{label}</span>
+      {badge ? <span className="min-w-5 h-5 px-1 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black flex items-center justify-center">{badge}</span> : null}
+    </button>
+  );
+}

@@ -89,10 +89,11 @@ export const PromoPage: React.FC = () => {
           <LoadMoreList
             items={visible}
             resetKey={`${brand}:${visible.length}`}
-            className="space-y-3"
+            className="grid grid-cols-2 gap-2"
             getKey={(item) => item.product.id || item.sku}
             renderItem={(item) => (
               <ProductCard
+                variant="tile"
                 product={item.product}
                 promoView={{
                   promoPrice: item.promoPrice,

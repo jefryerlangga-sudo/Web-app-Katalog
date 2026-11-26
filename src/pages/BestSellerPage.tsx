@@ -60,9 +60,9 @@ export const BestSellerPage: React.FC = () => {
           <LoadMoreList
             items={bestSellers}
             resetKey={String(bestSellers.length)}
-            className="space-y-3"
+            className="grid grid-cols-2 gap-2"
             getKey={(product) => product.id || product.sku}
-            renderItem={(product) => <ProductCard product={product} />}
+            renderItem={(product) => <ProductCard product={product} variant="tile" />}
           />
         ) : (
           <div className="p-8 text-center bg-slate-800/40 rounded-3xl border border-slate-700/60 my-6">

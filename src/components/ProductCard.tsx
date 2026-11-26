@@ -18,6 +18,7 @@ import { isPromoSku, promoStockLabel } from '../lib/promo';
 
 interface ProductCardProps {
   product: Product;
+  variant?: 'list' | 'tile';
   promoView?: {
     promoPrice: number;
     promoStock: number;
@@ -25,7 +26,7 @@ interface ProductCardProps {
   };
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, promoView }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, promoView, variant = 'list' }) => {
   const {
     viewMode,
     setSelectedProduct,
@@ -80,6 +81,52 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, promoView }) 
     'Pre-Order': 'Pre-Order',
     'Out of Stock': 'Stok Habis',
   }[product.stockStatus] || product.stockStatus;
+
+  if (variant === 'tile') {
+    const price = promoView?.promoPrice ?? product.suggestedRetailPrice;
+    return (
+      <button
+        type="button"
+        onClick={() => setSelectedProduct(product)}
+        className="text-left bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col active:scale-[0.98] min-w-0"
+      >
+        <div className="relative aspect-square bg-slate-100">
+          <ProductImage src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+          <div className="absolute top-1.5 left-1.5 flex flex-col gap-1">
+            {product.isBestSeller && (
+              <span className="px-1.5 py-0.5 rounded bg-amber-400 text-[9px] font-black text-slate-950">Terlaris</span>
+            )}
+            {(inPromo || promoView) && (
+              <span className="px-1.5 py-0.5 rounded bg-rose-500 text-[9px] font-black text-white">Promo</span>
+            )}
+            {product.stockStatus === 'Out of Stock' && (
+              <span className="px-1.5 py-0.5 rounded bg-slate-800/80 text-[9px] font-bold text-white">Stok habis</span>
+            )}
+          </div>
+        </div>
+        <div className="p-2 flex flex-col gap-1 min-w-0">
+          <p className="text-[12px] leading-snug text-slate-800 font-medium line-clamp-2 min-h-[2.1rem]">{product.name}</p>
+          {promoView?.showRetailStrike && (
+            <p className="text-[10px] text-slate-400 line-through">{rupiah(product.suggestedRetailPrice)}</p>
+          )}
+          <p className="text-[15px] font-black text-rose-600 leading-none">{rupiah(price)}</p>
+          <p className="text-[10px] text-slate-500 truncate">{product.brand}</p>
+          {quote && (
+            <p className="text-[10px] font-bold text-emerald-700">Margin {quote.marginPercent}%</p>
+          )}
+          <span
+            onClick={(event) => {
+              event.stopPropagation();
+              addToCart(product, 1);
+            }}
+            className="mt-1 h-7 rounded-lg bg-[#0B1B3A] text-white text-[11px] font-bold flex items-center justify-center gap-1"
+          >
+            <ShoppingCart className="w-3 h-3" /> Keranjang
+          </span>
+        </div>
+      </button>
+    );
+  }
 
   return (
     <div

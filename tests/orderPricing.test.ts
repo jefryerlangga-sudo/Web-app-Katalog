@@ -68,15 +68,15 @@ test('missing, inactive, and unbounded carts are rejected, and empty stock still
   assert.throws(() => priceCart([cartLine(), { ...cartLine(), productId: 'ACC-ANK-001' }], [product()]), /duplikat/);
   assert.throws(() => priceCart([{ ...cartLine(), quantity: 1.5 }], [product()]), /Jumlah/);
   assert.throws(() => priceCart([{ ...cartLine(), quantity: 100 }], [product()]), /Jumlah/);
-  const twenty = Array.from({ length: 20 }, (_, index) => ({
+  const fifty = Array.from({ length: 50 }, (_, index) => ({
     ...cartLine(),
     productId: `P-${index}`,
   }));
-  const catalog = twenty.map((line, index) => product({ id: `P-${index}`, sku: `P-${index}`, name: `Item ${index}` }));
-  assert.equal(priceCart(twenty, catalog).items.length, 20);
-  const twentyOne = [...twenty, { ...cartLine(), productId: 'P-20' }];
-  const catalog21 = [...catalog, product({ id: 'P-20', sku: 'P-20', name: 'Item 20' })];
-  assert.throws(() => priceCart(twentyOne, catalog21), /Maksimal/);
+  const catalog = fifty.map((line, index) => product({ id: `P-${index}`, sku: `P-${index}`, name: `Item ${index}` }));
+  assert.equal(priceCart(fifty, catalog).items.length, 50);
+  const fiftyOne = [...fifty, { ...cartLine(), productId: 'P-50' }];
+  const catalog51 = [...catalog, product({ id: 'P-50', sku: 'P-50', name: 'Item 50' })];
+  assert.throws(() => priceCart(fiftyOne, catalog51), /Maksimal/);
 });
 
 test('existing orders keep their embedded lines, and new orders are rebuilt from item docs', () => {

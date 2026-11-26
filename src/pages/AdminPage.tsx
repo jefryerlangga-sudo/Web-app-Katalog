@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   BarChart3,
   SlidersHorizontal,
@@ -15,6 +15,7 @@ import {
 import { Product, StockStatus, PositioningTier } from '../types/product';
 import { useCatalog } from '../context/CatalogContext';
 import { ExcelImportModal } from '../components/ExcelImportModal';
+import { useOverlayHistory } from '../lib/overlayHistory';
 import { CUSTOMER_CATALOG_DELAY_NOTE, isStorefrontProduct, listStorefrontCategories } from '../config/app';
 import { AccountApprovals } from '../components/AccountApprovals';
 import { isPromoSku, listPromoProducts } from '../lib/promo';
@@ -42,7 +43,19 @@ export const AdminPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [catalogQuery, setCatalogQuery] = useState('');
+  useOverlayHistory(showImportModal, () => setShowImportModal(false));
+  useOverlayHistory(Boolean(editingProduct), () => setEditingProduct(null));
   const [syncing, setSyncing] = useState(false);
+  const visibleProducts = useMemo(() => {
+    const needle = catalogQuery.trim().toLowerCase();
+    if (!needle) return products;
+    return products.filter((item) =>
+      item.sku.toLowerCase().includes(needle)
+      || item.name.toLowerCase().includes(needle)
+      || item.brand.toLowerCase().includes(needle)
+    );
+  }, [products, catalogQuery]);
 
   if (!user || !isAdmin) {
     return (
@@ -294,12 +307,21 @@ export const AdminPage: React.FC = () => {
       {/* Catalog Table / Mobile Cards */}
       <div className="space-y-2.5">
         <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">
-          Daftar Item Katalog ({products.length})
+          Daftar Item Katalog ({visibleProducts.length}{catalogQuery.trim() ? ` dari ${products.length}` : ''})
         </h2>
+        <label className="block">
+          <span className="sr-only">Cari SKU, nama, atau merk</span>
+          <input
+            value={catalogQuery}
+            onChange={(event) => setCatalogQuery(event.target.value)}
+            placeholder="Cari SKU, nama, atau merk"
+            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500"
+          />
+        </label>
 
         <LoadMoreList
-          items={products}
-          resetKey={String(products.length)}
+          items={visibleProducts}
+          resetKey={`${catalogQuery}:${products.length}`}
           className="space-y-2.5"
           getKey={(item) => item.id || item.sku}
           renderItem={(item) => (
