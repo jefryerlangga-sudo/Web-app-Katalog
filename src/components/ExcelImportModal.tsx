@@ -153,7 +153,8 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({ isOpen, onCl
             ? 'Out of Stock'
             : 'In Stock';
           const compatibility = String(row.compatibility || row.kompatibilitas || row.tipe_hp || row.cocok_untuk || 'Universal').trim();
-          const specification = String(row.specification || row.spesifikasi || row.spek || '-').trim();
+          const batteryCode = String(row.kode_baterai || row.kode || '').trim();
+          const specification = String(row.specification || row.spesifikasi || row.spek || batteryCode || '-').trim();
           const sellingPoint1 = String(row.sellingPoint1 || row.keunggulan_1 || 'Kualitas terjamin resmi').trim();
           const sellingPoint2 = String(row.sellingPoint2 || row.keunggulan_2 || 'Garansi distributor terpercaya').trim();
           const sellingPoint3 = String(row.sellingPoint3 || row.keunggulan_3 || 'Siap dipakai harian').trim();

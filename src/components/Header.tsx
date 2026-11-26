@@ -35,6 +35,8 @@ export const Header: React.FC = () => {
     accountOpen,
     setAccountOpen,
     promo,
+    catalogMode,
+    setCatalogMode,
   } = useCatalog();
 
   const whatsApp = configuredWhatsAppNumber();
@@ -67,7 +69,7 @@ export const Header: React.FC = () => {
               <input
                 value={filters.searchQuery}
                 onChange={(event) => applySearch(event.target.value)}
-                placeholder="Cari aksesoris HP"
+                placeholder={catalogMode === 'baterai' ? 'Cari tipe HP atau kode baterai' : 'Cari aksesoris HP'}
                 aria-label="Cari produk"
                 className="flex-1 min-w-0 bg-transparent text-sm outline-none placeholder:text-slate-400"
               />
@@ -115,6 +117,22 @@ export const Header: React.FC = () => {
                 {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
+          </button>
+        </div>
+        <div className="grid grid-cols-2 rounded-full bg-white/10 p-0.5 text-[11px] font-black">
+          <button
+            type="button"
+            onClick={() => setCatalogMode('aksesoris')}
+            className={`rounded-full py-1.5 ${catalogMode === 'aksesoris' ? 'bg-white text-[#0B1B3A]' : 'text-white/80'}`}
+          >
+            Aksesoris
+          </button>
+          <button
+            type="button"
+            onClick={() => setCatalogMode('baterai')}
+            className={`rounded-full py-1.5 ${catalogMode === 'baterai' ? 'bg-emerald-400 text-slate-950' : 'text-white/80'}`}
+          >
+            Baterai
           </button>
         </div>
         {isAdmin && (

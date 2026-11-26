@@ -1,0 +1,616 @@
+sku,nama_produk,merk,kategori,subkategori,het_eceran,modal,kompatibilitas,spesifikasi,kode_baterai,link_gambar,status_stok,tier
+PS-BOG-0001,Baterai OG BL-49FX Infinix Smart 5/6/Hot 9,OG,Baterai,Infinix,110000,0,Infinix Smart 5/6/Hot 9,BL-49FX,BL-49FX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0002,Baterai OG BL-49GX Infinix Note 7/10/Hot,OG,Baterai,Infinix,118000,0,Infinix Note 7/10/Hot,BL-49GX,BL-49GX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0003,Baterai OG BL-49JX Infinix Note 10 Pro Hot,OG,Baterai,Infinix,123000,0,Infinix Note 10 Pro Hot,BL-49JX,BL-49JX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0004,Baterai OG BL-49NX Infinix Smart 7/8/30I,OG,Baterai,Infinix,115000,0,Infinix Smart 7/8/30I,BL-49NX,BL-49NX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0005,Baterai OG BL-58BX Infinix Hot 9 Play/10,OG,Baterai,Infinix,137000,0,Infinix Hot 9 Play/10,BL-58BX,BL-58BX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0006,Baterai OG BL-39LX Infinix S5/Smart 4/X653,OG,Baterai,Infinix,117000,0,Infinix S5/Smart 4/X653,BL-39LX,BL-39LX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0007,Baterai OG BL-44CX Infinix Zero 8/X687,OG,Baterai,Infinix,120000,0,Infinix Zero 8/X687,BL-44CX,BL-44CX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0008,Baterai OG BL-49LX Infinix Hot 12/Hot 20S,OG,Baterai,Infinix,123000,0,Infinix Hot 12/Hot 20S,BL-49LX,BL-49LX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0009,Baterai OG BL-51BX Infinix Hot 10/Hot,OG,Baterai,Infinix,118000,0,Infinix Hot 10/Hot,BL-51BX,BL-51BX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0010,Baterai OG BL-49KX Infinix Note 11/12 2023,OG,Baterai,Infinix,125000,0,Infinix Note 11/12 2023,BL-49KX,BL-49KX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0011,Baterai OG BL-49XX Infinix Note 40 Pro 5G,OG,Baterai,Infinix,125000,0,Infinix Note 40 Pro 5G,BL-49XX,BL-49XX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0012,Baterai OG BL-49HX Infinix Hot 20 5G/X666B,OG,Baterai,Infinix,119000,0,Infinix Hot 20 5G/X666B,BL-49HX,BL-49HX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0013,Baterai OG BL-49PX Infinix Note 30,OG,Baterai,Infinix,135000,0,Infinix Note 30,BL-49PX,BL-49PX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0014,Baterai OG BL-49TX Infinix Note 30/X6833B,OG,Baterai,Infinix,135000,0,Infinix Note 30/X6833B,BL-49TX,BL-49TX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0015,Baterai OG BL-49UX Infinix Hot 50,OG,Baterai,Infinix,125000,0,Infinix Hot 50,BL-49UX,BL-49UX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0016,Baterai OG BL-5ABX Infinix Hot,OG,Baterai,Infinix,128000,0,Infinix Hot,BL-5ABX,BL-5ABX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0017,Baterai OG BL-58CX Infinix Hot 10I/X659/B,OG,Baterai,Infinix,122000,0,Infinix Hot 10I/X659/B,BL-58CX,BL-58CX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0018,Baterai OG BL-49NX Infinix Big Con Smart,OG,Baterai,Infinix,121000,0,Infinix Big Con Smart,BL-49NX,BL-49NX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0019,Baterai OG BL-58HX Infinix Smart,OG,Baterai,Infinix,134000,0,Infinix Smart,BL-58HX,BL-58HX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0020,Baterai OG BL-44GX Infinix Zero Ultra,OG,Baterai,Infinix,320000,0,Infinix Zero Ultra,BL-44GX,BL-44GX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0021,Baterai OG BL-50FX Infinix Hot 60I/Hot 60,OG,Baterai,Infinix,118000,0,Infinix Hot 60I/Hot 60,BL-50FX,BL-50FX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0022,Baterai OG BL-49NI Itel A50 4G/A70 Smal,OG,Baterai,Itel,116000,0,Itel A50 4G/A70 Smal,BL-49NI,BL-49NI,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0023,Baterai OG BL-51EX Infinix Smart 20/X6840,OG,Baterai,Infinix,134000,0,Infinix Smart 20/X6840,BL-51EX,BL-51EX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0024,Baterai OG BL-44EX Infinix Zero X,OG,Baterai,Infinix,111000,0,Infinix Zero X,BL-44EX,BL-44EX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0025,Baterai OG BL-49OX Infinix Note 30I/Note 40,OG,Baterai,Infinix,118000,0,Infinix Note 30I/Note 40,BL-49OX,BL-49OX,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0026,Baterai OG iPhone 6S,OG,Baterai,iPhone,102000,0,iPhone 6S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0027,Baterai OG iPhone 7+,OG,Baterai,iPhone,127000,0,iPhone 7+,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0028,Baterai OG iPhone 7G,OG,Baterai,iPhone,101000,0,iPhone 7G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0029,Baterai OG iPhone 8G,OG,Baterai,iPhone,107000,0,iPhone 8G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0030,Baterai OG iPhone 6+,OG,Baterai,iPhone,133000,0,iPhone 6+,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0031,Baterai OG iPhone 6G,OG,Baterai,iPhone,101000,0,iPhone 6G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0032,Baterai OG iPhone 6S+,OG,Baterai,iPhone,130000,0,iPhone 6S+,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0033,Baterai OG iPhone 8+,OG,Baterai,iPhone,170000,0,iPhone 8+,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0034,Baterai OG iPhone 11,OG,Baterai,iPhone,170000,0,iPhone 11,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0035,Baterai OG iPhone 11 Pro,OG,Baterai,iPhone,227000,0,iPhone 11 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0036,Baterai OG iPhone 11 Pro Max,OG,Baterai,iPhone,261000,0,iPhone 11 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0037,Baterai OG iPhone 12 Mini,OG,Baterai,iPhone,175000,0,iPhone 12 Mini,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0038,Baterai OG iPhone 12 Pro Max,OG,Baterai,iPhone,262000,0,iPhone 12 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0039,Baterai OG iPhone 12/12 Pro,OG,Baterai,iPhone,171000,0,iPhone 12/12 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0040,Baterai OG iPhone 13,OG,Baterai,iPhone,199000,0,iPhone 13,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0041,Baterai OG iPhone 13 Mini,OG,Baterai,iPhone,182000,0,iPhone 13 Mini,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0042,Baterai OG iPhone 13 Pro,OG,Baterai,iPhone,265000,0,iPhone 13 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0043,Baterai OG iPhone 13 Pro Max,OG,Baterai,iPhone,295000,0,iPhone 13 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0044,Baterai OG iPhone 14,OG,Baterai,iPhone,223000,0,iPhone 14,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0045,Baterai OG iPhone 14 Plus,OG,Baterai,iPhone,205500,0,iPhone 14 Plus,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0046,Baterai OG iPhone 14 Pro,OG,Baterai,iPhone,280000,0,iPhone 14 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0047,Baterai OG iPhone 14 Pro Max,OG,Baterai,iPhone,292000,0,iPhone 14 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0048,Baterai OG iPhone 15,OG,Baterai,iPhone,185000,0,iPhone 15,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0049,Baterai OG iPhone 15 Pro,OG,Baterai,iPhone,295000,0,iPhone 15 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0050,Baterai OG iPhone 15 Pro Max,OG,Baterai,iPhone,330000,0,iPhone 15 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0051,Baterai OG iPhone X,OG,Baterai,iPhone,191000,0,iPhone X,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0052,Baterai OG iPhone Xr,OG,Baterai,iPhone,195000,0,iPhone Xr,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0053,Baterai OG iPhone Xs,OG,Baterai,iPhone,188000,0,iPhone Xs,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0054,Baterai OG iPhone Xs Max,OG,Baterai,iPhone,211000,0,iPhone Xs Max,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0055,Baterai OG iPhone 15 Plus,OG,Baterai,iPhone,272000,0,iPhone 15 Plus,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0056,Baterai OG iPhone SE 2020,OG,Baterai,iPhone,112000,0,iPhone SE 2020,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0057,Baterai OG iPhone 13 Ultra,OG,Baterai,iPhone,289000,0,iPhone 13 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0058,Baterai OG BN-54 Xiaomi/Redmi/Poco 9/Note 9/Poco,OG,Baterai,Xiaomi/Redmi/Poco,142000,0,Xiaomi/Redmi/Poco 9/Note 9/Poco,BN-54,BN-54,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0059,Baterai OG BN-31 Xiaomi/Redmi/Poco Note,OG,Baterai,Xiaomi/Redmi/Poco,96000,0,Xiaomi/Redmi/Poco Note,BN-31,BN-31,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0060,Baterai OG BN-46 Xiaomi/Redmi/Poco 7/Note 6/Note 8,OG,Baterai,Xiaomi/Redmi/Poco,102000,0,Xiaomi/Redmi/Poco 7/Note 6/Note 8,BN-46,BN-46,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0061,Baterai OG BN-53 Xiaomi/Redmi/Poco 9 Pro Note 10,OG,Baterai,Xiaomi/Redmi/Poco,142000,0,Xiaomi/Redmi/Poco 9 Pro Note 10,BN-53,BN-53,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0062,Baterai OG BN-56 Xiaomi/Redmi/Poco 9A/9C/10A,OG,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco 9A/9C/10A,BN-56,BN-56,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0063,Baterai OG BN-57 Xiaomi/Redmi/Poco X3 Pro X3 Nfc,OG,Baterai,Xiaomi/Redmi/Poco,128000,0,Xiaomi/Redmi/Poco X3 Pro X3 Nfc,BN-57,BN-57,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0064,Baterai OG BN-59 Xiaomi/Redmi/Poco Note 10,OG,Baterai,Xiaomi/Redmi/Poco,139000,0,Xiaomi/Redmi/Poco Note 10,BN-59,BN-59,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0065,Baterai OG BN-62 Xiaomi/Redmi/Poco 9T/Poco M3,OG,Baterai,Xiaomi/Redmi/Poco,149500,0,Xiaomi/Redmi/Poco 9T/Poco M3,BN-62,BN-62,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0066,Baterai OG BN-5A Xiaomi/Redmi/Poco 10/Note 10 5G,OG,Baterai,Xiaomi/Redmi/Poco,120000,0,Xiaomi/Redmi/Poco 10/Note 10 5G,BN-5A,BN-5A,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0067,Baterai OG BN-4A Xiaomi/Redmi/Poco Note 7 / Note 7,OG,Baterai,Xiaomi/Redmi/Poco,103000,0,Xiaomi/Redmi/Poco Note 7 / Note 7,BN-4A,BN-4A,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0068,Baterai OG BN-5M Xiaomi/Redmi/Poco Note 12 4G,OG,Baterai,Xiaomi/Redmi/Poco,142000,0,Xiaomi/Redmi/Poco Note 12 4G,BN-5M,BN-5M,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0069,Baterai OG BP-42 Xiaomi/Redmi/Poco Mi 11 Lite (4G/5G),OG,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco Mi 11 Lite (4G/5G),BP-42,BP-42,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0070,Baterai OG BM-47 Xiaomi/Redmi/Poco 3S / 4X,OG,Baterai,Xiaomi/Redmi/Poco,107000,0,Xiaomi/Redmi/Poco 3S / 4X,BM-47,BM-47,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0071,Baterai OG BN-30 Xiaomi/Redmi/Poco 4A,OG,Baterai,Xiaomi/Redmi/Poco,94500,0,Xiaomi/Redmi/Poco 4A,BN-30,BN-30,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0072,Baterai OG BN-5P Xiaomi/Redmi/Poco Note 13 (4G/ 5G),OG,Baterai,Xiaomi/Redmi/Poco,135000,0,Xiaomi/Redmi/Poco Note 13 (4G/ 5G),BN-5P,BN-5P,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0073,Baterai OG BM-21 Xiaomi/Redmi/Poco Note 5,OG,Baterai,Xiaomi/Redmi/Poco,89000,0,Xiaomi/Redmi/Poco Note 5,BM-21,BM-21,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0074,Baterai OG BM-4P Xiaomi/Redmi/Poco K30/Poco X2,OG,Baterai,Xiaomi/Redmi/Poco,118000,0,Xiaomi/Redmi/Poco K30/Poco X2,BM-4P,BM-4P,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0075,Baterai OG BN-34 Xiaomi/Redmi/Poco 5A,OG,Baterai,Xiaomi/Redmi/Poco,92500,0,Xiaomi/Redmi/Poco 5A,BN-34,BN-34,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0076,Baterai OG BN-44 Xiaomi/Redmi/Poco 5+,OG,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco 5+,BN-44,BN-44,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0077,Baterai OG BN-63 Xiaomi/Redmi/Poco 10 Prime,OG,Baterai,Xiaomi/Redmi/Poco,117000,0,Xiaomi/Redmi/Poco 10 Prime,BN-63,BN-63,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0078,Baterai OG BM-4J Xiaomi/Redmi/Poco Note 8 Pro,OG,Baterai,Xiaomi/Redmi/Poco,112000,0,Xiaomi/Redmi/Poco Note 8 Pro,BM-4J,BM-4J,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0079,Baterai OG BM-5R Xiaomi/Redmi/Poco 12,OG,Baterai,Xiaomi/Redmi/Poco,128000,0,Xiaomi/Redmi/Poco 12,BM-5R,BM-5R,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0080,Baterai OG BN-43 Xiaomi/Redmi/Poco Note 4X,OG,Baterai,Xiaomi/Redmi/Poco,104500,0,Xiaomi/Redmi/Poco Note 4X,BN-43,BN-43,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0081,Baterai OG BM-49 Xiaomi/Redmi/Poco Mi Max 1,OG,Baterai,Xiaomi/Redmi/Poco,114000,0,Xiaomi/Redmi/Poco Mi Max 1,BM-49,BM-49,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0082,Baterai OG BM-4E Xiaomi/Redmi/Poco F1,OG,Baterai,Xiaomi/Redmi/Poco,108500,0,Xiaomi/Redmi/Poco F1,BM-4E,BM-4E,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0083,Baterai OG BM-4M Xiaomi/Redmi/Poco MI10 Pro 5G,OG,Baterai,Xiaomi/Redmi/Poco,127000,0,Xiaomi/Redmi/Poco MI10 Pro 5G,BM-4M,BM-4M,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0084,Baterai OG BM-4W Xiaomi/Redmi/Poco Note 9 Pro 5G,OG,Baterai,Xiaomi/Redmi/Poco,127000,0,Xiaomi/Redmi/Poco Note 9 Pro 5G,BM-4W,BM-4W,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0085,Baterai OG BM-4Y Xiaomi/Redmi/Poco F3/Redmi,OG,Baterai,Xiaomi/Redmi/Poco,123000,0,Xiaomi/Redmi/Poco F3/Redmi,BM-4Y,BM-4Y,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0086,Baterai OG BM-53 Xiaomi/Redmi/Poco,OG,Baterai,Xiaomi/Redmi/Poco,124000,0,Xiaomi/Redmi/Poco,BM-53,BM-53,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0087,Baterai OG BM-55 Xiaomi/Redmi/Poco MI11 Pro MI11,OG,Baterai,Xiaomi/Redmi/Poco,190000,0,Xiaomi/Redmi/Poco MI11 Pro MI11,BM-55,BM-55,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0088,Baterai OG BM-57 Xiaomi/Redmi/Poco X3 Gt,OG,Baterai,Xiaomi/Redmi/Poco,175000,0,Xiaomi/Redmi/Poco X3 Gt,BM-57,BM-57,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0089,Baterai OG BM-59 Xiaomi/Redmi/Poco Mi 11T,OG,Baterai,Xiaomi/Redmi/Poco,168000,0,Xiaomi/Redmi/Poco Mi 11T,BM-59,BM-59,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0090,Baterai OG BN-35 Xiaomi/Redmi/Poco 5,OG,Baterai,Xiaomi/Redmi/Poco,97000,0,Xiaomi/Redmi/Poco 5,BN-35,BN-35,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0091,Baterai OG BN-36 Xiaomi/Redmi/Poco MI6X/MIA2,OG,Baterai,Xiaomi/Redmi/Poco,97000,0,Xiaomi/Redmi/Poco MI6X/MIA2,BN-36,BN-36,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0092,Baterai OG BN-37 Xiaomi/Redmi/Poco 6/6A,OG,Baterai,Xiaomi/Redmi/Poco,90000,0,Xiaomi/Redmi/Poco 6/6A,BN-37,BN-37,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0093,Baterai OG BN-41 Xiaomi/Redmi/Poco Note 4,OG,Baterai,Xiaomi/Redmi/Poco,100000,0,Xiaomi/Redmi/Poco Note 4,BN-41,BN-41,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0094,Baterai OG BN-47 Xiaomi/Redmi/Poco 6 Pro MIA2 Lite,OG,Baterai,Xiaomi/Redmi/Poco,121000,0,Xiaomi/Redmi/Poco 6 Pro MIA2 Lite,BN-47,BN-47,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0095,Baterai OG BN-49 Xiaomi/Redmi/Poco 7A,OG,Baterai,Xiaomi/Redmi/Poco,101000,0,Xiaomi/Redmi/Poco 7A,BN-49,BN-49,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0096,Baterai OG BN-51 Xiaomi/Redmi/Poco 8/8A/8A Pro,OG,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco 8/8A/8A Pro,BN-51,BN-51,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0097,Baterai OG BN-5C Xiaomi/Redmi/Poco Note 11 5G/M4,OG,Baterai,Xiaomi/Redmi/Poco,120000,0,Xiaomi/Redmi/Poco Note 11 5G/M4,BN-5C,BN-5C,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0098,Baterai OG BN-5D Xiaomi/Redmi/Poco 11/11S/M4 Pro,OG,Baterai,Xiaomi/Redmi/Poco,121000,0,Xiaomi/Redmi/Poco 11/11S/M4 Pro,BN-5D,BN-5D,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0099,Baterai OG BN-5E Xiaomi/Redmi/Poco 11 Pro 5G/12,OG,Baterai,Xiaomi/Redmi/Poco,153000,0,Xiaomi/Redmi/Poco 11 Pro 5G/12,BN-5E,BN-5E,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0100,Baterai OG BN-5G Xiaomi/Redmi/Poco 10C,OG,Baterai,Xiaomi/Redmi/Poco,128000,0,Xiaomi/Redmi/Poco 10C,BN-5G,BN-5G,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0101,Baterai OG BN-61 Xiaomi/Redmi/Poco X3,OG,Baterai,Xiaomi/Redmi/Poco,141000,0,Xiaomi/Redmi/Poco X3,BN-61,BN-61,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0102,Baterai OG BN-66 Xiaomi/Redmi/Poco C40,OG,Baterai,Xiaomi/Redmi/Poco,136000,0,Xiaomi/Redmi/Poco C40,BN-66,BN-66,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0103,Baterai OG BP-49 Xiaomi/Redmi/Poco F4 5G,OG,Baterai,Xiaomi/Redmi/Poco,162000,0,Xiaomi/Redmi/Poco F4 5G,BP-49,BP-49,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0104,Baterai OG BM-4N Xiaomi/Redmi/Poco MI10/MI10S,OG,Baterai,Xiaomi/Redmi/Poco,127000,0,Xiaomi/Redmi/Poco MI10/MI10S,BM-4N,BM-4N,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0105,Baterai OG BM-52 Xiaomi/Redmi/Poco Mi Note,OG,Baterai,Xiaomi/Redmi/Poco,122000,0,Xiaomi/Redmi/Poco Mi Note,BM-52,BM-52,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0106,Baterai OG BM-5T Xiaomi/Redmi/Poco X6 Pro,OG,Baterai,Xiaomi/Redmi/Poco,175000,0,Xiaomi/Redmi/Poco X6 Pro,BM-5T,BM-5T,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0107,Baterai OG BN-5F Xiaomi/Redmi/Poco A2,OG,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco A2,BN-5F,BN-5F,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0108,Baterai OG BN-5H Xiaomi/Redmi/Poco 10 5G,OG,Baterai,Xiaomi/Redmi/Poco,121000,0,Xiaomi/Redmi/Poco 10 5G,BN-5H,BN-5H,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0109,Baterai OG BN-5K Xiaomi/Redmi/Poco 12C,OG,Baterai,Xiaomi/Redmi/Poco,122000,0,Xiaomi/Redmi/Poco 12C,BN-5K,BN-5K,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0110,Baterai OG BN-5T Xiaomi/Redmi/Poco 13 4G,OG,Baterai,Xiaomi/Redmi/Poco,134000,0,Xiaomi/Redmi/Poco 13 4G,BN-5T,BN-5T,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0111,Baterai OG BN-5X Xiaomi/Redmi/Poco 14C 4G,OG,Baterai,Xiaomi/Redmi/Poco,120000,0,Xiaomi/Redmi/Poco 14C 4G,BN-5X,BN-5X,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0112,Baterai OG BP-40 Xiaomi/Redmi/Poco K20 Pro MI9T,OG,Baterai,Xiaomi/Redmi/Poco,101500,0,Xiaomi/Redmi/Poco K20 Pro MI9T,BP-40,BP-40,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0113,Baterai OG BP-41 Xiaomi/Redmi/Poco K20/MI9T,OG,Baterai,Xiaomi/Redmi/Poco,103500,0,Xiaomi/Redmi/Poco K20/MI9T,BP-41,BP-41,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0114,Baterai OG BP-45 Xiaomi/Redmi/Poco MI12 Pro,OG,Baterai,Xiaomi/Redmi/Poco,270000,0,Xiaomi/Redmi/Poco MI12 Pro,BP-45,BP-45,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0115,Baterai OG BP-48 Xiaomi/Redmi/Poco F4 Gt,OG,Baterai,Xiaomi/Redmi/Poco,267000,0,Xiaomi/Redmi/Poco F4 Gt,BP-48,BP-48,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0116,Baterai OG BP-4K Xiaomi/Redmi/Poco X5 Pro 5G,OG,Baterai,Xiaomi/Redmi/Poco,176000,0,Xiaomi/Redmi/Poco X5 Pro 5G,BP-4K,BP-4K,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0117,Baterai OG BP-52 Xiaomi/Redmi/Poco F6,OG,Baterai,Xiaomi/Redmi/Poco,230000,0,Xiaomi/Redmi/Poco F6,BP-52,BP-52,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0118,Baterai OG Xiaomi/Redmi/Poco (BSO1FA) Black Shark 1,OG,Baterai,Xiaomi/Redmi/Poco,152000,0,Xiaomi/Redmi/Poco (BSO1FA) Black Shark 1,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0119,Baterai OG BN-45 Xiaomi/Redmi/Poco Note 5/5 Pro,OG,Baterai,Xiaomi/Redmi/Poco,106000,0,Xiaomi/Redmi/Poco Note 5/5 Pro,BN-45,BN-45,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0120,Baterai OG BN-48 Xiaomi/Redmi/Poco Note 6 Pro,OG,Baterai,Xiaomi/Redmi/Poco,104500,0,Xiaomi/Redmi/Poco Note 6 Pro,BN-48,BN-48,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0121,Baterai OG BN-5R Xiaomi/Redmi/Poco A3,OG,Baterai,Xiaomi/Redmi/Poco,134000,0,Xiaomi/Redmi/Poco A3,BN-5R,BN-5R,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0122,Baterai OG BM-4Q Xiaomi/Redmi/Poco F2/F2 Pro K30,OG,Baterai,Xiaomi/Redmi/Poco,128000,0,Xiaomi/Redmi/Poco F2/F2 Pro K30,BM-4Q,BM-4Q,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0123,Baterai OG BN-5J Xiaomi/Redmi/Poco X5 5G,OG,Baterai,Xiaomi/Redmi/Poco,128000,0,Xiaomi/Redmi/Poco X5 5G,BN-5J,BN-5J,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0124,Baterai OG BN-5Q Xiaomi/Redmi/Poco 13C/Poco C65,OG,Baterai,Xiaomi/Redmi/Poco,122000,0,Xiaomi/Redmi/Poco 13C/Poco C65,BN-5Q,BN-5Q,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0125,Baterai OG BM-5U Xiaomi/Redmi/Poco Note 13 PRO+,OG,Baterai,Xiaomi/Redmi/Poco,282000,0,Xiaomi/Redmi/Poco Note 13 PRO+,BM-5U,BM-5U,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0126,Baterai OG BP-5E Xiaomi/Redmi/Poco A5 4G,OG,Baterai,Xiaomi/Redmi/Poco,129000,0,Xiaomi/Redmi/Poco A5 4G,BP-5E,BP-5E,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0127,Baterai OG BM-3J Xiaomi/Redmi/Poco MI8 Lite,OG,Baterai,Xiaomi/Redmi/Poco,104500,0,Xiaomi/Redmi/Poco MI8 Lite,BM-3J,BM-3J,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0128,Baterai OG BM-3K Xiaomi/Redmi/Poco Mi Mix 3,OG,Baterai,Xiaomi/Redmi/Poco,94000,0,Xiaomi/Redmi/Poco Mi Mix 3,BM-3K,BM-3K,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0129,Baterai OG BM-3L Xiaomi/Redmi/Poco MI9,OG,Baterai,Xiaomi/Redmi/Poco,90000,0,Xiaomi/Redmi/Poco MI9,BM-3L,BM-3L,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0130,Baterai OG BM-5V Xiaomi/Redmi/Poco Note 13 Pro,OG,Baterai,Xiaomi/Redmi/Poco,184000,0,Xiaomi/Redmi/Poco Note 13 Pro,BM-5V,BM-5V,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0131,Baterai OG BP-46 Xiaomi/Redmi/Poco MI12,OG,Baterai,Xiaomi/Redmi/Poco,175000,0,Xiaomi/Redmi/Poco MI12,BP-46,BP-46,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0132,Baterai OG BN-68 Xiaomi/Redmi/Poco 15C 4G/Poco,OG,Baterai,Xiaomi/Redmi/Poco,199000,0,Xiaomi/Redmi/Poco 15C 4G/Poco,BN-68,BN-68,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0133,Baterai OG BN-70 Xiaomi/Redmi/Poco 15 4G,OG,Baterai,Xiaomi/Redmi/Poco,220000,0,Xiaomi/Redmi/Poco 15 4G,BN-70,BN-70,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0134,Baterai OG BP-56 Xiaomi/Redmi/Poco Note 14 Pro,OG,Baterai,Xiaomi/Redmi/Poco,252000,0,Xiaomi/Redmi/Poco Note 14 Pro,BP-56,BP-56,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0135,Baterai OG BR-50 Xiaomi/Redmi/Poco Note 14 4G,OG,Baterai,Xiaomi/Redmi/Poco,213000,0,Xiaomi/Redmi/Poco Note 14 4G,BR-50,BR-50,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0136,Baterai OG BM-5J Xiaomi/Redmi/Poco MI12T Pro K50,OG,Baterai,Xiaomi/Redmi/Poco,265000,0,Xiaomi/Redmi/Poco MI12T Pro K50,BM-5J,BM-5J,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0137,Baterai OG BM-6S Xiaomi/Redmi/Poco A7 Pro,OG,Baterai,Xiaomi/Redmi/Poco,180000,0,Xiaomi/Redmi/Poco A7 Pro,BM-6S,BM-6S,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0138,Baterai OG BN-69 Xiaomi/Redmi/Poco Note 15 Pro 5G,OG,Baterai,Xiaomi/Redmi/Poco,214000,0,Xiaomi/Redmi/Poco Note 15 Pro 5G,BN-69,BN-69,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0139,Baterai OG BN-6F Xiaomi/Redmi/Poco Note 15 4G,OG,Baterai,Xiaomi/Redmi/Poco,240000,0,Xiaomi/Redmi/Poco Note 15 4G,BN-6F,BN-6F,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0140,Baterai OG BLP-615 Neo 9/A37,OG,Baterai,Lainnya,82500,0,Neo 9/A37,BLP-615,BLP-615,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0141,Baterai OG BLP-641 Oppo A71,OG,Baterai,Oppo,90000,0,Oppo A71,BLP-641,BLP-641,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0142,Baterai OG BLP-673,OG,Baterai,Lainnya,103500,0,Universal,BLP-673,BLP-673,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0143,Baterai OG BLP-729 Realme,OG,Baterai,Realme,139000,0,Realme,BLP-729,BLP-729,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0144,Baterai OG BLP-793 Realme C11/C12/C15/C25,OG,Baterai,Realme,148000,0,Realme C11/C12/C15/C25,BLP-793,BLP-793,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0145,Baterai OG BLP-803 Realme 7I/C17/Rlm 8 5G,OG,Baterai,Realme,117000,0,Realme 7I/C17/Rlm 8 5G,BLP-803,BLP-803,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0146,Baterai OG BLP-805 Oppo,OG,Baterai,Oppo,125000,0,Oppo,BLP-805,BLP-805,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0147,Baterai OG BLP-817 Oppo A15/A15S,OG,Baterai,Oppo,107000,0,Oppo A15/A15S,BLP-817,BLP-817,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0148,Baterai OG BLP-923 Oppo A57 2022/A78,OG,Baterai,Oppo,116000,0,Oppo A57 2022/A78,BLP-923,BLP-923,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0149,Baterai OG BLP-681 F9 /Rlm 2 Pro,OG,Baterai,Lainnya,115000,0,F9 /Rlm 2 Pro,BLP-681,BLP-681,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0150,Baterai OG BLP-711 Oppo A1K,OG,Baterai,Oppo,127000,0,Oppo A1K,BLP-711,BLP-711,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0151,Baterai OG BLP-721 Realme C2,OG,Baterai,Realme,104000,0,Realme C2,BLP-721,BLP-721,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0152,Baterai OG BLP-735 Oppo Reno 2,OG,Baterai,Oppo,118000,0,Oppo Reno 2,BLP-735,BLP-735,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0153,Baterai OG BLP-737 Oppo Reno 2F,OG,Baterai,Oppo,115000,0,Oppo Reno 2F,BLP-737,BLP-737,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0154,Baterai OG BLP-741 Realme Xt,OG,Baterai,Realme,133000,0,Realme Xt,BLP-741,BLP-741,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0155,Baterai OG BLP-757 Realme 6/6 Pro,OG,Baterai,Realme,115000,0,Realme 6/6 Pro,BLP-757,BLP-757,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0156,Baterai OG BLP-779 Oppo Reno 4F/A92S,OG,Baterai,Oppo,111000,0,Oppo Reno 4F/A92S,BLP-779,BLP-779,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0157,Baterai OG BLP-787 Oppo Reno 4 Pro,OG,Baterai,Oppo,230000,0,Oppo Reno 4 Pro,BLP-787,BLP-787,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0158,Baterai OG BLP-791 Oppo Reno 4,OG,Baterai,Oppo,113500,0,Oppo Reno 4,BLP-791,BLP-791,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0159,Baterai OG BLP-797 Oppo A72 5G/A73 5G,OG,Baterai,Oppo,103500,0,Oppo A72 5G/A73 5G,BLP-797,BLP-797,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0160,Baterai OG BLP-837 Realme 8 Pro,OG,Baterai,Realme,150000,0,Realme 8 Pro,BLP-837,BLP-837,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0161,Baterai OG BLP-855 Oppo Reno 6 Pro,OG,Baterai,Oppo,198000,0,Oppo Reno 6 Pro,BLP-855,BLP-855,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0162,Baterai OG BLP-907 Oppo Reno 7/8/7Z 4G,OG,Baterai,Oppo,149000,0,Oppo Reno 7/8/7Z 4G,BLP-907,BLP-907,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0163,Baterai OG BLP-915 Oppo A17/A17K/A57,OG,Baterai,Oppo,121000,0,Oppo A17/A17K/A57,BLP-915,BLP-915,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0164,Baterai OG BLP-693 Realme 3,OG,Baterai,Realme,111000,0,Realme 3,BLP-693,BLP-693,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0165,Baterai OG BLP-839 Oppo A95 5G,OG,Baterai,Oppo,131000,0,Oppo A95 5G,BLP-839,BLP-839,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0166,Baterai OG BLP-727 Oppo A5/A9,OG,Baterai,Oppo,125000,0,Oppo A5/A9,BLP-727,BLP-727,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0167,Baterai OG BLP-819 Oppo Reno 5,OG,Baterai,Oppo,146000,0,Oppo Reno 5,BLP-819,BLP-819,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0168,Baterai OG BLP-877 Realme,OG,Baterai,Realme,128000,0,Realme,BLP-877,BLP-877,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0169,Baterai OG BLP-755 Oppo Reno 3 Pro,OG,Baterai,Oppo,107000,0,Oppo Reno 3 Pro,BLP-755,BLP-755,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0170,Baterai OG BLP-765 Oppo A91 2020/ Reno,OG,Baterai,Oppo,137000,0,Oppo A91 2020/ Reno,BLP-765,BLP-765,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0171,Baterai OG BLP-601 Oppo F1S/A59,OG,Baterai,Oppo,92500,0,Oppo F1S/A59,BLP-601,BLP-601,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0172,Baterai OG BLP-619 Oppo A39/A57,OG,Baterai,Oppo,108500,0,Oppo A39/A57,BLP-619,BLP-619,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0173,Baterai OG BLP-631 Oppo F3/F5/F5 Youth,OG,Baterai,Oppo,90000,0,Oppo F3/F5/F5 Youth,BLP-631,BLP-631,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0174,Baterai OG BLP-649 Oppo A83,OG,Baterai,Oppo,110000,0,Oppo A83,BLP-649,BLP-649,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0175,Baterai OG BLP-697 Oppo F11 Pro,OG,Baterai,Oppo,136500,0,Oppo F11 Pro,BLP-697,BLP-697,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0176,Baterai OG BLP-701 Oppo Reno 1,OG,Baterai,Oppo,113500,0,Oppo Reno 1,BLP-701,BLP-701,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0177,Baterai OG BLP-707 Oppo F11,OG,Baterai,Oppo,115000,0,Oppo F11,BLP-707,BLP-707,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0178,Baterai OG BLP-713 Realme 3 Pro,OG,Baterai,Realme,131000,0,Realme 3 Pro,BLP-713,BLP-713,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0179,Baterai OG BLP-715 Oppo K3,OG,Baterai,Oppo,124000,0,Oppo K3,BLP-715,BLP-715,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0180,Baterai OG BLP-731 Realme 5 Pro Q,OG,Baterai,Realme,115000,0,Realme 5 Pro Q,BLP-731,BLP-731,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0181,Baterai OG BLP-771 Realme 6I/C25Y/Narzo,OG,Baterai,Realme,128000,0,Realme 6I/C25Y/Narzo,BLP-771,BLP-771,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0182,Baterai OG BLP-775 Realme X3/X3 Super,OG,Baterai,Realme,122000,0,Realme X3/X3 Super,BLP-775,BLP-775,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0183,Baterai OG BLP-781 Oppo A92/A52,OG,Baterai,Oppo,139000,0,Oppo A92/A52,BLP-781,BLP-781,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0184,Baterai OG BLP-835 Oppo A94 4G/Reno,OG,Baterai,Oppo,116000,0,Oppo A94 4G/Reno,BLP-835,BLP-835,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0185,Baterai OG BLP-841 Realme 8,OG,Baterai,Realme,131000,0,Realme 8,BLP-841,BLP-841,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0186,Baterai OG BLP-851 Oppo A74 4G/A95 4G,OG,Baterai,Oppo,129000,0,Oppo A74 4G/A95 4G,BLP-851,BLP-851,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0187,Baterai OG BLP-875 Realme C55/Narzo 50,OG,Baterai,Realme,120000,0,Realme C55/Narzo 50,BLP-875,BLP-875,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0188,Baterai OG BLP-661 Oppo F7,OG,Baterai,Oppo,98000,0,Oppo F7,BLP-661,BLP-661,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0189,Baterai OG BLP-665 Oppo F7 Youth/Rlm,OG,Baterai,Oppo,112500,0,Oppo F7 Youth/Rlm,BLP-665,BLP-665,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0190,Baterai OG BLP-705 Oppo Reno 10X,OG,Baterai,Oppo,113500,0,Oppo Reno 10X,BLP-705,BLP-705,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0191,Baterai OG BLP-807 Realme 7,OG,Baterai,Realme,135000,0,Realme 7,BLP-807,BLP-807,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0192,Baterai OG BLP-809 Realme Gt Master,OG,Baterai,Realme,214000,0,Realme Gt Master,BLP-809,BLP-809,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0193,Baterai OG BLP-811 Oppo Reno,OG,Baterai,Oppo,195000,0,Oppo Reno,BLP-811,BLP-811,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0194,Baterai OG BLP-863 Oppo Reno 6 5G,OG,Baterai,Oppo,187000,0,Oppo Reno 6 5G,BLP-863,BLP-863,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0195,Baterai OG BLP-885 Oppo A76/A96 4G,OG,Baterai,Oppo,140000,0,Oppo A76/A96 4G,BLP-885,BLP-885,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0196,Baterai OG BLP-887 Realme Gt Neo 2/Gt 2,OG,Baterai,Realme,195000,0,Realme Gt Neo 2/Gt 2,BLP-887,BLP-887,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0197,Baterai OG BLP-889 Oppo Find X5 Pro,OG,Baterai,Oppo,230000,0,Oppo Find X5 Pro,BLP-889,BLP-889,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0198,Baterai OG BLP-911 Realme 9I/9 Pro 5G,OG,Baterai,Realme,129000,0,Realme 9I/9 Pro 5G,BLP-911,BLP-911,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0199,Baterai OG BLP-957 Realme 10 4G,OG,Baterai,Realme,122500,0,Realme 10 4G,BLP-957,BLP-957,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0200,Baterai OG BLP-983 Realme 10 Pro 5G,OG,Baterai,Realme,127000,0,Realme 10 Pro 5G,BLP-983,BLP-983,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0201,Baterai OG BLP-993 Oppo Reno 10 PRO+,OG,Baterai,Oppo,268000,0,Oppo Reno 10 PRO+,BLP-993,BLP-993,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0202,Baterai OG BLP-997 Oppo Reno 10 Pro,OG,Baterai,Oppo,299000,0,Oppo Reno 10 Pro,BLP-997,BLP-997,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0203,Baterai OG BLP-A05 Oppo Reno 10 5G,OG,Baterai,Oppo,147000,0,Oppo Reno 10 5G,BLP-A05,BLP-A05,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0204,Baterai OG BLP-A79 Oppo Reno 12F 5G,OG,Baterai,Oppo,124000,0,Oppo Reno 12F 5G,BLP-A79,BLP-A79,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0205,Baterai OG BLP-A83 Realme C63 4G,OG,Baterai,Realme,118000,0,Realme C63 4G,BLP-A83,BLP-A83,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0206,Baterai OG BLP-A75 Realme Note 60,OG,Baterai,Realme,122000,0,Realme Note 60,BLP-A75,BLP-A75,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0207,Baterai OG BLP-683 F9 /Rlm 2 Pro,OG,Baterai,Lainnya,96500,0,F9 /Rlm 2 Pro,BLP-683,BLP-683,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0208,Baterai OG BLP-A49 Oppo A60 (CPH2631),OG,Baterai,Oppo,173000,0,Oppo A60 (CPH2631),BLP-A49,BLP-A49,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0209,Baterai OG BLP-A77 Oppo A3X/A3 Pro,OG,Baterai,Oppo,123000,0,Oppo A3X/A3 Pro,BLP-A77,BLP-A77,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0210,Baterai OG BLP-777 Realme X50 Pro 5G,OG,Baterai,Realme,230000,0,Realme X50 Pro 5G,BLP-777,BLP-777,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0211,Baterai OG BLP-B47 Realme C75,OG,Baterai,Realme,154000,0,Realme C75,BLP-B47,BLP-B47,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0212,Baterai OG BLP-A21 Oppo A18 4G,OG,Baterai,Oppo,122500,0,Oppo A18 4G,BLP-A21,BLP-A21,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0213,Baterai OG BLP-B21 Realme Note 60X,OG,Baterai,Realme,118000,0,Realme Note 60X,BLP-B21,BLP-B21,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0214,Baterai OG BLP-A07 Oppo A78 4G,OG,Baterai,Oppo,191000,0,Oppo A78 4G,BLP-A07,BLP-A07,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0215,Baterai OG BLP-A19 Oppo A38/A58 4G/ A79,OG,Baterai,Oppo,127000,0,Oppo A38/A58 4G/ A79,BLP-A19,BLP-A19,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0216,Baterai OG BLP-929 Oppo Reno 8 Pro,OG,Baterai,Oppo,190000,0,Oppo Reno 8 Pro,BLP-929,BLP-929,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0217,Baterai OG BLP-951 Realme 11 4G/Nfc/Rlm,OG,Baterai,Realme,175000,0,Realme 11 4G/Nfc/Rlm,BLP-951,BLP-951,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0218,Baterai OG BLP-989 Oppo A98 5G,OG,Baterai,Oppo,151000,0,Oppo A98 5G,BLP-989,BLP-989,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0219,Baterai OG BLP-A15 Oppo Reno 11/Rlm 11,OG,Baterai,Oppo,177000,0,Oppo Reno 11/Rlm 11,BLP-A15,BLP-A15,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0220,Baterai OG BLP-A41 Oppo Reno 11F,OG,Baterai,Oppo,200000,0,Oppo Reno 11F,BLP-A41,BLP-A41,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0221,Baterai OG BLP-A43 Realme 12+ 5G/Rlm 13,OG,Baterai,Realme,230000,0,Realme 12+ 5G/Rlm 13,BLP-A43,BLP-A43,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0222,Baterai OG BLP-799 Realme 7 Pro Narzo 20,OG,Baterai,Realme,193500,0,Realme 7 Pro Narzo 20,BLP-799,BLP-799,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0223,Baterai OG BLP-883 Realme 8S 5G,OG,Baterai,Realme,126000,0,Realme 8S 5G,BLP-883,BLP-883,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0224,Baterai OG BLP-927 Oppo A77S,OG,Baterai,Oppo,129000,0,Oppo A77S,BLP-927,BLP-927,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0225,Baterai OG BLP-981 Oppo Reno 8T 5G,OG,Baterai,Oppo,154000,0,Oppo Reno 8T 5G,BLP-981,BLP-981,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0226,Baterai OG BLP-A17 Realme C53/C65/C67/Rl,OG,Baterai,Realme,128000,0,Realme C53/C65/C67/Rl,BLP-A17,BLP-A17,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0227,Baterai OG BLP-A35 Realme 12 Pro 12 PRO+,OG,Baterai,Realme,197000,0,Realme 12 Pro 12 PRO+,BLP-A35,BLP-A35,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0228,Baterai OG BLP-A57 Realme 13 Plus,OG,Baterai,Realme,177000,0,Realme 13 Plus,BLP-A57,BLP-A57,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0229,Baterai OG BLP-B57 Realme C75X,OG,Baterai,Realme,164000,0,Realme C75X,BLP-B57,BLP-B57,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0230,Baterai OG BLP-B87 Oppo Reno 13F 4G,OG,Baterai,Oppo,154000,0,Oppo Reno 13F 4G,BLP-B87,BLP-B87,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0231,Baterai OG BLP-A59 Oppo Reno 12,OG,Baterai,Oppo,194000,0,Oppo Reno 12,BLP-A59,BLP-A59,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0232,Baterai OG BLP-C69 Realme C71,OG,Baterai,Realme,208000,0,Realme C71,BLP-C69,BLP-C69,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0233,Baterai OG BLP-D79 Oppo A6X 4G,OG,Baterai,Oppo,207000,0,Oppo A6X 4G,BLP-D79,BLP-D79,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0234,Baterai OG BLP-959 Oppo Reno 8T 4G,OG,Baterai,Oppo,130000,0,Oppo Reno 8T 4G,BLP-959,BLP-959,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0235,Baterai OG BLP-D25 Realme C85(4G/5G)/C85,OG,Baterai,Realme,147000,0,Realme C85(4G/5G)/C85,BLP-D25,BLP-D25,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0236,Baterai OG Samsung A10S/A20S/A21S,OG,Baterai,Samsung,115000,0,Samsung A10S/A20S/A21S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0237,Baterai OG Samsung A14 5G/A146,OG,Baterai,Samsung,127000,0,Samsung A14 5G/A146,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0238,Baterai OG Samsung A51(EB-BA515ABY),OG,Baterai,Samsung,122000,0,Samsung A51(EB-BA515ABY),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0239,Baterai OG Samsung A02S/A03S (HQ-50S),OG,Baterai,Samsung,128000,0,Samsung A02S/A03S (HQ-50S),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0240,Baterai OG Samsung A05/A055F (WT-S-N28),OG,Baterai,Samsung,149000,0,Samsung A05/A055F (WT-S-N28),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0241,Baterai OG Samsung A32 5G/A72,OG,Baterai,Samsung,126000,0,Samsung A32 5G/A72,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0242,Baterai OG Samsung A20/A30/A50/A50S,OG,Baterai,Samsung,104500,0,Samsung A20/A30/A50/A50S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0243,Baterai OG Samsung A70/A705F,OG,Baterai,Samsung,135000,0,Samsung A70/A705F,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0244,Baterai OG Samsung A71/A715 (EB-BA715ABY),OG,Baterai,Samsung,123000,0,Samsung A71/A715 (EB-BA715ABY),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0245,Baterai OG Samsung M20/ M30(EB-BG580ABU),OG,Baterai,Samsung,125000,0,Samsung M20/ M30(EB-BG580ABU),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0246,Baterai OG Samsung A11/A115 (HQ-70N),OG,Baterai,Samsung,104500,0,Samsung A11/A115 (HQ-70N),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0247,Baterai OG Samsung A01/A015F (QL-1695),OG,Baterai,Samsung,103000,0,Samsung A01/A015F (QL-1695),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0248,Baterai OG Samsung A22 5G/A226B,OG,Baterai,Samsung,150000,0,Samsung A22 5G/A226B,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0249,Baterai OG Samsung A7 2018/A750/A10/M10,OG,Baterai,Samsung,98000,0,Samsung A7 2018/A750/A10/M10,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0250,Baterai OG Samsung S6 Edge (EB-BG925ABE),OG,Baterai,Samsung,104000,0,Samsung S6 Edge (EB-BG925ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0251,Baterai OG Samsung S7/S7 Flat,OG,Baterai,Samsung,93000,0,Samsung S7/S7 Flat,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0252,Baterai OG Samsung S9 (EB-BG960ABE),OG,Baterai,Samsung,106000,0,Samsung S9 (EB-BG960ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0253,Baterai OG Samsung S20 Plus,OG,Baterai,Samsung,120000,0,Samsung S20 Plus,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0254,Baterai OG Samsung A6+ 2018 (EB-BJ805ABE),OG,Baterai,Samsung,108000,0,Samsung A6+ 2018 (EB-BJ805ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0255,Baterai OG Samsung A03/A04E/A14 4G,OG,Baterai,Samsung,149000,0,Samsung A03/A04E/A14 4G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0256,Baterai OG Samsung A01 Core,OG,Baterai,Samsung,77000,0,Samsung A01 Core,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0257,Baterai OG Samsung A21S/A02/A12,OG,Baterai,Samsung,121000,0,Samsung A21S/A02/A12,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0258,Baterai OG Samsung A24 4G (EB-BA245ABY),OG,Baterai,Samsung,127000,0,Samsung A24 4G (EB-BA245ABY),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0259,Baterai OG Samsung A55 5G (EB-BA256ABS),OG,Baterai,Samsung,130000,0,Samsung A55 5G (EB-BA256ABS),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0260,Baterai OG Samsung A33 5G/A53,OG,Baterai,Samsung,120000,0,Samsung A33 5G/A53,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0261,Baterai OG Samsung J4+/J6+/J7,OG,Baterai,Samsung,69000,0,Samsung J4+/J6+/J7,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0262,Baterai OG Samsung A52/S20 FE,OG,Baterai,Samsung,147000,0,Samsung A52/S20 FE,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0263,Baterai OG Samsung S7 Edge (EB-BG935ABE),OG,Baterai,Samsung,95000,0,Samsung S7 Edge (EB-BG935ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0264,Baterai OG Samsung S8/S8 Flat,OG,Baterai,Samsung,110000,0,Samsung S8/S8 Flat,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0265,Baterai OG Samsung S8+ (EB-BG955ABE),OG,Baterai,Samsung,108000,0,Samsung S8+ (EB-BG955ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0266,Baterai OG Samsung S9+ (EB-BG965ABE),OG,Baterai,Samsung,114000,0,Samsung S9+ (EB-BG965ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0267,Baterai OG Samsung S21 FE 5G,OG,Baterai,Samsung,120000,0,Samsung S21 FE 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0268,Baterai OG Samsung M21/M31/M30S,OG,Baterai,Samsung,148000,0,Samsung M21/M31/M30S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0269,Baterai OG Samsung M51/M62 (EB-BM415ABY),OG,Baterai,Samsung,162000,0,Samsung M51/M62 (EB-BM415ABY),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0270,Baterai OG Samsung Note 8 (EB-BN950ABE),OG,Baterai,Samsung,94000,0,Samsung Note 8 (EB-BN950ABE),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0271,Baterai OG Samsung Note 9 (EB-BN965ABU),OG,Baterai,Samsung,123000,0,Samsung Note 9 (EB-BN965ABU),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0272,Baterai OG Samsung Note 10 (EB-BN970ABU),OG,Baterai,Samsung,106000,0,Samsung Note 10 (EB-BN970ABU),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0273,Baterai OG Samsung M11/M115 (HQ-S71),OG,Baterai,Samsung,128000,0,Samsung M11/M115 (HQ-S71),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0274,Baterai OG Samsung A04/A045F/A14 5G,OG,Baterai,Samsung,138000,0,Samsung A04/A045F/A14 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0275,Baterai OG Samsung A06/A065F (HQ-7160SS),OG,Baterai,Samsung,128000,0,Samsung A06/A065F (HQ-7160SS),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0276,Baterai OG Samsung S23+/S916B,OG,Baterai,Samsung,127000,0,Samsung S23+/S916B,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0277,Baterai OG Samsung A15,OG,Baterai,Samsung,136000,0,Samsung A15,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0278,Baterai OG Samsung A16 4G/A26,OG,Baterai,Samsung,149000,0,Samsung A16 4G/A26,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0279,Baterai OG Samsung M34/M54,OG,Baterai,Samsung,142000,0,Samsung M34/M54,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0280,Baterai OG Samsung S22,OG,Baterai,Samsung,120000,0,Samsung S22,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0281,Baterai OG Samsung S22 Ultra,OG,Baterai,Samsung,132000,0,Samsung S22 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0282,Baterai OG Samsung S23 Ultra,OG,Baterai,Samsung,149000,0,Samsung S23 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0283,Baterai OG Samsung A05S/A057F (SLC-51),OG,Baterai,Samsung,127000,0,Samsung A05S/A057F (SLC-51),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0284,Baterai OG Samsung S10,OG,Baterai,Samsung,144000,0,Samsung S10,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0285,Baterai OG Samsung S20,OG,Baterai,Samsung,100000,0,Samsung S20,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0286,Baterai OG Samsung S20,OG,Baterai,Samsung,131000,0,Samsung S20,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0287,Baterai OG Samsung S21 5G/G991,OG,Baterai,Samsung,129000,0,Samsung S21 5G/G991,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0288,Baterai OG Samsung M15 5G (EB-BM156ABY),OG,Baterai,Samsung,115000,0,Samsung M15 5G (EB-BM156ABY),-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0289,Baterai OG Samsung Note 20/N980,OG,Baterai,Samsung,129000,0,Samsung Note 20/N980,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0290,Baterai OG Samsung A07 4G/A075F,OG,Baterai,Samsung,138000,0,Samsung A07 4G/A075F,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0291,Baterai OG Samsung S24 Plus 5G,OG,Baterai,Samsung,155000,0,Samsung S24 Plus 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0292,Baterai OG Samsung S24 Ultra 5G,OG,Baterai,Samsung,146000,0,Samsung S24 Ultra 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0293,Baterai OG Samsung C9,OG,Baterai,Samsung,130000,0,Samsung C9,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0294,Baterai OG Samsung A37 5G/A57,OG,Baterai,Samsung,138500,0,Samsung A37 5G/A57,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0295,Baterai OG Vivo B-F3 Y91/Y91C/Y93/Y95,OG,Baterai,Vivo,110000,0,Vivo B-F3 Y91/Y91C/Y93/Y95,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0296,Baterai OG Vivo B-O5 Y20/Y20S/Y20I/ Y12S,OG,Baterai,Vivo,117000,0,Vivo B-O5 Y20/Y20S/Y20I/ Y12S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0297,Baterai OG Vivo B-O8 Y51/Y31/Y52S/Y51A,OG,Baterai,Vivo,112000,0,Vivo B-O8 Y51/Y31/Y52S/Y51A,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0298,Baterai OG Vivo B-S7 Y15S/Y16,OG,Baterai,Vivo,112000,0,Vivo B-S7 Y15S/Y16,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0299,Baterai OG Vivo B-E1 Y71,OG,Baterai,Vivo,92000,0,Vivo B-E1 Y71,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0300,Baterai OG Vivo B-G7,OG,Baterai,Vivo,117000,0,Vivo B-G7,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0301,Baterai OG Vivo B-S1,OG,Baterai,Vivo,119000,0,Vivo B-S1,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0302,Baterai OG Vivo B-Y1 Y02T,OG,Baterai,Vivo,108000,0,Vivo B-Y1 Y02T,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0303,Baterai OG Vivo B-Y2 V27E,OG,Baterai,Vivo,187000,0,Vivo B-Y2 V27E,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0304,Baterai OG Vivo B-B2 V5/V5S/V5,OG,Baterai,Vivo,98000,0,Vivo B-B2 V5/V5S/V5,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0305,Baterai OG Vivo B-G2 V15,OG,Baterai,Vivo,106000,0,Vivo B-G2 V15,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0306,Baterai OG Vivo B-M3 Y30/Y30I/Y50,OG,Baterai,Vivo,151000,0,Vivo B-M3 Y30/Y30I/Y50,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0307,Baterai OG Vivo B-E5 Y81/Y83,OG,Baterai,Vivo,97000,0,Vivo B-E5 Y81/Y83,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0308,Baterai OG Vivo B-E8 V11/V11I/Y97/Z3,OG,Baterai,Vivo,95500,0,Vivo B-E8 V11/V11I/Y97/Z3,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0309,Baterai OG Vivo B-F0 V11 Pro,OG,Baterai,Vivo,121000,0,Vivo B-F0 V11 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0310,Baterai OG Vivo B-H1 V17 Pro V19 Pro,OG,Baterai,Vivo,107500,0,Vivo B-H1 V17 Pro V19 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0311,Baterai OG Vivo B-K3 S1 Pro,OG,Baterai,Vivo,112000,0,Vivo B-K3 S1 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0312,Baterai OG Vivo B-K6 V19,OG,Baterai,Vivo,139000,0,Vivo B-K6 V19,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0313,Baterai OG Vivo B-N2 X50,OG,Baterai,Vivo,116000,0,Vivo B-N2 X50,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0314,Baterai OG Vivo B-N3 X50 Pro,OG,Baterai,Vivo,113500,0,Vivo B-N3 X50 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0315,Baterai OG Vivo B-O6 V20 SE,OG,Baterai,Vivo,122000,0,Vivo B-O6 V20 SE,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0316,Baterai OG Vivo B-P9 V21 5G,OG,Baterai,Vivo,108000,0,Vivo B-P9 V21 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0317,Baterai OG Vivo B-Q8 Y53S,OG,Baterai,Vivo,127000,0,Vivo B-Q8 Y53S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0318,Baterai OG Vivo B-S3 Y21 2021,OG,Baterai,Vivo,123000,0,Vivo B-S3 Y21 2021,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0319,Baterai OG Vivo B-T7 Y33T,OG,Baterai,Vivo,121000,0,Vivo B-T7 Y33T,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0320,Baterai OG Vivo B-W3 Y22 2022/Y22S,OG,Baterai,Vivo,119000,0,Vivo B-W3 Y22 2022/Y22S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0321,Baterai OG BA-33 Vivo Y18 4G/Y03/Y03T,OG,Baterai,Vivo,138000,0,Vivo Y18 4G/Y03/Y03T,BA-33,BA-33,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0322,Baterai OG Vivo B-B1 Y55/Y55S,OG,Baterai,Vivo,89500,0,Vivo B-B1 Y55/Y55S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0323,Baterai OG Vivo B-D9 V9/Y85,OG,Baterai,Vivo,95000,0,Vivo B-D9 V9/Y85,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0324,Baterai OG Vivo B-G0 X27,OG,Baterai,Vivo,110000,0,Vivo B-G0 X27,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0325,Baterai OG Vivo B-G1 V15 Pro,OG,Baterai,Vivo,123000,0,Vivo B-G1 V15 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0326,Baterai OG Vivo B-G3 X27 Pro,OG,Baterai,Vivo,110000,0,Vivo B-G3 X27 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0327,Baterai OG Vivo B-H0 S1/V17 Neo/Y7S,OG,Baterai,Vivo,119000,0,Vivo B-H0 S1/V17 Neo/Y7S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0328,Baterai OG Vivo B-H9 Y19 2019/Y5S,OG,Baterai,Vivo,136000,0,Vivo B-H9 Y19 2019/Y5S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0329,Baterai OG Vivo B-C1 Y53,OG,Baterai,Vivo,82000,0,Vivo B-C1 Y53,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0330,Baterai OG Vivo B-R5 V23E,OG,Baterai,Vivo,117000,0,Vivo B-R5 V23E,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0331,Baterai OG Vivo B-T3 V23 5G,OG,Baterai,Vivo,119000,0,Vivo B-T3 V23 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0332,Baterai OG Vivo B-W0 Y35 2022,OG,Baterai,Vivo,130000,0,Vivo B-W0 Y35 2022,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0333,Baterai OG Vivo B-W1 Y02/Y02S,OG,Baterai,Vivo,138000,0,Vivo B-W1 Y02/Y02S,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0334,Baterai OG Vivo B-N8 V20/V20 Pro V21 4G,OG,Baterai,Vivo,118000,0,Vivo B-N8 V20/V20 Pro V21 4G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0335,Baterai OG BA-45 Vivo Y28 4G,OG,Baterai,Vivo,163000,0,Vivo Y28 4G,BA-45,BA-45,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0336,Baterai OG Vivo B-T6 Y75 5G/T1 5G,OG,Baterai,Vivo,151000,0,Vivo B-T6 Y75 5G/T1 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0337,Baterai OG BA-08 Vivo V29E,OG,Baterai,Vivo,116000,0,Vivo V29E,BA-08,BA-08,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0338,Baterai OG BA-18 Vivo V30 5G,OG,Baterai,Vivo,191000,0,Vivo V30 5G,BA-18,BA-18,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0339,Baterai OG BA-27 Vivo Y100 5G/V40 Lite,OG,Baterai,Vivo,174000,0,Vivo Y100 5G/V40 Lite,BA-27,BA-27,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0340,Baterai OG Vivo B-V7 V25 5G/V25E,OG,Baterai,Vivo,125000,0,Vivo B-V7 V25 5G/V25E,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0341,Baterai OG Vivo B-O9 X60,OG,Baterai,Vivo,122000,0,Vivo B-O9 X60,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0342,Baterai OG Vivo B-Z7 V29 5G,OG,Baterai,Vivo,139500,0,Vivo B-Z7 V29 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0343,Baterai OG BA-10 Vivo Y17S,OG,Baterai,Vivo,142000,0,Vivo Y17S,BA-10,BA-10,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0344,Baterai OG BA-61 Vivo Y19S,OG,Baterai,Vivo,140000,0,Vivo Y19S,BA-61,BA-61,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0345,Baterai OG Vivo B-W2 V25 Pro,OG,Baterai,Vivo,178000,0,Vivo B-W2 V25 Pro,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0346,Baterai OG BA-49 Vivo V40 5G,OG,Baterai,Vivo,161000,0,Vivo V40 5G,BA-49,BA-49,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0347,Baterai OG BA-90 Vivo Y29 4G,OG,Baterai,Vivo,174000,0,Vivo Y29 4G,BA-90,BA-90,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0348,Baterai OG Vivo B-N5 Y70S/Y51S 5G,OG,Baterai,Vivo,135000,0,Vivo B-N5 Y70S/Y51S 5G,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0349,Baterai OG BA-43 Vivo Y100 4G,OG,Baterai,Vivo,185000,0,Vivo Y100 4G,BA-43,BA-43,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0350,Baterai OG BA-87 Vivo Y400 4G,OG,Baterai,Vivo,190000,0,Vivo Y400 4G,BA-87,BA-87,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BOG-0351,Baterai OG Zenf Max Pro M1/M2,OG,Baterai,Lainnya,130000,0,Zenf Max Pro M1/M2,-,,https://portaltech-katalog.vercel.app/baterai/og.webp,In Stock,Better
+PS-BLF-0001,Baterai LF iPhone 11,LF,Baterai,iPhone,180000,0,iPhone 11,-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0002,Baterai LF iPhone 12 Mini (DIAGNOSTIC),LF,Baterai,iPhone,236500,0,iPhone 12 Mini (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0003,Baterai LF iPhone 12 Pro Max (DIAGNOSTIC),LF,Baterai,iPhone,337500,0,iPhone 12 Pro Max (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0004,Baterai LF iPhone 12/12 Pro (DIAGNOSTIC),LF,Baterai,iPhone,246000,0,iPhone 12/12 Pro (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0005,Baterai LF iPhone 13 Mini (DIAGNOSTIC),LF,Baterai,iPhone,243000,0,iPhone 13 Mini (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0006,Baterai LF iPhone 13 Pro Max (DIAGNOSTIC),LF,Baterai,iPhone,330000,0,iPhone 13 Pro Max (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0007,Baterai LF iPhone 14 (DIAGNOSTIC),LF,Baterai,iPhone,266000,0,iPhone 14 (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0008,Baterai LF iPhone 14 Plus (DIAGNOSTIC),LF,Baterai,iPhone,304000,0,iPhone 14 Plus (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0009,Baterai LF iPhone 14 Pro (DIAGNOSTIC),LF,Baterai,iPhone,318000,0,iPhone 14 Pro (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0010,Baterai LF iPhone 14 Pro Max (DIAGNOSTIC),LF,Baterai,iPhone,350000,0,iPhone 14 Pro Max (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0011,Baterai LF iPhone 15 (DIAGNOSTIC),LF,Baterai,iPhone,304000,0,iPhone 15 (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0012,Baterai LF iPhone 15 Plus (DIAGNOSTIC),LF,Baterai,iPhone,318000,0,iPhone 15 Plus (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0013,Baterai LF iPhone 15 Pro (DIAGNOSTIC),LF,Baterai,iPhone,351000,0,iPhone 15 Pro (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0014,Baterai LF iPhone 15 Pro Max (DIAGNOSTIC),LF,Baterai,iPhone,375000,0,iPhone 15 Pro Max (DIAGNOSTIC),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0015,Baterai LF BM-5V Xiaomi/Redmi/Poco 13 Pro,LF,Baterai,Xiaomi/Redmi/Poco,222000,0,Xiaomi/Redmi/Poco 13 Pro,BM-5V,BM-5V,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0016,Baterai LF BN-5V Xiaomi/Redmi/Poco 14 Pro,LF,Baterai,Xiaomi/Redmi/Poco,160000,0,Xiaomi/Redmi/Poco 14 Pro,BN-5V,BN-5V,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0017,Baterai LF BR-50 Xiaomi/Redmi/Poco Note 14 4G,LF,Baterai,Xiaomi/Redmi/Poco,222000,0,Xiaomi/Redmi/Poco Note 14 4G,BR-50,BR-50,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0018,Baterai LF BN-5U Xiaomi/Redmi/Poco 14 5G/Poco M7,LF,Baterai,Xiaomi/Redmi/Poco,156000,0,Xiaomi/Redmi/Poco 14 5G/Poco M7,BN-5U,BN-5U,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0019,Baterai LF BLP-805 Oppo,LF,Baterai,Oppo,146000,0,Oppo,BLP-805,BLP-805,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0020,Baterai LF BLP-A35 Realme 12 Pro 5G/12,LF,Baterai,Realme,206000,0,Realme 12 Pro 5G/12,BLP-A35,BLP-A35,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0021,Baterai LF BLP-A91 Realme 13 PRO+,LF,Baterai,Realme,220000,0,Realme 13 PRO+,BLP-A91,BLP-A91,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0022,Baterai LF BLP-B87 Reno 13F 4G/12F 5G,LF,Baterai,Lainnya,205000,0,Reno 13F 4G/12F 5G,BLP-B87,BLP-B87,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0023,Baterai LF Samsung S23 PLUS(EB-BS916ABY),LF,Baterai,Samsung,140000,0,Samsung S23 PLUS(EB-BS916ABY),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0024,Baterai LF Samsung S24 (EB-BS922ABY),LF,Baterai,Samsung,142000,0,Samsung S24 (EB-BS922ABY),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0025,Baterai LF Samsung S24 FE(EB-BS721ABY),LF,Baterai,Samsung,142000,0,Samsung S24 FE(EB-BS721ABY),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0026,Baterai LF Samsung S24+ (EB-BS926ABY),LF,Baterai,Samsung,149000,0,Samsung S24+ (EB-BS926ABY),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0027,Baterai LF Samsung S24 Ultra,LF,Baterai,Samsung,138000,0,Samsung S24 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0028,Baterai LF Samsung S25 (EB-BS931ABY),LF,Baterai,Samsung,140000,0,Samsung S25 (EB-BS931ABY),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0029,Baterai LF Samsung S25+ (EB-BS936ABY),LF,Baterai,Samsung,154000,0,Samsung S25+ (EB-BS936ABY),-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0030,Baterai LF Samsung S25 Ultra,LF,Baterai,Samsung,150000,0,Samsung S25 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0031,Baterai LF Samsung A36/A56 5G,LF,Baterai,Samsung,170500,0,Samsung A36/A56 5G,-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0032,Baterai LF Samsung S22 Ultra,LF,Baterai,Samsung,160000,0,Samsung S22 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0033,Baterai LF Vivo B-G7 Y12/Y15/Y17/Z1 Pro,LF,Baterai,Vivo,140000,0,Vivo B-G7 Y12/Y15/Y17/Z1 Pro,-,,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BLF-0034,Baterai LF BA-18 Vivo V30 5G,LF,Baterai,Vivo,213000,0,Vivo V30 5G,BA-18,BA-18,https://portaltech-katalog.vercel.app/baterai/lf.webp,In Stock,Better
+PS-BHX-0001,Baterai HX BL-49FX Infinix Smart 5/6/Hot,HX,Baterai,Infinix,116500,0,Infinix Smart 5/6/Hot,BL-49FX,BL-49FX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0002,Baterai HX BL-58BX Infinix Hot 9 Play/10 Play,HX,Baterai,Infinix,133000,0,Infinix Hot 9 Play/10 Play,BL-58BX,BL-58BX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0003,Baterai HX BL-49NX Infinix Smart,HX,Baterai,Infinix,119000,0,Infinix Smart,BL-49NX,BL-49NX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0004,Baterai HX BL-51BX Infinix Hot 10/11/Note 8,HX,Baterai,Infinix,115000,0,Infinix Hot 10/11/Note 8,BL-51BX,BL-51BX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0005,Baterai HX BL-58CX Infinix Smart 7,HX,Baterai,Infinix,99000,0,Infinix Smart 7,BL-58CX,BL-58CX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0006,Baterai HX BL-49JX Infinix Note 10,HX,Baterai,Infinix,116500,0,Infinix Note 10,BL-49JX,BL-49JX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0007,Baterai HX BL-49KX Infinix Note 11/Note 12,HX,Baterai,Infinix,116500,0,Infinix Note 11/Note 12,BL-49KX,BL-49KX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0008,Baterai HX BL-49GX Infinix Note 7/Hot,HX,Baterai,Infinix,110500,0,Infinix Note 7/Hot,BL-49GX,BL-49GX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0009,Baterai HX BL-49NX Infinix Big Con Smart 9,HX,Baterai,Infinix,116500,0,Infinix Big Con Smart 9,BL-49NX,BL-49NX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0010,Baterai HX BL-49LX Infinix Hot 12/12I/20S,HX,Baterai,Infinix,119000,0,Infinix Hot 12/12I/20S,BL-49LX,BL-49LX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0011,Baterai HX BL-49HX Infinix Hot 20 5G,HX,Baterai,Infinix,110500,0,Infinix Hot 20 5G,BL-49HX,BL-49HX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0012,Baterai HX BL-5ABX Infinix Hot 50 4G,HX,Baterai,Infinix,116500,0,Infinix Hot 50 4G,BL-5ABX,BL-5ABX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0013,Baterai HX BL-49UX Infinix Hot 50 Pro 50,HX,Baterai,Infinix,101000,0,Infinix Hot 50 Pro 50,BL-49UX,BL-49UX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0014,Baterai HX BL-50FX Infinix Hot 60 Pro 60,HX,Baterai,Infinix,124000,0,Infinix Hot 60 Pro 60,BL-50FX,BL-50FX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0015,Baterai HX BL-49PX Infinix Note 30,HX,Baterai,Infinix,127500,0,Infinix Note 30,BL-49PX,BL-49PX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0016,Baterai HX BL-49TX Infinix Note 30 (4G/5G),HX,Baterai,Infinix,127500,0,Infinix Note 30 (4G/5G),BL-49TX,BL-49TX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0017,Baterai HX BL-49OX Infinix Note 30I/Note 40,HX,Baterai,Infinix,115000,0,Infinix Note 30I/Note 40,BL-49OX,BL-49OX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0018,Baterai HX BL-58HX Infinix Smart 10 Plus,HX,Baterai,Infinix,140000,0,Infinix Smart 10 Plus,BL-58HX,BL-58HX,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0019,Baterai HX iPhone 11,HX,Baterai,iPhone,150000,0,iPhone 11,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0020,Baterai HX iPhone 7+,HX,Baterai,iPhone,126000,0,iPhone 7+,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0021,Baterai HX iPhone Xr,HX,Baterai,iPhone,150000,0,iPhone Xr,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0022,Baterai HX iPhone 7G,HX,Baterai,iPhone,109000,0,iPhone 7G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0023,Baterai HX iPhone X,HX,Baterai,iPhone,155000,0,iPhone X,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0024,Baterai HX iPhone 13,HX,Baterai,iPhone,161000,0,iPhone 13,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0025,Baterai HX iPhone 11 Pro,HX,Baterai,iPhone,194000,0,iPhone 11 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0026,Baterai HX iPhone 11 Pro Max,HX,Baterai,iPhone,210000,0,iPhone 11 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0027,Baterai HX iPhone 12 Mini,HX,Baterai,iPhone,144000,0,iPhone 12 Mini,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0028,Baterai HX iPhone 12 Pro Max,HX,Baterai,iPhone,193000,0,iPhone 12 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0029,Baterai HX iPhone 12/12 Pro,HX,Baterai,iPhone,150000,0,iPhone 12/12 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0030,Baterai HX iPhone 13 Mini,HX,Baterai,iPhone,150000,0,iPhone 13 Mini,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0031,Baterai HX iPhone 13 Pro,HX,Baterai,iPhone,208000,0,iPhone 13 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0032,Baterai HX iPhone 13 Pro Max,HX,Baterai,iPhone,249000,0,iPhone 13 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0033,Baterai HX iPhone 14 Plus,HX,Baterai,iPhone,194000,0,iPhone 14 Plus,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0034,Baterai HX iPhone 14 Pro,HX,Baterai,iPhone,208000,0,iPhone 14 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0035,Baterai HX iPhone 15,HX,Baterai,iPhone,175000,0,iPhone 15,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0036,Baterai HX iPhone 15 Plus,HX,Baterai,iPhone,194000,0,iPhone 15 Plus,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0037,Baterai HX iPhone 15 Pro,HX,Baterai,iPhone,227000,0,iPhone 15 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0038,Baterai HX iPhone 15 Pro Max,HX,Baterai,iPhone,269000,0,iPhone 15 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0039,Baterai HX iPhone Xs,HX,Baterai,iPhone,166000,0,iPhone Xs,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0040,Baterai HX iPhone Xs Max,HX,Baterai,iPhone,166000,0,iPhone Xs Max,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0041,Baterai HX iPhone 8,HX,Baterai,iPhone,109000,0,iPhone 8,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0042,Baterai HX iPhone 8+,HX,Baterai,iPhone,122000,0,iPhone 8+,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0043,Baterai HX iPhone 14,HX,Baterai,iPhone,171000,0,iPhone 14,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0044,Baterai HX iPhone 14 Pro Max,HX,Baterai,iPhone,238000,0,iPhone 14 Pro Max,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0045,Baterai HX BN-57 Xiaomi/Redmi/Poco X3 Pro Nfc,HX,Baterai,Xiaomi/Redmi/Poco,122000,0,Xiaomi/Redmi/Poco X3 Pro Nfc,BN-57,BN-57,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0046,Baterai HX BN-62 Xiaomi/Redmi/Poco 9T/Poco M3,HX,Baterai,Xiaomi/Redmi/Poco,133000,0,Xiaomi/Redmi/Poco 9T/Poco M3,BN-62,BN-62,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0047,Baterai HX BN-5A Xiaomi/Redmi/Poco 10/Note 10 5G,HX,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco 10/Note 10 5G,BN-5A,BN-5A,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0048,Baterai HX BN-56 Xiaomi/Redmi/Poco 9A/9C/10A,HX,Baterai,Xiaomi/Redmi/Poco,118000,0,Xiaomi/Redmi/Poco 9A/9C/10A,BN-56,BN-56,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0049,Baterai HX BN-54 Xiaomi/Redmi/Poco 9/Note 9 Pro,HX,Baterai,Xiaomi/Redmi/Poco,116500,0,Xiaomi/Redmi/Poco 9/Note 9 Pro,BN-54,BN-54,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0050,Baterai HX BN-31 Redno 5A/MI5X/MIA1/ S2,HX,Baterai,Lainnya,77500,0,Redno 5A/MI5X/MIA1/ S2,BN-31,BN-31,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0051,Baterai HX BN-37 Xiaomi/Redmi/Poco 6/6A,HX,Baterai,Xiaomi/Redmi/Poco,91000,0,Xiaomi/Redmi/Poco 6/6A,BN-37,BN-37,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0052,Baterai HX BN-45 Xiaomi/Redmi/Poco Note 5,HX,Baterai,Xiaomi/Redmi/Poco,103000,0,Xiaomi/Redmi/Poco Note 5,BN-45,BN-45,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0053,Baterai HX BN-46 Xiaomi/Redmi/Poco 7/R.NOTE 6/ Note,HX,Baterai,Xiaomi/Redmi/Poco,102000,0,Xiaomi/Redmi/Poco 7/R.NOTE 6/ Note,BN-46,BN-46,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0054,Baterai HX BM-5R Xiaomi/Redmi/Poco 12(4G/5G)/Pc M6,HX,Baterai,Xiaomi/Redmi/Poco,122000,0,Xiaomi/Redmi/Poco 12(4G/5G)/Pc M6,BM-5R,BM-5R,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0055,Baterai HX BN-5D Xiaomi/Redmi/Poco Note 11,HX,Baterai,Xiaomi/Redmi/Poco,127500,0,Xiaomi/Redmi/Poco Note 11,BN-5D,BN-5D,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0056,Baterai HX BN-53 Xiaomi/Redmi/Poco Note 9/Note 10,HX,Baterai,Xiaomi/Redmi/Poco,129000,0,Xiaomi/Redmi/Poco Note 9/Note 10,BN-53,BN-53,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0057,Baterai HX BN-59 Xiaomi/Redmi/Poco Note 10/10S,HX,Baterai,Xiaomi/Redmi/Poco,127500,0,Xiaomi/Redmi/Poco Note 10/10S,BN-59,BN-59,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0058,Baterai HX BN-5K Xiaomi/Redmi/Poco 12C,HX,Baterai,Xiaomi/Redmi/Poco,116500,0,Xiaomi/Redmi/Poco 12C,BN-5K,BN-5K,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0059,Baterai HX BN-44 Xiaomi/Redmi/Poco 5+,HX,Baterai,Xiaomi/Redmi/Poco,87500,0,Xiaomi/Redmi/Poco 5+,BN-44,BN-44,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0060,Baterai HX BN-4A Xiaomi/Redmi/Poco Note 7,HX,Baterai,Xiaomi/Redmi/Poco,102000,0,Xiaomi/Redmi/Poco Note 7,BN-4A,BN-4A,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0061,Baterai HX BP-42 Mi 11 Lite,HX,Baterai,Lainnya,115000,0,Mi 11 Lite,BP-42,BP-42,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0062,Baterai HX BM-4E Xiaomi/Redmi/Poco F1,HX,Baterai,Xiaomi/Redmi/Poco,93000,0,Xiaomi/Redmi/Poco F1,BM-4E,BM-4E,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0063,Baterai HX BM-4Y Xiaomi/Redmi/Poco F3/F3 Pro,HX,Baterai,Xiaomi/Redmi/Poco,109000,0,Xiaomi/Redmi/Poco F3/F3 Pro,BM-4Y,BM-4Y,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0064,Baterai HX BP-49 Xiaomi/Redmi/Poco F4 5g/K40S,HX,Baterai,Xiaomi/Redmi/Poco,155000,0,Xiaomi/Redmi/Poco F4 5g/K40S,BP-49,BP-49,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0065,Baterai HX BP-48 Xiaomi/Redmi/Poco F4 Gt,HX,Baterai,Xiaomi/Redmi/Poco,299000,0,Xiaomi/Redmi/Poco F4 Gt,BP-48,BP-48,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0066,Baterai HX BN-5T Xiaomi/Redmi/Poco 13/13X/Poco M6,HX,Baterai,Xiaomi/Redmi/Poco,115000,0,Xiaomi/Redmi/Poco 13/13X/Poco M6,BN-5T,BN-5T,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0067,Baterai HX BN-5X Xiaomi/Redmi/Poco 14C,HX,Baterai,Xiaomi/Redmi/Poco,113000,0,Xiaomi/Redmi/Poco 14C,BN-5X,BN-5X,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0068,Baterai HX BN-5F Xiaomi/Redmi/Poco A2/Poco M4,HX,Baterai,Xiaomi/Redmi/Poco,120000,0,Xiaomi/Redmi/Poco A2/Poco M4,BN-5F,BN-5F,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0069,Baterai HX BN-5U Xiaomi/Redmi/Poco 14 5G/Poco M7,HX,Baterai,Xiaomi/Redmi/Poco,188000,0,Xiaomi/Redmi/Poco 14 5G/Poco M7,BN-5U,BN-5U,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0070,Baterai HX BR-50 Xiaomi/Redmi/Poco Note 14 4G,HX,Baterai,Xiaomi/Redmi/Poco,194000,0,Xiaomi/Redmi/Poco Note 14 4G,BR-50,BR-50,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0071,Baterai HX BM-59 Mi 11T,HX,Baterai,Lainnya,150000,0,Mi 11T,BM-59,BM-59,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0072,Baterai HX BN-66 Xiaomi/Redmi/Poco C40,HX,Baterai,Xiaomi/Redmi/Poco,120000,0,Xiaomi/Redmi/Poco C40,BN-66,BN-66,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0073,Baterai HX BN-34 Xiaomi/Redmi/Poco 5A,HX,Baterai,Xiaomi/Redmi/Poco,83000,0,Xiaomi/Redmi/Poco 5A,BN-34,BN-34,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0074,Baterai HX BM-5A Xiaomi/Redmi/Poco 11 Pro 4G,HX,Baterai,Xiaomi/Redmi/Poco,161000,0,Xiaomi/Redmi/Poco 11 Pro 4G,BM-5A,BM-5A,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0075,Baterai HX BN-5Q Xiaomi/Redmi/Poco 13C/Poco C65,HX,Baterai,Xiaomi/Redmi/Poco,118000,0,Xiaomi/Redmi/Poco 13C/Poco C65,BN-5Q,BN-5Q,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0076,Baterai HX BN-5C Xiaomi/Redmi/Poco 11 5G/Pc M4,HX,Baterai,Xiaomi/Redmi/Poco,130000,0,Xiaomi/Redmi/Poco 11 5G/Pc M4,BN-5C,BN-5C,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0077,Baterai HX BP-4K Xiaomi/Redmi/Poco Note 12 Pro X5,HX,Baterai,Xiaomi/Redmi/Poco,160000,0,Xiaomi/Redmi/Poco Note 12 Pro X5,BP-4K,BP-4K,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0078,Baterai HX BN-5E Xiaomi/Redmi/Poco 11 Pro 5G/12,HX,Baterai,Xiaomi/Redmi/Poco,161000,0,Xiaomi/Redmi/Poco 11 Pro 5G/12,BN-5E,BN-5E,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0079,Baterai HX BN-5H Xiaomi/Redmi/Poco 10 5G/Poco M5,HX,Baterai,Xiaomi/Redmi/Poco,119000,0,Xiaomi/Redmi/Poco 10 5G/Poco M5,BN-5H,BN-5H,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0080,Baterai HX BN-5J Xiaomi/Redmi/Poco MI12T/MI12T Pro,HX,Baterai,Xiaomi/Redmi/Poco,118000,0,Xiaomi/Redmi/Poco MI12T/MI12T Pro,BN-5J,BN-5J,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0081,Baterai HX BN-5P Xiaomi/Redmi/Poco Note 13 4G/5G,HX,Baterai,Xiaomi/Redmi/Poco,127500,0,Xiaomi/Redmi/Poco Note 13 4G/5G,BN-5P,BN-5P,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0082,Baterai HX BLP-673 A31/A3S/A5S/A7/C1,HX,Baterai,Lainnya,103000,0,A31/A3S/A5S/A7/C1,BLP-673,BLP-673,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0083,Baterai HX BLP-805 Oppo,HX,Baterai,Oppo,116500,0,Oppo,BLP-805,BLP-805,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0084,Baterai HX BLP-727 A5/A9 2020,HX,Baterai,Lainnya,119000,0,A5/A9 2020,BLP-727,BLP-727,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0085,Baterai HX BLP-729 Realme C3/5/5I/C21/C21Y,HX,Baterai,Realme,115000,0,Realme C3/5/5I/C21/C21Y,BLP-729,BLP-729,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0086,Baterai HX BLP-793 Realme C11/C12/C15/C25,HX,Baterai,Realme,136000,0,Realme C11/C12/C15/C25,BLP-793,BLP-793,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0087,Baterai HX BLP-817 Oppo,HX,Baterai,Oppo,99000,0,Oppo,BLP-817,BLP-817,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0088,Baterai HX BLP-923 Oppo A57,HX,Baterai,Oppo,115000,0,Oppo A57,BLP-923,BLP-923,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0089,Baterai HX BLP-721 Realme C2,HX,Baterai,Realme,100000,0,Realme C2,BLP-721,BLP-721,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0090,Baterai HX BLP-779 Reno 4F/A925,HX,Baterai,Lainnya,95500,0,Reno 4F/A925,BLP-779,BLP-779,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0091,Baterai HX BLP-803 Realme 7/7i/C17,HX,Baterai,Realme,116500,0,Realme 7/7i/C17,BLP-803,BLP-803,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0092,Baterai HX BLP-915 Oppo A17,HX,Baterai,Oppo,116500,0,Oppo A17,BLP-915,BLP-915,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0093,Baterai HX BLP-641 Oppo A71,HX,Baterai,Oppo,99000,0,Oppo A71,BLP-641,BLP-641,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0094,Baterai HX BLP-681 F9 /Rlm 2 Pro,HX,Baterai,Lainnya,105000,0,F9 /Rlm 2 Pro,BLP-681,BLP-681,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0095,Baterai HX BLP-711 Oppo A1K,HX,Baterai,Oppo,103000,0,Oppo A1K,BLP-711,BLP-711,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0096,Baterai HX BLP-615 Neo 9/A37,HX,Baterai,Lainnya,79000,0,Neo 9/A37,BLP-615,BLP-615,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0097,Baterai HX BLP-661 F7/A3,HX,Baterai,Lainnya,94000,0,F7/A3,BLP-661,BLP-661,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0098,Baterai HX BLP-731 Realme 5 Pro,HX,Baterai,Realme,110000,0,Realme 5 Pro,BLP-731,BLP-731,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0099,Baterai HX BLP-819 Reno 6 4G,HX,Baterai,Lainnya,161000,0,Reno 6 4G,BLP-819,BLP-819,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0100,Baterai HX BLP-851 Oppo A74 4G/A95,HX,Baterai,Oppo,135000,0,Oppo A74 4G/A95,BLP-851,BLP-851,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0101,Baterai HX BLP-601 F1S,HX,Baterai,Lainnya,83000,0,F1S,BLP-601,BLP-601,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0102,Baterai HX BLP-683 Oppo F9/F9 Pro,HX,Baterai,Oppo,86500,0,Oppo F9/F9 Pro,BLP-683,BLP-683,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0103,Baterai HX BLP-927 Oppo A77S,HX,Baterai,Oppo,118000,0,Oppo A77S,BLP-927,BLP-927,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0104,Baterai HX BLP-A07 Oppo A78 4G,HX,Baterai,Oppo,122000,0,Oppo A78 4G,BLP-A07,BLP-A07,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0105,Baterai HX BLP-A17 Realme,HX,Baterai,Realme,116500,0,Realme,BLP-A17,BLP-A17,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0106,Baterai HX BLP-A19 Oppo A38/A58 4G,HX,Baterai,Oppo,119000,0,Oppo A38/A58 4G,BLP-A19,BLP-A19,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0107,Baterai HX BLP-A21 Oppo A18/A38,HX,Baterai,Oppo,119000,0,Oppo A18/A38,BLP-A21,BLP-A21,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0108,Baterai HX BLP-A83 Realme C63 4G,HX,Baterai,Realme,109000,0,Realme C63 4G,BLP-A83,BLP-A83,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0109,Baterai HX BLP-B21 Realme C61,HX,Baterai,Realme,103000,0,Realme C61,BLP-B21,BLP-B21,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0110,Baterai HX BLP-B65 Oppo A5 Pro 5G,HX,Baterai,Oppo,135000,0,Oppo A5 Pro 5G,BLP-B65,BLP-B65,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0111,Baterai HX BLP-C69 Realme C71,HX,Baterai,Realme,143000,0,Realme C71,BLP-C69,BLP-C69,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0112,Baterai HX BLP-649 A83,HX,Baterai,Lainnya,94000,0,A83,BLP-649,BLP-649,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0113,Baterai HX BLP-693 Realme 3,HX,Baterai,Realme,103000,0,Realme 3,BLP-693,BLP-693,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0114,Baterai HX BLP-697 F11 Pro,HX,Baterai,Lainnya,109000,0,F11 Pro,BLP-697,BLP-697,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0115,Baterai HX BLP-707 Oppo F11,HX,Baterai,Oppo,110000,0,Oppo F11,BLP-707,BLP-707,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0116,Baterai HX BLP-737 Reno 2F,HX,Baterai,Lainnya,115000,0,Reno 2F,BLP-737,BLP-737,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0117,Baterai HX BLP-771 Realme 6I/C25Y/Narzo,HX,Baterai,Realme,110000,0,Realme 6I/C25Y/Narzo,BLP-771,BLP-771,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0118,Baterai HX BLP-781 Oppo A52/A92,HX,Baterai,Oppo,110000,0,Oppo A52/A92,BLP-781,BLP-781,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0119,Baterai HX BLP-791 Reno 4,HX,Baterai,Lainnya,110500,0,Reno 4,BLP-791,BLP-791,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0120,Baterai HX BLP-839 Reno 5 4G/5Z/A95 5G,HX,Baterai,Lainnya,105000,0,Reno 5 4G/5Z/A95 5G,BLP-839,BLP-839,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0121,Baterai HX BLP-841 Realme 8,HX,Baterai,Realme,131000,0,Realme 8,BLP-841,BLP-841,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0122,Baterai HX BLP-875 Realme C55/Rlm 9,HX,Baterai,Realme,121000,0,Realme C55/Rlm 9,BLP-875,BLP-875,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0123,Baterai HX BLP-877 Realme 8I/C30/C31/C35,HX,Baterai,Realme,119000,0,Realme 8I/C30/C31/C35,BLP-877,BLP-877,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0124,Baterai HX BLP-879 Oppo A36/A74 4G/ A78,HX,Baterai,Oppo,119000,0,Oppo A36/A74 4G/ A78,BLP-879,BLP-879,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0125,Baterai HX BLP-885 Oppo A76/A96 4G,HX,Baterai,Oppo,119000,0,Oppo A76/A96 4G,BLP-885,BLP-885,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0126,Baterai HX BLP-907 Reno 7/7Z/8/8Z/A96,HX,Baterai,Lainnya,116500,0,Reno 7/7Z/8/8Z/A96,BLP-907,BLP-907,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0127,Baterai HX BLP-741 Realme Xt/X2,HX,Baterai,Realme,110000,0,Realme Xt/X2,BLP-741,BLP-741,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0128,Baterai HX BLP-713 Realme 3 Pro,HX,Baterai,Realme,102000,0,Realme 3 Pro,BLP-713,BLP-713,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0129,Baterai HX BLP-A49 Oppo A60,HX,Baterai,Oppo,146000,0,Oppo A60,BLP-A49,BLP-A49,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0130,Baterai HX BLP-A75 Realme Note 60,HX,Baterai,Realme,115000,0,Realme Note 60,BLP-A75,BLP-A75,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0131,Baterai HX BLP-A77 Oppo A3/A3X/A3 Pro,HX,Baterai,Oppo,108000,0,Oppo A3/A3X/A3 Pro,BLP-A77,BLP-A77,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0132,Baterai HX BLP-B47 Realme C75,HX,Baterai,Realme,142000,0,Realme C75,BLP-B47,BLP-B47,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0133,Baterai HX BLP-959 Oppo Reno 8T 5G,HX,Baterai,Oppo,127500,0,Oppo Reno 8T 5G,BLP-959,BLP-959,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0134,Baterai HX BLP-A79 Oppo Reno 12F,HX,Baterai,Oppo,133000,0,Oppo Reno 12F,BLP-A79,BLP-A79,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0135,Baterai HX BLP-B57 Realme C75X,HX,Baterai,Realme,133000,0,Realme C75X,BLP-B57,BLP-B57,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0136,Baterai HX BLP-C07 Realme 14T 5G,HX,Baterai,Realme,150000,0,Realme 14T 5G,BLP-C07,BLP-C07,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0137,Baterai HX BLP-C21 Oppo A5X,HX,Baterai,Oppo,144000,0,Oppo A5X,BLP-C21,BLP-C21,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0138,Baterai HX BLP-C29 Oppo Reno 14 5G,HX,Baterai,Oppo,199000,0,Oppo Reno 14 5G,BLP-C29,BLP-C29,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0139,Baterai HX BLP-911 Realme 9I/9 Pro,HX,Baterai,Realme,116500,0,Realme 9I/9 Pro,BLP-911,BLP-911,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0140,Baterai HX BLP-957 Realme 10,HX,Baterai,Realme,119000,0,Realme 10,BLP-957,BLP-957,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0141,Baterai HX BLP-A05 Oppo Reno 10 5G,HX,Baterai,Oppo,145000,0,Oppo Reno 10 5G,BLP-A05,BLP-A05,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0142,Baterai HX BLP-B43 Oppo Reno 13 5G,HX,Baterai,Oppo,185000,0,Oppo Reno 13 5G,BLP-B43,BLP-B43,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0143,Baterai HX BLP-B87 Oppo Reno 13F,HX,Baterai,Oppo,135000,0,Oppo Reno 13F,BLP-B87,BLP-B87,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0144,Baterai HX Samsung A03 CORE(SLC-50),HX,Baterai,Samsung,117500,0,Samsung A03 CORE(SLC-50),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0145,Baterai HX Samsung A750/A10 (EB-BA750ABU),HX,Baterai,Samsung,91000,0,Samsung A750/A10 (EB-BA750ABU),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0146,Baterai HX Samsung A02S/A03S/A04E,HX,Baterai,Samsung,118000,0,Samsung A02S/A03S/A04E,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0147,Baterai HX Samsung A05 (WT-S-N28),HX,Baterai,Samsung,114000,0,Samsung A05 (WT-S-N28),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0148,Baterai HX Samsung A05S (SLC-51),HX,Baterai,Samsung,110500,0,Samsung A05S (SLC-51),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0149,Baterai HX HQ-70N Samsung A11,HX,Baterai,Samsung,99000,0,Samsung A11,HQ-70N,HQ-70N,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0150,Baterai HX Samsung A14 (WT-S-W1),HX,Baterai,Samsung,116500,0,Samsung A14 (WT-S-W1),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0151,Baterai HX Samsung A15 4G/5G,HX,Baterai,Samsung,110000,0,Samsung A15 4G/5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0152,Baterai HX Samsung A24 4G (EB-BA245ABY),HX,Baterai,Samsung,103000,0,Samsung A24 4G (EB-BA245ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0153,Baterai HX Samsung A31/A22/A32,HX,Baterai,Samsung,116500,0,Samsung A31/A22/A32,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0154,Baterai HX Samsung A22 5G/A04,HX,Baterai,Samsung,116500,0,Samsung A22 5G/A04,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0155,Baterai HX Samsung A23/M52/A73,HX,Baterai,Samsung,113000,0,Samsung A23/M52/A73,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0156,Baterai HX Samsung A32 5G/A72/A42,HX,Baterai,Samsung,114000,0,Samsung A32 5G/A72/A42,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0157,Baterai HX Samsung A25/A35/A55,HX,Baterai,Samsung,121000,0,Samsung A25/A35/A55,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0158,Baterai HX Samsung A33/A53,HX,Baterai,Samsung,116500,0,Samsung A33/A53,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0159,Baterai HX Samsung A36/A56 5G,HX,Baterai,Samsung,116500,0,Samsung A36/A56 5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0160,Baterai HX Samsung A06/A065F (HQ-7160SS),HX,Baterai,Samsung,114000,0,Samsung A06/A065F (HQ-7160SS),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0161,Baterai HX Samsung A70 /A705F,HX,Baterai,Samsung,114000,0,Samsung A70 /A705F,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0162,Baterai HX Samsung A71 2020 (EB-BA715ABY),HX,Baterai,Samsung,114000,0,Samsung A71 2020 (EB-BA715ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0163,Baterai HX Samsung A16 4G/A26 5G,HX,Baterai,Samsung,121000,0,Samsung A16 4G/A26 5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0164,Baterai HX Samsung M20 / M30,HX,Baterai,Samsung,110500,0,Samsung M20 / M30,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0165,Baterai HX Samsung S23 Ultra 5G,HX,Baterai,Samsung,116500,0,Samsung S23 Ultra 5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0166,Baterai HX Samsung S24+ (EB-BS926ABY),HX,Baterai,Samsung,122000,0,Samsung S24+ (EB-BS926ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0167,Baterai HX Samsung S25 Ultra,HX,Baterai,Samsung,122000,0,Samsung S25 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0168,Baterai HX Samsung S25 (EB-BS931ABY),HX,Baterai,Samsung,105000,0,Samsung S25 (EB-BS931ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0169,Baterai HX Samsung S25+ (EB-BS936ABY),HX,Baterai,Samsung,122000,0,Samsung S25+ (EB-BS936ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0170,Baterai HX Samsung A07 (HQ-7160SA),HX,Baterai,Samsung,122000,0,Samsung A07 (HQ-7160SA),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0171,Baterai HX Samsung M32 (EB-BM325ABN),HX,Baterai,Samsung,142000,0,Samsung M32 (EB-BM325ABN),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0172,Baterai HX Samsung M51/M62/F62,HX,Baterai,Samsung,142000,0,Samsung M51/M62/F62,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0173,Baterai HX Samsung A13 5G (EB-BA136ABY),HX,Baterai,Samsung,115000,0,Samsung A13 5G (EB-BA136ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0174,Baterai HX Samsung A52/S20,HX,Baterai,Samsung,113000,0,Samsung A52/S20,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0175,Baterai HX Samsung A54 5G/A34 5G,HX,Baterai,Samsung,119000,0,Samsung A54 5G/A34 5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0176,Baterai HX Samsung Note 9 (EB-BN965ABU),HX,Baterai,Samsung,119000,0,Samsung Note 9 (EB-BN965ABU),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0177,Baterai HX Samsung S22 Ultra,HX,Baterai,Samsung,110000,0,Samsung S22 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0178,Baterai HX Samsung S22+ (EB-BS906ABY),HX,Baterai,Samsung,110500,0,Samsung S22+ (EB-BS906ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0179,Baterai HX Samsung S23 (EB-BS912ABY),HX,Baterai,Samsung,102000,0,Samsung S23 (EB-BS912ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0180,Baterai HX Samsung S23 FE (EB-BS711ABY),HX,Baterai,Samsung,102000,0,Samsung S23 FE (EB-BS711ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0181,Baterai HX Samsung S23 PLUS(EB-BS916ABY),HX,Baterai,Samsung,110500,0,Samsung S23 PLUS(EB-BS916ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0182,Baterai HX Samsung S24 (EB-BS922ABY),HX,Baterai,Samsung,105000,0,Samsung S24 (EB-BS922ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0183,Baterai HX Samsung S24 FE(EB-BS721ABY),HX,Baterai,Samsung,116500,0,Samsung S24 FE(EB-BS721ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0184,Baterai HX Samsung S24 Ultra,HX,Baterai,Samsung,122000,0,Samsung S24 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0185,Baterai HX Samsung Note 10(EB-BN970ABU),HX,Baterai,Samsung,94000,0,Samsung Note 10(EB-BN970ABU),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0186,Baterai HX Samsung Note 10,HX,Baterai,Samsung,94000,0,Samsung Note 10,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0187,Baterai HX Samsung Note 20,HX,Baterai,Samsung,119000,0,Samsung Note 20,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0188,Baterai HX Samsung S20 (EB-BG980ABY),HX,Baterai,Samsung,100000,0,Samsung S20 (EB-BG980ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0189,Baterai HX Samsung S21 FE(EB-BG990ABY),HX,Baterai,Samsung,105000,0,Samsung S21 FE(EB-BG990ABY),-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0190,Baterai HX Samsung S21 Ultra,HX,Baterai,Samsung,110000,0,Samsung S21 Ultra,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0191,Baterai HX Vivo B-G7 Y12/Y15/Y17/Z1 Pro,HX,Baterai,Vivo,116500,0,Vivo B-G7 Y12/Y15/Y17/Z1 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0192,Baterai HX Vivo B-O5 Y12S/Y20S/Y20I,HX,Baterai,Vivo,116500,0,Vivo B-O5 Y12S/Y20S/Y20I,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0193,Baterai HX Vivo B-S1 Y21/Y21A/Y21S/ Y33S,HX,Baterai,Vivo,116500,0,Vivo B-S1 Y21/Y21A/Y21S/ Y33S,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0194,Baterai HX Vivo B-S7/B-S8 Y15S/Y01,HX,Baterai,Vivo,109000,0,Vivo B-S7/B-S8 Y15S/Y01,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0195,Baterai HX Vivo B-F3 Y91/Y91C/Y93/Y95,HX,Baterai,Vivo,94000,0,Vivo B-F3 Y91/Y91C/Y93/Y95,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0196,Baterai HX Vivo B-O8 Y51/Y31(2020)/Y52S,HX,Baterai,Vivo,100000,0,Vivo B-O8 Y51/Y31(2020)/Y52S,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0197,Baterai HX Vivo B-W0 Y35 2022,HX,Baterai,Vivo,118000,0,Vivo B-W0 Y35 2022,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0198,Baterai HX Vivo B-E1 Y71,HX,Baterai,Vivo,97500,0,Vivo B-E1 Y71,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0199,Baterai HX BN-51 Xiaomi/Redmi/Poco 8 / 8A,HX,Baterai,Xiaomi/Redmi/Poco,105000,0,Xiaomi/Redmi/Poco 8 / 8A,BN-51,BN-51,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0200,Baterai HX Vivo B-K3 S1 Pro,HX,Baterai,Vivo,114000,0,Vivo B-K3 S1 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0201,Baterai HX Vivo B-H0 S1,HX,Baterai,Vivo,114000,0,Vivo B-H0 S1,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0202,Baterai HX Vivo B-G2 V15,HX,Baterai,Vivo,103000,0,Vivo B-G2 V15,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0203,Baterai HX Vivo B-S3 Y16 2022,HX,Baterai,Vivo,116500,0,Vivo B-S3 Y16 2022,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0204,Baterai HX BA-10 Vivo Y17S,HX,Baterai,Vivo,109000,0,Vivo Y17S,BA-10,BA-10,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0205,Baterai HX BA-61 Vivo,HX,Baterai,Vivo,120000,0,Vivo,BA-61,BA-61,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0206,Baterai HX Vivo B-S2 Y21A,HX,Baterai,Vivo,116500,0,Vivo B-S2 Y21A,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0207,Baterai HX Vivo B-T7 Y21T,HX,Baterai,Vivo,100000,0,Vivo B-T7 Y21T,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0208,Baterai HX Vivo B-Y1 Y35 5G/Y02T,HX,Baterai,Vivo,114000,0,Vivo B-Y1 Y35 5G/Y02T,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0209,Baterai HX Vivo B-M3 Y30/Y50,HX,Baterai,Vivo,119000,0,Vivo B-M3 Y30/Y50,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0210,Baterai HX Vivo B-H1 V17 Pro,HX,Baterai,Vivo,105000,0,Vivo B-H1 V17 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0211,Baterai HX Vivo B-K6 V19/V17,HX,Baterai,Vivo,110500,0,Vivo B-K6 V19/V17,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0212,Baterai HX Vivo B-N8 V20 4G/V20 Pro S7,HX,Baterai,Vivo,105000,0,Vivo B-N8 V20 4G/V20 Pro S7,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0213,Baterai HX Vivo B-O6 V20 SE,HX,Baterai,Vivo,105000,0,Vivo B-O6 V20 SE,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0214,Baterai HX Vivo B-P9 V21,HX,Baterai,Vivo,106500,0,Vivo B-P9 V21,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0215,Baterai HX BA-33 Vivo Y03,HX,Baterai,Vivo,116500,0,Vivo Y03,BA-33,BA-33,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0216,Baterai HX BA-43 Vivo Y100 4G,HX,Baterai,Vivo,155000,0,Vivo Y100 4G,BA-43,BA-43,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0217,Baterai HX Vivo B-W1 Y16/Y02/Y02S,HX,Baterai,Vivo,119000,0,Vivo B-W1 Y16/Y02/Y02S,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0218,Baterai HX BA-45 Vivo Y28 4G,HX,Baterai,Vivo,114000,0,Vivo Y28 4G,BA-45,BA-45,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0219,Baterai HX BA-90 Vivo Y29 4G,HX,Baterai,Vivo,142000,0,Vivo Y29 4G,BA-90,BA-90,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0220,Baterai HX Vivo B-E5 Y81/Y83,HX,Baterai,Vivo,97500,0,Vivo B-E5 Y81/Y83,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0221,Baterai HX Vivo B-G1 V15 Pro,HX,Baterai,Vivo,92000,0,Vivo B-G1 V15 Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0222,Baterai HX Vivo B-T3 V23 5G,HX,Baterai,Vivo,110000,0,Vivo B-T3 V23 5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0223,Baterai HX Vivo B-Y2 V27E,HX,Baterai,Vivo,139000,0,Vivo B-Y2 V27E,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0224,Baterai HX BA-16 Vivo V29E,HX,Baterai,Vivo,122000,0,Vivo V29E,BA-16,BA-16,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0225,Baterai HX Vivo B-W3 Y22 2022,HX,Baterai,Vivo,116500,0,Vivo B-W3 Y22 2022,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0226,Baterai HX Vivo B-R5 V23E,HX,Baterai,Vivo,110500,0,Vivo B-R5 V23E,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0227,Baterai HX Vivo B-Z7 V29 5G,HX,Baterai,Vivo,139000,0,Vivo B-Z7 V29 5G,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0228,Baterai HX BA-18 Vivo V30 5G,HX,Baterai,Vivo,142000,0,Vivo V30 5G,BA-18,BA-18,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0229,Baterai HX Vivo B-X7 V27 5G/V27 Pro S16,HX,Baterai,Vivo,115000,0,Vivo B-X7 V27 5G/V27 Pro S16,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
+PS-BHX-0230,Baterai HX Zenf Max Pro,HX,Baterai,Lainnya,105000,0,Zenf Max Pro,-,,https://portaltech-katalog.vercel.app/baterai/hx.webp,In Stock,Better
