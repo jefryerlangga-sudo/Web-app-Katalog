@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Search,
   SlidersHorizontal,
@@ -59,30 +59,10 @@ export const SearchCatalogPage: React.FC = () => {
       // Search Query
       if (filters.searchQuery.trim()) {
         const query = filters.searchQuery.toLowerCase().trim();
-        const matchesName = product.name.toLowerCase().includes(query);
-        const matchesSku = product.sku.toLowerCase().includes(query);
-        const matchesCategory = product.category.toLowerCase().includes(query);
-        const matchesSubcategory = product.subcategory.toLowerCase().includes(query);
-        const matchesCompatibility = product.compatibility.toLowerCase().includes(query);
-        const matchesBrand = product.brand.toLowerCase().includes(query);
-        const matchesSpecs = product.specification.toLowerCase().includes(query);
-        const matchesSellingPoints =
-          product.sellingPoint1.toLowerCase().includes(query) ||
-          product.sellingPoint2.toLowerCase().includes(query) ||
-          product.sellingPoint3.toLowerCase().includes(query);
-
-        if (
-          !matchesName &&
-          !matchesSku &&
-          !matchesCategory &&
-          !matchesSubcategory &&
-          !matchesCompatibility &&
-          !matchesBrand &&
-          !matchesSpecs &&
-          !matchesSellingPoints
-        ) {
-          return false;
-        }
+        const haystack = [product.name, product.sku, product.brand, product.compatibility, product.subcategory]
+          .join(' ')
+          .toLowerCase();
+        if (!haystack.includes(query)) return false;
       }
 
       // Compatibility filter
@@ -173,54 +153,23 @@ export const SearchCatalogPage: React.FC = () => {
     });
   }, [activeProducts, filters, viewMode, promo]);
 
+  useEffect(() => {
+    const bar = document.getElementById('catalog-toolbar');
+    const header = document.querySelector('header');
+    if (!bar) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      return;
+    }
+    const headerHeight = header?.getBoundingClientRect().height ?? 0;
+    const top = bar.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+  }, [filters.searchQuery]);
+
   return (
     <div className="space-y-3 pb-20">
-      {/* Sticky Search Header */}
-      <div className="sticky top-[53px] z-20 bg-slate-900/95 backdrop-blur-md pt-1 pb-2 space-y-2">
+      <div id="catalog-toolbar" className="scroll-mt-28 pt-1 pb-1">
         <div className="flex items-center gap-2">
-          {/* Main Search Input */}
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={filters.searchQuery}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))
-              }
-              placeholder="Cari SKU, nama produk, tipe HP (cth: iPhone, Type-C)..."
-              className="w-full bg-slate-800 border border-slate-700 rounded-2xl pl-9 pr-9 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 shadow-inner"
-            />
-            {filters.searchQuery && (
-              <button
-                onClick={() => setFilters((prev) => ({ ...prev, searchQuery: '' }))}
-                className="w-6 h-6 rounded-full bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {/* Filter Drawer Toggle Button */}
-          <button
-            onClick={() => setShowFilterDrawer(true)}
-            className={`flex items-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-bold border transition-all active:scale-95 ${
-              activeFilterCount > 0
-                ? 'bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-500/30'
-                : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700'
-            }`}
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>Filter</span>
-            {activeFilterCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-white text-blue-900 text-[10px] font-black flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* Quick Filter Horizontal Scroll Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 pb-0.5">
           {/* Focus Toggle */}
           <button
             onClick={() =>
@@ -302,14 +251,31 @@ export const SearchCatalogPage: React.FC = () => {
               className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-semibold text-rose-400 hover:text-white bg-rose-500/10 border border-rose-500/30 whitespace-nowrap flex-shrink-0"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Reset</span>
-            </button>
+            <span>Reset</span>
+          </button>
           )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowFilterDrawer(true)}
+            className={`shrink-0 flex items-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-bold border transition-all active:scale-95 ${
+              activeFilterCount > 0
+                ? 'bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-500/30'
+                : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700'
+            }`}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span>Filter</span>
+            {activeFilterCount > 0 && (
+              <span className="w-4 h-4 rounded-full bg-white text-blue-900 text-[10px] font-black flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Results Header with Sorting */}
-      <div className="flex items-center justify-between px-1 text-xs text-slate-400">
+      <div id="catalog-results" className="flex items-center justify-between px-1 text-xs text-slate-400 scroll-mt-28">
         <span className="font-semibold">
           Menampilkan <strong className="text-slate-900 font-mono">{filteredProducts.length}</strong> produk
         </span>
