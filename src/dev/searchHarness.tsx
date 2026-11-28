@@ -5,6 +5,7 @@ import { Header } from '../components/Header';
 import { BottomNav } from '../components/BottomNav';
 import { SearchCatalogPage } from '../pages/SearchCatalogPage';
 import { BatteryPage } from '../pages/BatteryPage';
+import { HomePage } from '../pages/HomePage';
 import { catalogModeFromPath, type CatalogMode } from '../lib/catalogKind';
 import { Product, ProductFilterState } from '../types/product';
 
@@ -140,13 +141,13 @@ function Harness() {
     <CatalogContext.Provider value={value as unknown as NonNullable<React.ComponentProps<typeof CatalogContext.Provider>['value']>}>
       <div className="min-h-screen bg-[#f5f5f5] text-slate-900">
         <Header />
-        <main className="max-w-md mx-auto p-3">
+        <main className="max-w-md lg:max-w-[1400px] mx-auto p-3 lg:px-6">
           {catalogMode === 'baterai' ? (
             <BatteryPage />
           ) : currentTab === 'search' ? (
             <SearchCatalogPage />
           ) : (
-            <div className="h-[1400px] bg-white rounded-2xl border border-slate-200 p-4">Beranda contoh</div>
+            <HomePage />
           )}
         </main>
         <BottomNav />

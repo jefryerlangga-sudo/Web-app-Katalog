@@ -89,7 +89,7 @@ export const PromoPage: React.FC = () => {
           <LoadMoreList
             items={visible}
             resetKey={`${brand}:${visible.length}`}
-            className="grid grid-cols-2 gap-2"
+            className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3 xl:grid-cols-5"
             getKey={(item) => item.product.id || item.sku}
             renderItem={(item) => (
               <ProductCard

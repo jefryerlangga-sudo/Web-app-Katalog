@@ -60,7 +60,7 @@ export const BestSellerPage: React.FC = () => {
           <LoadMoreList
             items={bestSellers}
             resetKey={String(bestSellers.length)}
-            className="grid grid-cols-2 gap-2"
+            className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3 xl:grid-cols-5"
             getKey={(product) => product.id || product.sku}
             renderItem={(product) => <ProductCard product={product} variant="tile" />}
           />

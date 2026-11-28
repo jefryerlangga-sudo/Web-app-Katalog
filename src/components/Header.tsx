@@ -53,17 +53,17 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 text-white" style={{ backgroundColor: '#0B1B3A' }}>
-      <div className="max-w-md mx-auto px-3 pt-2.5 pb-2 space-y-2">
-        <div className="flex items-center gap-2">
+      <div className="max-w-md lg:max-w-[1400px] mx-auto px-3 pt-2.5 pb-2 lg:py-3 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-3">
+        <div className="flex items-center gap-2 lg:contents">
           <button
             type="button"
             onClick={() => setCurrentTab('home')}
-            className="shrink-0 active:opacity-80"
+            className="shrink-0 active:opacity-80 lg:order-1"
             aria-label={APP_NAME}
           >
             <BrandMark className="w-9 h-9" />
           </button>
-          <form onSubmit={submitSearch} className="flex-1 min-w-0">
+          <form onSubmit={submitSearch} className="flex-1 min-w-0 lg:order-3 lg:max-w-2xl">
             <label className="flex items-center gap-2 bg-white rounded-full px-3 h-9 text-slate-800">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
@@ -85,6 +85,7 @@ export const Header: React.FC = () => {
               )}
             </label>
           </form>
+          <div className="flex items-center gap-1.5 lg:order-4">
           {promo?.active && (
             <button
               type="button"
@@ -118,8 +119,27 @@ export const Header: React.FC = () => {
               </span>
             )}
           </button>
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={toggleViewMode}
+              className="hidden lg:flex items-center gap-1.5 px-2.5 h-9 rounded-full text-[11px] font-bold bg-white/15"
+            >
+              {viewMode === 'sales' ? <Briefcase className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {viewMode === 'sales' ? 'Mode Sales' : 'Mode Toko'}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setAccountOpen(true)}
+            className="hidden lg:flex relative w-9 h-9 rounded-full bg-white/10 items-center justify-center"
+            aria-label="Akun"
+          >
+            <User className="w-5 h-5" />
+          </button>
+          </div>
         </div>
-        <div className="grid grid-cols-2 rounded-full bg-white/10 p-0.5 text-[11px] font-black">
+        <div className="grid grid-cols-2 rounded-full bg-white/10 p-0.5 text-[11px] font-black lg:order-2 lg:w-56 lg:shrink-0">
           <button
             type="button"
             onClick={() => setCatalogMode('aksesoris')}
@@ -136,7 +156,7 @@ export const Header: React.FC = () => {
           </button>
         </div>
         {isAdmin && (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 lg:hidden">
             <button
               type="button"
               onClick={toggleViewMode}

@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { BatteryFull } from 'lucide-react';
-import { BATTERY_MAKES, PHONE_BRANDS } from '../lib/catalogKind';
+import { BATTERY_MAKES, PHONE_BRANDS, productGridClass } from '../lib/catalogKind';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
+import { DesktopSplit } from '../components/DesktopSplit';
 
 export const BatteryPage: React.FC = () => {
   const { batteryProducts, filters } = useCatalog();
@@ -31,7 +32,43 @@ export const BatteryPage: React.FC = () => {
   }, [batteryProducts, make, phone, query]);
 
   return (
-    <div className="space-y-3 pb-24">
+    <DesktopSplit
+      sidebar={
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <p className="text-[11px] font-black uppercase tracking-wide text-slate-400 px-2">Merek baterai</p>
+            {['Semua', ...BATTERY_MAKES].map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setMake(item)}
+                className={`w-full text-left px-2 py-1.5 rounded-lg text-sm font-semibold ${
+                  make === item ? 'bg-[#047857] text-white' : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                {item === 'Semua' ? 'Semua merek' : item}
+              </button>
+            ))}
+          </div>
+          <div className="space-y-1">
+            <p className="text-[11px] font-black uppercase tracking-wide text-slate-400 px-2">Merek HP</p>
+            {['Semua', ...PHONE_BRANDS].map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setPhone(item)}
+                className={`w-full text-left px-2 py-1.5 rounded-lg text-sm ${
+                  phone === item ? 'bg-[#0B1B3A] text-white' : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+      }
+    >
+    <div className="space-y-3 pb-24 lg:pb-8">
       <div className="rounded-2xl bg-[#064E3B] text-white p-4">
         <p className="text-[11px] font-bold text-emerald-200 flex items-center gap-1">
           <BatteryFull className="w-3.5 h-3.5" /> Mode Baterai
@@ -40,7 +77,7 @@ export const BatteryPage: React.FC = () => {
         <p className="text-xs text-emerald-100 mt-1">{batteryProducts.length} SKU · harga grosir di katalog, End User +30%</p>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex gap-2 overflow-x-auto lg:hidden">
         {['Semua', ...BATTERY_MAKES].map((item) => (
           <button
             key={item}
@@ -55,7 +92,7 @@ export const BatteryPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto pb-1 lg:hidden">
         {['Semua', ...PHONE_BRANDS].map((item) => (
           <button
             key={item}
@@ -78,7 +115,7 @@ export const BatteryPage: React.FC = () => {
         <LoadMoreList
           items={shown}
           resetKey={`${query}|${phone}|${make}|${shown.length}`}
-          className="grid grid-cols-2 gap-2"
+          className={productGridClass}
           getKey={(product) => product.id || product.sku}
           renderItem={(product) => <ProductCard product={product} variant="tile" />}
         />
@@ -88,5 +125,6 @@ export const BatteryPage: React.FC = () => {
         </p>
       )}
     </div>
+    </DesktopSplit>
   );
 };

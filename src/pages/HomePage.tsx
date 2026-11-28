@@ -15,6 +15,8 @@ import { listPromoProducts } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
+import { DesktopSplit } from '../components/DesktopSplit';
+import { productGridClass } from '../lib/catalogKind';
 
 export const HomePage: React.FC = () => {
   const {
@@ -88,8 +90,35 @@ export const HomePage: React.FC = () => {
   const categories = listStorefrontCategories(activeProducts.map((item) => item.category));
 
   return (
-    <div className="space-y-3 pb-24">
-      <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+    <DesktopSplit
+      sidebar={
+        <div className="space-y-1">
+          <p className="text-[11px] font-black uppercase tracking-wide text-slate-400 px-2 pb-1">Kategori</p>
+          <button
+            type="button"
+            onClick={() => {
+              setFilters((prev) => ({ ...prev, category: 'All', searchQuery: '' }));
+              setCurrentTab('home');
+            }}
+            className="w-full text-left px-2 py-1.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-100"
+          >
+            Semua
+          </button>
+          {categories.map((name) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => handleCategoryClick(name)}
+              className="w-full text-left px-2 py-1.5 rounded-lg text-sm text-slate-700 hover:bg-slate-100"
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      }
+    >
+    <div className="space-y-3 pb-24 lg:pb-8">
+      <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 lg:hidden">
         {categories.slice(0, 12).map((name) => (
           <button
             key={name}
@@ -184,10 +213,11 @@ export const HomePage: React.FC = () => {
       <LoadMoreList
         items={displayedProducts}
         resetKey={`${selectedDevice}:${displayedProducts.length}`}
-        className="grid grid-cols-2 gap-2"
+        className={productGridClass}
         getKey={(product) => product.id || product.sku}
         renderItem={(product) => <ProductCard product={product} variant="tile" />}
       />
     </div>
+    </DesktopSplit>
   );
 };

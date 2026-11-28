@@ -322,7 +322,7 @@ export const AdminPage: React.FC = () => {
         <LoadMoreList
           items={visibleProducts}
           resetKey={`${catalogQuery}:${products.length}`}
-          className="space-y-2.5"
+          className="space-y-2.5 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-3"
           getKey={(item) => item.id || item.sku}
           renderItem={(item) => (
             <div
