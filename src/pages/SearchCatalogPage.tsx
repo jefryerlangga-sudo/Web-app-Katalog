@@ -14,12 +14,19 @@ import { isPromoSku } from '../lib/promo';
 import { useCatalog } from '../context/CatalogContext';
 import { ProductCard } from '../components/ProductCard';
 import { LoadMoreList } from '../components/LoadMoreList';
+import { DesktopSplit } from '../components/DesktopSplit';
 import { useOverlayHistory } from '../lib/overlayHistory';
+import { productGridClass } from '../lib/catalogKind';
+import { listStorefrontCategories } from '../config/app';
 
 export const SearchCatalogPage: React.FC = () => {
   const { activeProducts, filters, setFilters, resetFilters, viewMode, promo } = useCatalog();
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   useOverlayHistory(showFilterDrawer, () => setShowFilterDrawer(false));
+  const categoryNames = useMemo(
+    () => listStorefrontCategories(activeProducts.map((item) => item.category)),
+    [activeProducts]
+  );
 
   // Extract unique categories & brands from active products
   const categories = useMemo(() => {
@@ -166,10 +173,34 @@ export const SearchCatalogPage: React.FC = () => {
   }, [filters.searchQuery]);
 
   return (
-    <div className="space-y-3 pb-20">
+    <DesktopSplit
+      sidebar={
+        <div className="space-y-1">
+          <p className="text-[11px] font-black uppercase tracking-wide text-slate-400 px-2 pb-1">Kategori</p>
+          <button
+            type="button"
+            onClick={() => setFilters((prev) => ({ ...prev, category: 'All' }))}
+            className={`w-full text-left px-2 py-1.5 rounded-lg text-sm ${filters.category === 'All' ? 'bg-[#0B1B3A] text-white' : 'text-slate-700 hover:bg-slate-100'}`}
+          >
+            Semua
+          </button>
+          {categoryNames.map((name) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => setFilters((prev) => ({ ...prev, category: name }))}
+              className={`w-full text-left px-2 py-1.5 rounded-lg text-sm ${filters.category === name ? 'bg-[#0B1B3A] text-white' : 'text-slate-700 hover:bg-slate-100'}`}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      }
+    >
+    <div className="space-y-3 pb-20 lg:pb-8">
       <div id="catalog-toolbar" className="scroll-mt-28 pt-1 pb-1">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 pb-0.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 pb-0.5 lg:hidden">
           {/* Focus Toggle */}
           <button
             onClick={() =>
@@ -306,7 +337,7 @@ export const SearchCatalogPage: React.FC = () => {
         <LoadMoreList
           items={filteredProducts}
           resetKey={`${filters.searchQuery}|${filters.category}|${filters.brand}|${filters.sortBy}|${filters.compatibilityVehicle}|${filters.promoOnly}|${filteredProducts.length}`}
-          className="grid grid-cols-2 gap-2"
+          className={productGridClass}
           getKey={(product) => product.id || product.sku}
           renderItem={(product) => <ProductCard product={product} variant="tile" />}
         />
@@ -514,5 +545,6 @@ export const SearchCatalogPage: React.FC = () => {
         </div>
       )}
     </div>
+    </DesktopSplit>
   );
 };

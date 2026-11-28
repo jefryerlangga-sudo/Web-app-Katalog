@@ -71,7 +71,7 @@ export const ProductFocusPage: React.FC = () => {
           <LoadMoreList
             items={focusProducts}
             resetKey={String(focusProducts.length)}
-            className="grid grid-cols-2 gap-2"
+            className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3 xl:grid-cols-5"
             getKey={(product) => product.id || product.sku}
             renderItem={(product) => <ProductCard product={product} variant="tile" />}
           />

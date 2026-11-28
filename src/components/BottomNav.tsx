@@ -16,8 +16,8 @@ export const BottomNav: React.FC = () => {
   return (
     <>
       {compareList.length > 0 && currentTab !== 'compare' && (
-        <div className="fixed bottom-16 left-0 right-0 z-30 px-3 pb-1 pointer-events-none">
-          <div className="max-w-md mx-auto pointer-events-auto">
+        <div className="fixed bottom-16 lg:bottom-4 left-0 right-0 z-30 px-3 pb-1 pointer-events-none">
+          <div className="max-w-md lg:max-w-[1400px] mx-auto pointer-events-auto">
             <div className="bg-[#0B1B3A] text-white p-2.5 rounded-2xl shadow-xl flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <Scale className="w-4 h-4 shrink-0" />
@@ -36,7 +36,7 @@ export const BottomNav: React.FC = () => {
         </div>
       )}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 pb-safe lg:hidden">
         <div className="max-w-md mx-auto grid grid-cols-5 h-16">
           {navItems.map((item) => {
             const Icon = item.icon;

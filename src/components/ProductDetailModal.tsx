@@ -85,7 +85,7 @@ ${
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
       <div
-        className="w-full max-w-lg max-h-[92vh] bg-slate-900 border border-slate-700/80 rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white animate-in slide-in-from-bottom duration-250"
+        className="w-full max-w-lg lg:max-w-4xl max-h-[92vh] bg-slate-900 border border-slate-700/80 rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white animate-in slide-in-from-bottom duration-250"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Sticky Header with Drag Pill & Close */}
@@ -114,7 +114,7 @@ ${
         {/* Scrollable Content Body */}
         <div className="overflow-y-auto p-4 space-y-4 pb-24">
           {/* Main Visual & Key Badges */}
-          <div className="relative w-full h-56 rounded-2xl bg-slate-950 overflow-hidden border border-slate-800">
+          <div className="relative w-full h-56 lg:h-80 rounded-2xl bg-slate-950 overflow-hidden border border-slate-800">
             <ProductImage src={product.imageUrl} alt={product.name} className="w-full h-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
 

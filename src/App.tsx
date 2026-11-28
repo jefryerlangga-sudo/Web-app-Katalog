@@ -22,7 +22,7 @@ import { AnalyticsBinder } from './components/AnalyticsBinder';
 import { ScrollTopButton } from './components/ScrollTopButton';
 
 const AppContent: React.FC = () => {
-  const { currentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate, catalogMode } = useCatalog();
+  const { currentTab, setCurrentTab, selectedProduct, setSelectedProduct, loading, error, isAdmin, usingPreviewCatalog, gate, catalogMode } = useCatalog();
   const lightShell = !['admin', 'laporan', 'ai', 'compare'].includes(currentTab);
 
   if (gate !== 'ready') {
@@ -65,7 +65,7 @@ const AppContent: React.FC = () => {
       <Header />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-md w-full mx-auto p-3 overflow-x-hidden">
+      <main className="flex-1 max-w-md lg:max-w-[1400px] w-full mx-auto p-3 lg:px-6 overflow-x-hidden">
         {loading && (
           <div className="flex items-center justify-center gap-2 py-6 text-xs text-blue-400">
             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -89,7 +89,21 @@ const AppContent: React.FC = () => {
           </div>
         )}
 
-        {renderCurrentView()}
+        {currentTab === 'cart' ? (
+          <div className="lg:fixed lg:inset-0 lg:z-50">
+            <button
+              type="button"
+              className="hidden lg:block absolute inset-0 bg-black/40"
+              aria-label="Tutup keranjang"
+              onClick={() => setCurrentTab('home')}
+            />
+            <div className="lg:absolute lg:right-0 lg:top-0 lg:h-full lg:w-[440px] lg:overflow-y-auto lg:bg-[#f5f5f5] lg:shadow-2xl lg:p-4 lg:pt-24">
+              <CartPage />
+            </div>
+          </div>
+        ) : (
+          renderCurrentView()
+        )}
       </main>
 
       {/* Fixed Bottom Navigation */}
